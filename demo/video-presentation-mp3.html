@@ -246,17 +246,7 @@
         .controls-overlay .status {
             color: #fff;
             font-size: 0.85em;
-            min-width: 120px;
-        }
-
-        .controls-overlay select {
-            padding: 8px 12px;
-            border-radius: 15px;
-            border: none;
-            background: #333;
-            color: #fff;
-            font-size: 0.85em;
-            cursor: pointer;
+            min-width: 150px;
         }
 
         .progress-bar {
@@ -269,35 +259,21 @@
             z-index: 1001;
         }
 
-        .debug-panel {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.8);
-            color: #0f0;
-            padding: 10px;
+        .time-display {
             font-family: monospace;
-            font-size: 11px;
-            border-radius: 5px;
-            z-index: 1002;
-            max-width: 300px;
-            display: none;
-        }
-
-        .debug-panel.visible {
-            display: block;
+            color: #888;
+            font-size: 0.85em;
         }
     </style>
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
-    <div class="debug-panel" id="debugPanel">Debug: Loading...</div>
 
     <div class="reveal">
         <div class="slides">
 
             <!-- Slide 1: Title -->
-            <section data-narration="Physicians spend four and a half hours every day on documentation. More time than they spend with patients. This is Voice to Health Record, a clinical extraction pipeline powered by Google's MedGemma.">
+            <section>
                 <h1>Voice-to-Health-Record</h1>
                 <h2 style="color: #888; font-weight: 400;">Clinical Documentation Extraction with MedGemma</h2>
                 <div class="medgemma-logo">
@@ -306,7 +282,7 @@
             </section>
 
             <!-- Slide 2: Problem Statement -->
-            <section data-narration="The problem is a translation gap. Clinicians speak naturally, but EHRs need structured data with ICD-10 codes and RxNorm identifiers. Manual data entry is slow, error-prone, and burns out physicians.">
+            <section>
                 <h2>The Documentation Burden</h2>
                 <div class="stat-grid">
                     <div class="stat-box">
@@ -325,7 +301,7 @@
             </section>
 
             <!-- Slide 3: Docker Startup -->
-            <section data-narration="Let me show you the working system. I'll start the server with Docker Compose. The server is now running.">
+            <section>
                 <h2>Starting the Server</h2>
                 <div class="terminal">
                     <div><span class="prompt">$</span> <span class="command">docker-compose up -d</span></div>
@@ -335,7 +311,7 @@
             </section>
 
             <!-- Slide 4: Transcript Input -->
-            <section data-narration="Here's a cardiology consultation. A 48 year old male with chest pain, on aspirin. The physician orders a stress test and starts statin therapy.">
+            <section>
                 <h2>Clinical Transcript</h2>
                 <div class="terminal" style="font-size: 0.6em; line-height: 1.5;">
                     <div id="transcriptText"></div>
@@ -343,7 +319,7 @@
             </section>
 
             <!-- Slide 5: API Call -->
-            <section data-narration="I'll send this to the extraction API. In under three seconds, MedGemma extracts the complete clinical picture.">
+            <section>
                 <h2>Extraction API Call</h2>
                 <div class="terminal">
                     <div><span class="prompt">$</span> <span class="command">curl -X POST localhost:8001/api/v1/extract \</span></div>
@@ -355,19 +331,19 @@
             </section>
 
             <!-- Slide 6: Extraction Results -->
-            <section data-narration="Notice the ICD-10 code for angina, the RxNorm code for aspirin verified against the national database, and the automated order extraction. Stress test, echo, and statin therapy.">
+            <section>
                 <h2>Extracted Entities</h2>
                 <pre><code class="language-json" id="extractionResult"></code></pre>
             </section>
 
             <!-- Slide 7: FHIR Transform -->
-            <section data-narration="Now I'll transform this to a FHIR R4 Bundle. Ready for Epic, Cerner, or any FHIR server. We also support CDA and HL7 version 2.">
+            <section>
                 <h2>FHIR R4 Output</h2>
                 <pre><code class="language-json" id="fhirResult"></code></pre>
             </section>
 
             <!-- Slide 8: Benchmark Results -->
-            <section data-narration="We benchmarked against regex-based extraction using 181 human-annotated entities. MedGemma achieves 66% F1, an 11 point improvement over baseline. Critically, MedGemma catches allergies and family history that rule-based systems completely miss.">
+            <section>
                 <h2>Benchmark Results</h2>
                 <p style="color: #888; margin-bottom: 15px;">181 ground truth entities | Independent human annotation</p>
                 <table class="benchmark-table">
@@ -416,7 +392,7 @@
             </section>
 
             <!-- Slide 9: Impact -->
-            <section data-narration="The projected impact: thirteen minutes saved per patient, over two hundred thousand dollars annual value per physician.">
+            <section>
                 <h2>Projected Clinical Impact</h2>
                 <div class="impact-grid">
                     <div class="impact-item">
@@ -438,7 +414,7 @@
             </section>
 
             <!-- Slide 10: Clinician Quote -->
-            <section data-narration="Deploys to the cloud at three cents per extraction, or on-premises for complete HIPAA compliance.">
+            <section>
                 <h2>Clinical Validation</h2>
                 <div class="quote-box">
                     "V2HR addresses one of the most pressing challenges in clinical practice: documentation burden. This could save physicians hours each day while improving data quality."
@@ -451,7 +427,7 @@
             </section>
 
             <!-- Slide 11: Closing -->
-            <section data-narration="Voice to Health Record. Open source. Because physicians should spend their time with patients, not paperwork.">
+            <section>
                 <div class="end-card" style="padding-bottom: 80px;">
                     <h1 style="font-size: 2em;">Voice-to-Health-Record</h1>
                     <div class="url" style="margin: 15px 0;">github.com/paulgCleansheet/voice-to-health-record</div>
@@ -467,15 +443,18 @@
         </div>
     </div>
 
+    <!-- Audio Element -->
+    <audio id="narrationAudio" preload="auto">
+        <source src="ElevenLabs_2026-01-31T06_26_58_Rachelle - Well-spoken, Wise and Clear_pvc_sp107_s77_sb75_v3.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Controls Overlay -->
     <div class="controls-overlay" id="controls">
-        <button id="startBtn">▶ Start</button>
+        <button id="startBtn">▶ Play Presentation</button>
         <button id="pauseBtn" disabled>⏸ Pause</button>
         <button id="restartBtn" disabled>↺ Restart</button>
-        <button id="testVoiceBtn">🔊 Test Voice</button>
-        <select id="voiceSelect"></select>
-        <span class="status" id="status">Loading voices...</span>
-        <button id="debugBtn" style="background: #666; padding: 5px 10px;">🐛</button>
+        <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+        <span class="status" id="status">Ready</span>
     </div>
 
     <!-- Scripts -->
@@ -484,6 +463,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
 
     <script>
+        // =========================================================
+        // SLIDE TIMING CONFIGURATION
+        // =========================================================
+        // Adjust these timestamps (in seconds) to match your MP3
+        // Listen to the audio and note when each section ends
+
+        const SLIDE_TIMESTAMPS = [
+            0,      // Slide 1: Title - starts at 0:00
+            12,     // Slide 2: Problem - starts at 0:12
+            30,     // Slide 3: Docker - starts at 0:24
+            36,     // Slide 4: Transcript - starts at 0:32
+            46,     // Slide 5: API Call - starts at 0:42
+            50,     // Slide 6: Extraction - starts at 0:50
+            68,     // Slide 7: FHIR - starts at 1:02
+            77,     // Slide 8: Benchmarks - starts at 1:12
+            93,     // Slide 9: Impact - starts at 1:27
+            104,     // Slide 10: Quote - starts at 1:37
+            105,    // Slide 11: Closing - starts at 1:45
+        ];
+
         // =========================================================
         // DATA
         // =========================================================
@@ -540,173 +539,102 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
         // GLOBALS
         // =========================================================
 
-        let deck;
-        let synth = window.speechSynthesis;
-        let voices = [];
-        let selectedVoice = null;
+        let audio = document.getElementById('narrationAudio');
         let isPlaying = false;
-        let isPaused = false;
-        let currentUtterance = null;
+        let syncInterval = null;
 
         // =========================================================
-        // DEBUG
+        // UTILITIES
         // =========================================================
 
-        function debug(msg) {
-            console.log('[V2HR]', msg);
-            const panel = document.getElementById('debugPanel');
-            panel.innerHTML = msg + '<br>' + panel.innerHTML.split('<br>').slice(0, 10).join('<br>');
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // =========================================================
-        // VOICE HANDLING
-        // =========================================================
-
-        function loadVoices() {
-            voices = synth.getVoices();
-            debug(`Loaded ${voices.length} voices`);
-
-            const select = document.getElementById('voiceSelect');
-            select.innerHTML = '';
-
-            if (voices.length === 0) {
-                select.innerHTML = '<option>No voices available</option>';
-                document.getElementById('status').textContent = 'No voices found';
-                return;
-            }
-
-            // Sort: prefer English voices
-            const englishVoices = voices.filter(v => v.lang.startsWith('en'));
-            const sortedVoices = [...englishVoices, ...voices.filter(v => !v.lang.startsWith('en'))];
-
-            sortedVoices.forEach((voice, i) => {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `${voice.name} (${voice.lang})`;
-                if (voice.default) option.textContent += ' *';
-                select.appendChild(option);
-            });
-
-            // Select first English voice or default
-            const defaultVoice = englishVoices.find(v =>
-                v.name.includes('Google') ||
-                v.name.includes('Microsoft') ||
-                v.name.includes('Samantha') ||
-                v.name.includes('Zira') ||
-                v.name.includes('David')
-            ) || englishVoices[0] || voices[0];
-
-            selectedVoice = defaultVoice;
-            const idx = sortedVoices.indexOf(defaultVoice);
-            if (idx >= 0) select.value = idx;
-
-            debug(`Selected voice: ${selectedVoice?.name}`);
-            document.getElementById('status').textContent = 'Ready';
-        }
-
-        // Voice change handler
-        document.getElementById('voiceSelect')?.addEventListener('change', (e) => {
-            const allVoices = synth.getVoices();
-            const englishVoices = allVoices.filter(v => v.lang.startsWith('en'));
-            const sortedVoices = [...englishVoices, ...allVoices.filter(v => !v.lang.startsWith('en'))];
-            selectedVoice = sortedVoices[e.target.value];
-            debug(`Changed voice to: ${selectedVoice?.name}`);
-        });
-
-        // =========================================================
-        // SPEECH
-        // =========================================================
-
-        function speak(text, onEnd) {
-            // Cancel any ongoing speech
-            synth.cancel();
-
-            debug(`Speaking: "${text.substring(0, 50)}..."`);
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.voice = selectedVoice;
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-            utterance.volume = 1.0;
-
-            utterance.onstart = () => {
-                debug('Speech started');
-            };
-
-            utterance.onend = () => {
-                debug('Speech ended');
-                if (onEnd) onEnd();
-            };
-
-            utterance.onerror = (e) => {
-                debug(`Speech error: ${e.error}`);
-                document.getElementById('status').textContent = `Error: ${e.error}`;
-                // Try to continue anyway
-                if (onEnd) setTimeout(onEnd, 1000);
-            };
-
-            currentUtterance = utterance;
-
-            // Chrome bug workaround: pause/resume to prevent cutoff
-            synth.speak(utterance);
-
-            // Chrome fix: keep speech alive
-            const keepAlive = setInterval(() => {
-                if (!synth.speaking) {
-                    clearInterval(keepAlive);
-                } else {
-                    synth.pause();
-                    synth.resume();
+        function getCurrentSlideIndex(currentTime) {
+            for (let i = SLIDE_TIMESTAMPS.length - 1; i >= 0; i--) {
+                if (currentTime >= SLIDE_TIMESTAMPS[i]) {
+                    return i;
                 }
-            }, 10000);
-        }
-
-        function testVoice() {
-            speak("Testing voice. This is Voice to Health Record.", () => {
-                debug('Test complete');
-            });
+            }
+            return 0;
         }
 
         // =========================================================
-        // PRESENTATION CONTROL
+        // SYNC LOGIC
+        // =========================================================
+
+        function syncSlides() {
+            const currentTime = audio.currentTime;
+            const duration = audio.duration || 0;
+            const targetSlide = getCurrentSlideIndex(currentTime);
+            const currentSlide = Reveal.getIndices().h;
+
+            // Update time display
+            document.getElementById('timeDisplay').textContent =
+                `${formatTime(currentTime)} / ${formatTime(duration)}`;
+
+            // Update progress bar
+            document.getElementById('progressBar').style.width =
+                (currentTime / duration * 100) + '%';
+
+            // Advance slide if needed
+            if (targetSlide !== currentSlide) {
+                Reveal.slide(targetSlide);
+                runSlideAnimations(targetSlide);
+            }
+        }
+
+        function runSlideAnimations(idx) {
+            if (idx === 2) {
+                // Docker output animation
+                setTimeout(() => {
+                    document.getElementById('dockerOutput').innerHTML =
+                        '<div class="success">✔ Container v2hr-api Started</div>';
+                }, 500);
+            }
+        }
+
+        // =========================================================
+        // CONTROLS
         // =========================================================
 
         function startPresentation() {
-            if (voices.length === 0) {
-                alert('No voices available. Please check your browser supports Web Speech API.');
-                return;
-            }
-
+            audio.play();
             isPlaying = true;
-            isPaused = false;
 
             document.getElementById('startBtn').disabled = true;
             document.getElementById('pauseBtn').disabled = false;
             document.getElementById('restartBtn').disabled = false;
             document.getElementById('status').textContent = 'Playing...';
 
-            playCurrentSlide();
+            // Start sync loop
+            syncInterval = setInterval(syncSlides, 100);
         }
 
         function togglePause() {
-            if (isPaused) {
-                isPaused = false;
-                synth.resume();
+            if (audio.paused) {
+                audio.play();
                 document.getElementById('pauseBtn').textContent = '⏸ Pause';
                 document.getElementById('status').textContent = 'Playing...';
+                syncInterval = setInterval(syncSlides, 100);
             } else {
-                isPaused = true;
-                synth.pause();
+                audio.pause();
                 document.getElementById('pauseBtn').textContent = '▶ Resume';
                 document.getElementById('status').textContent = 'Paused';
+                clearInterval(syncInterval);
             }
         }
 
         function restartPresentation() {
-            synth.cancel();
-            isPlaying = false;
-            isPaused = false;
+            audio.pause();
+            audio.currentTime = 0;
+            clearInterval(syncInterval);
+
             Reveal.slide(0);
+            document.getElementById('dockerOutput').innerHTML = '';
 
             document.getElementById('startBtn').disabled = false;
             document.getElementById('pauseBtn').disabled = true;
@@ -714,57 +642,7 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
             document.getElementById('restartBtn').disabled = true;
             document.getElementById('status').textContent = 'Ready';
             document.getElementById('progressBar').style.width = '0%';
-        }
-
-        function playCurrentSlide() {
-            if (!isPlaying || isPaused) return;
-
-            const slide = Reveal.getCurrentSlide();
-            const narration = slide?.getAttribute('data-narration');
-            const slideIdx = Reveal.getIndices().h;
-
-            debug(`Slide ${slideIdx}: "${narration?.substring(0, 30)}..."`);
-
-            // Run animations
-            runSlideAnimations(slideIdx);
-
-            // Update progress
-            document.getElementById('progressBar').style.width =
-                ((slideIdx + 1) / Reveal.getTotalSlides() * 100) + '%';
-
-            if (narration) {
-                speak(narration, () => {
-                    if (isPlaying && !isPaused) {
-                        setTimeout(() => {
-                            if (Reveal.isLastSlide()) {
-                                document.getElementById('status').textContent = 'Complete';
-                                isPlaying = false;
-                            } else {
-                                Reveal.next();
-                                playCurrentSlide();
-                            }
-                        }, 1000);
-                    }
-                });
-            } else {
-                // No narration, advance after delay
-                setTimeout(() => {
-                    if (isPlaying && !isPaused && !Reveal.isLastSlide()) {
-                        Reveal.next();
-                        playCurrentSlide();
-                    }
-                }, 3000);
-            }
-        }
-
-        function runSlideAnimations(idx) {
-            if (idx === 2) {
-                // Docker output
-                setTimeout(() => {
-                    document.getElementById('dockerOutput').innerHTML =
-                        '<div class="success">✔ Container v2hr-api Started</div>';
-                }, 1000);
-            }
+            document.getElementById('timeDisplay').textContent = '0:00 / ' + formatTime(audio.duration || 0);
         }
 
         // =========================================================
@@ -779,38 +657,53 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
             document.getElementById('fhirResult').textContent =
                 JSON.stringify(FHIR_RESULT, null, 2);
 
-            // Init Reveal - MUST await the promise
-            deck = await Reveal.initialize({
+            // Init Reveal
+            await Reveal.initialize({
                 hash: false,
                 controls: false,
                 progress: false,
                 center: true,
                 transition: 'fade',
                 width: 1280,
-                height: 720
+                height: 720,
+                keyboard: true
             });
-
-            debug('Reveal.js initialized');
 
             // Syntax highlighting
             hljs.highlightAll();
 
-            // Load voices
-            loadVoices();
-            if (speechSynthesis.onvoiceschanged !== undefined) {
-                speechSynthesis.onvoiceschanged = loadVoices;
-            }
-            // Fallback: try again after delay
-            setTimeout(loadVoices, 500);
-            setTimeout(loadVoices, 1000);
+            // Audio events
+            audio.addEventListener('loadedmetadata', () => {
+                document.getElementById('timeDisplay').textContent =
+                    `0:00 / ${formatTime(audio.duration)}`;
+            });
+
+            audio.addEventListener('ended', () => {
+                clearInterval(syncInterval);
+                document.getElementById('status').textContent = 'Complete';
+                document.getElementById('pauseBtn').disabled = true;
+            });
+
+            audio.addEventListener('error', (e) => {
+                document.getElementById('status').textContent = 'Audio load error - check file path';
+                console.error('Audio error:', e);
+            });
 
             // Controls
             document.getElementById('startBtn').addEventListener('click', startPresentation);
             document.getElementById('pauseBtn').addEventListener('click', togglePause);
             document.getElementById('restartBtn').addEventListener('click', restartPresentation);
-            document.getElementById('testVoiceBtn').addEventListener('click', testVoice);
-            document.getElementById('debugBtn').addEventListener('click', () => {
-                document.getElementById('debugPanel').classList.toggle('visible');
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (!isPlaying) {
+                        startPresentation();
+                    } else {
+                        togglePause();
+                    }
+                }
             });
         });
     </script>

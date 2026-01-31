@@ -37,21 +37,33 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 ## Benchmark Results
 
-Evaluated against 16 SME-validated clinical transcripts, comparing MedGemma extraction vs. rule-based baseline:
+Evaluated against 181 independently annotated entities from 15 clinical transcripts, comparing MedGemma extraction vs. rule-based baseline:
 
-| Entity Type | MedGemma F1 | Baseline F1 | Improvement |
-|-------------|-------------|-------------|-------------|
-| Conditions | 100% | 36.9% | **+171%** |
-| Medications | 100% | 73.9% | **+35%** |
-| Vital Signs | 100% | 84.2% | **+19%** |
-| Orders | 100% | 20.3% | **+393%** |
-| **Average** | **100%** | **30.8%** | **+225%** |
+| Entity Type | MedGemma F1 | Baseline F1 | Delta |
+|-------------|-------------|-------------|-------|
+| Conditions | 68% | 56% | **+12%** |
+| Medications | 83% | 69% | **+14%** |
+| Allergies | 89% | 0% | **+89%** |
+| Family History | 80% | 0% | **+80%** |
+| **Overall** | **66%** | **55%** | **+11%** |
+
+### What This Means in Plain Terms
+
+**F1 Score** measures how well the system finds the right information. It balances two questions:
+- **Did it find everything?** (Recall) — Out of all the items that should be extracted, how many did it actually find?
+- **Was it accurate?** (Precision) — Out of everything it extracted, how much was correct?
+
+**In practical terms:**
+- MedGemma correctly extracts **about 2 out of 3** clinical entities from physician dictation
+- The simple rule-based system only gets **about 1 out of 2** correct
+- For allergies and family history, rule-based extraction **completely fails** (0%) while MedGemma succeeds (80-89%)
+
+**Why this matters:** A physician dictating "patient is allergic to penicillin, father had heart attack at 55" will have both items captured by MedGemma. Rule-based regex patterns miss them entirely.
 
 See [BENCHMARKS.md](BENCHMARKS.md) for detailed methodology and results.
 
-**Clinical Impact:**
+**Projected Clinical Impact:**
 - 13 minutes saved per patient encounter
-- 45% reduction in medication documentation errors
 - $202,500 annual value per physician
 
 See [docs/IMPACT_ANALYSIS.md](docs/IMPACT_ANALYSIS.md) for full impact analysis.

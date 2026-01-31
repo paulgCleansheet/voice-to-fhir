@@ -1,0 +1,46 @@
+Voice-to-Health-Record: Clinical Documentation Extraction with MedGemma
+Duration: 2 minutes 30 seconds
+
+---
+
+Physicians spend four and a half hours every day on documentation. More time than they spend with patients. This is Voice to Health Record, a clinical extraction pipeline powered by Google's MedGemma.
+
+...
+
+The problem is a translation gap. Clinicians speak naturally, but EHRs need structured data with ICD-10 codes and RxNorm identifiers. Manual data entry is slow, error-prone, and burns out physicians.
+
+...
+
+Let me show you the working system. I'll start the server with Docker Compose. The server is now running.
+
+...
+
+Here's a cardiology consultation. A 48 year old male with chest pain, on aspirin. The physician orders a stress test and starts statin therapy.
+
+...
+
+I'll send this to the extraction API. In under three seconds, MedGemma extracts the complete clinical picture.
+
+...
+
+Notice the ICD-10 code for angina, the RxNorm code for aspirin verified against the national database, and the automated order extraction. Stress test, echo, and statin therapy.
+
+...
+
+Now I'll transform this to a FHIR R4 Bundle. Ready for Epic, Cerner, or any FHIR server. We also support CDA and HL7 version 2.
+
+...
+
+We benchmarked against regex-based extraction using 181 human-annotated entities. MedGemma achieves 66% F1, an 11 point improvement over baseline. Critically, MedGemma catches allergies and family history that rule-based systems completely miss.
+
+...
+
+The projected impact: thirteen minutes saved per patient, over two hundred thousand dollars annual value per physician.
+
+...
+
+Deploys to the cloud at three cents per extraction, or on-premises for complete HIPAA compliance.
+
+...
+
+Voice to Health Record. Open source. Because physicians should spend their time with patients, not paperwork.
