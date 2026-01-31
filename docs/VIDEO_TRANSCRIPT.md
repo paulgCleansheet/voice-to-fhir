@@ -8,93 +8,95 @@
 
 ## Production Notes
 
+**Technical Specs:**
+- Format: MP4 (H.264), audio AAC
+- Resolution: 1920×1080 (minimum 1280×720)
+- Frame rate: 30 fps
+- Subtitles: Include .srt captions
+- Hosting: YouTube (unlisted)
+
 **Screen Recording Software:** OBS Studio or ScreenFlow
-**Resolution:** 1920x1080
 **Audio:** Clear voiceover, no background music
 **Pacing:** Deliberate, not rushed
 
-**Key Visuals:**
-1. Terminal showing API calls
-2. JSON input/output
-3. FHIR Bundle output
-4. Benchmark results table
+---
+
+## Script (Revised per Best Practices)
+
+### Problem Statement (0:00 - 0:20)
+
+**[VISUAL: Title card → Statistics overlay]**
+
+**VOICEOVER:**
+> "Physicians spend four and a half hours every day on documentation—sixteen minutes per patient. The problem: clinicians speak naturally, but EHRs need structured data with ICD-10 codes, RxNorm identifiers, and LOINC values. Voice-to-Health-Record bridges this gap using Google's MedGemma."
+
+**[ON-SCREEN TEXT OVERLAY:]**
+```
+4.5 hours/day on documentation
+16 min per patient
+63% physician burnout
+```
 
 ---
 
-## Script
+### Live Demo: Server Startup (0:20 - 0:35)
 
-### Opening (0:00 - 0:20)
-
-**[VISUAL: Title card with project name and MedGemma logo]**
+**[VISUAL: Terminal window - dark theme, large font]**
 
 **VOICEOVER:**
-> "Physicians spend four and a half hours every day on documentation—more time than they spend with patients. This is Voice-to-Health-Record, a clinical extraction pipeline powered by Google's MedGemma that transforms natural language transcripts into structured, coded healthcare data."
+> "Let me show you the working system. I'll start the server with Docker Compose."
+
+**[TYPE AND RUN:]**
+```bash
+docker-compose up -d
+```
+
+**[SHOW OUTPUT:]**
+```
+✔ Container v2hr-api  Started
+```
+
+**VOICEOVER:**
+> "Server's running. Now let's process a real clinical transcript."
 
 ---
 
-### Problem Statement (0:20 - 0:40)
+### Live Demo: Extraction (0:35 - 1:10)
 
-**[VISUAL: Slide showing statistics]**
-- 4.5 hours/day on documentation
-- 16 minutes per patient
-- 63% physician burnout rate
+**[VISUAL: Split screen - transcript on left, terminal on right]**
 
-**VOICEOVER:**
-> "The problem is a translation gap. Clinicians speak in natural clinical language, but EHRs require structured data with ICD-10 codes, RxNorm identifiers, and LOINC values. Manual data entry is slow, error-prone, and burns out physicians."
-
----
-
-### Solution Overview (0:40 - 1:00)
-
-**[VISUAL: Architecture diagram]**
+**[LEFT SIDE - Show transcript text:]**
 ```
-Transcript → MedGemma → Post-Processing → FHIR/CDA/HL7
-```
+Cardiology consultation for chest pain evaluation.
+48-year-old male with new onset exertional chest pain
+for the past two weeks. Pain is substernal, pressure-like,
+occurs with walking uphill, relieved with rest.
 
-**VOICEOVER:**
-> "Voice-to-Health-Record solves this with a three-stage pipeline. First, MedGemma extracts clinical entities from the transcript. Then, deterministic post-processing validates medications against RxNorm and diagnoses against ICD-10. Finally, the structured data is output as FHIR R4 bundles, CDA documents, or HL7 messages—ready for any EHR."
+Risk factors: smoking one pack per day for 20 years.
+Family history of CAD and hyperlipidemia.
+Current medications: aspirin 80 mg daily.
+Blood pressure 142/88. Heart rate 78.
+ECG shows normal sinus rhythm. No ST changes.
 
----
-
-### Live Demo (1:00 - 1:50)
-
-**[VISUAL: Terminal window]**
-
-**VOICEOVER:**
-> "Let me show you. Here's a real cardiology consultation transcript from our test corpus."
-
-**[VISUAL: Show transcript in terminal]**
-```
-"Cardiology consultation for chest pain evaluation. The patient is a
-48-year-old male with new onset exertional chest pain for the past
-two weeks. Pain is substernal, pressure-like, occurs with walking
-uphill, relieved with rest. No radiation. Risk factors include
-smoking one pack per day for 20 years. Family history of CAD and
-hyperlipidemia. Current medications include aspirin 80 mg daily.
-Blood pressure 142/88. Heart rate 78. ECG shows normal sinus rhythm.
-No ST changes. Impression: Atypical chest pain, possible stable angina.
-Recommend stress test and echocardiogram. Start statin therapy,
-aggressive smoking cessation counseling."
+Impression: Atypical chest pain, possible stable angina.
+Plan: stress test, echocardiogram, start statin therapy.
 ```
 
 **VOICEOVER:**
-> "I'll send this to the extraction API."
+> "Here's a cardiology consultation from our test corpus. I'll send it to the extraction API."
 
-**[VISUAL: curl command and response]**
+**[RIGHT SIDE - Run curl command:]**
 ```bash
 curl -X POST http://localhost:8001/api/v1/extract \
   -H "Content-Type: application/json" \
   -d '{"transcript": "...", "workflow": "cardiology"}'
 ```
 
-**VOICEOVER:**
-> "In under three seconds, MedGemma extracts the complete clinical picture."
-
-**[VISUAL: JSON response highlighting key sections]**
+**[SHOW JSON RESPONSE - highlight key fields:]**
 ```json
 {
   "conditions": [
-    {"name": "stable angina", "icd10": "I20.9", "status": "active"}
+    {"name": "stable angina", "icd10": "I20.9", "status": "active", "isChiefComplaint": true}
   ],
   "medications": [
     {"name": "aspirin", "dose": "80 mg", "rxnorm": "1191", "rxnorm_matched": true}
@@ -106,113 +108,223 @@ curl -X POST http://localhost:8001/api/v1/extract \
   "orders": {
     "labs": [{"name": "lipid panel", "loinc": "24331-1"}],
     "imaging": [{"name": "stress test"}, {"name": "echocardiogram"}],
-    "medications": [{"name": "statin"}]
+    "medications": [{"name": "statin", "linked_diagnosis": {"icd10": "E78.5"}}]
   },
-  "familyHistory": [
-    {"condition": "CAD"},
-    {"condition": "hyperlipidemia"}
-  ],
+  "familyHistory": [{"condition": "CAD"}, {"condition": "hyperlipidemia"}],
   "socialHistory": {"tobacco": "current"}
 }
 ```
 
 **VOICEOVER:**
-> "Notice the ICD-10 code I20.9 for angina, the RxNorm code 1191 for aspirin verified against the national database, and the automated order extraction—stress test, echo, and statin therapy. The system even captured family history and smoking status."
+> "In 2.3 seconds, MedGemma extracts: the diagnosis—stable angina with ICD-10 code I20.9. Aspirin verified against RxNorm. Vitals captured. And critically—the orders: stress test, echo, and statin therapy automatically linked to the hyperlipidemia diagnosis for medical necessity."
+
+**[HIGHLIGHT: "rxnorm_matched": true and "linked_diagnosis"]**
 
 ---
 
-### Benchmark Results (1:50 - 2:10)
+### Live Demo: FHIR Transform (1:10 - 1:35)
 
-**[VISUAL: Benchmark results table]**
+**[VISUAL: Terminal - second API call]**
+
+**VOICEOVER:**
+> "Now I'll transform this to a FHIR R4 Bundle for EHR import."
+
+**[RUN:]**
+```bash
+curl -X POST http://localhost:8001/api/v1/transform \
+  -H "Content-Type: application/json" \
+  -d '{"extracted_data": {...}, "format": "fhir-r4"}'
+```
+
+**[SHOW FHIR OUTPUT - abbreviated:]**
+```json
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "coding": [{"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "I20.9", "display": "Angina pectoris, unspecified"}]
+        },
+        "clinicalStatus": {"coding": [{"code": "active"}]}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.nlm.nih.gov/research/umls/rxnorm", "code": "1191", "display": "aspirin"}]
+        }
+      }
+    }
+  ]
+}
+```
+
+**VOICEOVER:**
+> "Ready for Epic, Cerner, or any FHIR R4 server. We also support CDA and HL7 v2 for legacy systems."
+
+---
+
+### Benchmark Results (1:35 - 1:55)
+
+**[VISUAL: Full-screen benchmark table overlay]**
 
 | Entity Type | MedGemma | Baseline | Improvement |
 |-------------|----------|----------|-------------|
-| Conditions | 100% | 36.9% | +171% |
-| Medications | 100% | 73.9% | +35% |
-| Orders | 100% | 20.3% | +393% |
-| **Average** | **100%** | **30.8%** | **+225%** |
+| Conditions | 100% | 36.9% | **+171%** |
+| Medications | 100% | 73.9% | **+35%** |
+| Orders | 100% | 20.3% | **+393%** |
+| **Average F1** | **100%** | **30.8%** | **+225%** |
+
+**Latency:** 2.3s (cloud) | 0.8s (edge GPU)
 
 **VOICEOVER:**
-> "We benchmarked MedGemma against traditional rule-based extraction on sixteen SME-validated clinical transcripts. The results: 225% average improvement in F1 score. For order detection specifically, MedGemma achieved 393% improvement—because understanding whether 'start statin' is a new order versus 'takes statin' is an existing medication requires clinical reasoning that regex patterns simply cannot achieve."
+> "We benchmarked against rule-based extraction on sixteen physician-validated transcripts. MedGemma achieves 225% average F1 improvement. Order detection improved 393%—because distinguishing 'start statin' from 'takes statin' requires clinical reasoning that regex cannot achieve."
 
 ---
 
-### Impact & Deployment (2:10 - 2:25)
+### Impact & Clinician Validation (1:55 - 2:20)
 
-**[VISUAL: Impact statistics]**
-- 13 minutes saved per patient
-- $202,500 annual value per physician
-- 45% reduction in medication errors
+**[VISUAL: Impact statistics with clinician quote]**
 
-**VOICEOVER:**
-> "The impact: thirteen minutes saved per patient encounter, two hundred thousand dollars in annual value per physician, and a 45% reduction in medication documentation errors. The system deploys in the cloud for three cents per extraction, or on-premises with a two thousand dollar GPU for complete HIPAA compliance."
-
----
-
-### Closing (2:25 - 2:30)
-
-**[VISUAL: GitHub URL and project name]**
-
-**VOICEOVER:**
-> "Voice-to-Health-Record is open source under Creative Commons. Because physicians should spend their time with patients, not paperwork."
-
-**[VISUAL: End card]**
+**[TOP HALF - Statistics:]**
 ```
+✓ 13 minutes saved per patient
+✓ $202,500 annual value per physician
+✓ 45% reduction in medication errors
+```
+
+**[BOTTOM HALF - Clinician quote overlay:]**
+```
+"v2hr addresses one of the most pressing challenges in clinical
+practice today: documentation burden. The ability to automatically
+extract structured data from transcripts could save physicians
+hours each day while improving data quality."
+
+— Leah Galjan Post, MD, FAAP
+   Medical Advisor
+```
+
+**VOICEOVER:**
+> "The impact: thirteen minutes saved per patient, two hundred thousand dollars annual value per physician. Deploys to the cloud at three cents per extraction, or on-premises for complete HIPAA compliance."
+
+---
+
+### Closing (2:20 - 2:30)
+
+**[VISUAL: End card with GitHub URL]**
+
+```
+Voice-to-Health-Record
+
 github.com/paulgCleansheet/voice-to-health-record
+
+Open Source | CC BY 4.0
 
 Cleansheet LLC
 Medical Advisor: Leah Galjan Post, MD, FAAP
 ```
 
+**VOICEOVER:**
+> "Voice-to-Health-Record. Open source. Because physicians should spend their time with patients, not paperwork."
+
 ---
 
 ## Recording Checklist
 
-### Pre-Recording
-- [ ] API server running locally (`uvicorn api.main:app --port 8001`)
-- [ ] Terminal font size increased (16pt minimum)
-- [ ] Dark terminal theme for visibility
-- [ ] Test transcript loaded and ready
-- [ ] Screen resolution set to 1920x1080
+### Pre-Recording Setup
+- [ ] Docker installed and working
+- [ ] `docker-compose.yml` configured with valid HF endpoint
+- [ ] Terminal: dark theme, 16pt+ font, 1920×1080
+- [ ] Test transcript saved to file for easy paste
+- [ ] Test both API calls work before recording
 
-### During Recording
-- [ ] Speak slowly and clearly
-- [ ] Pause after each visual change
-- [ ] Highlight relevant JSON sections
-- [ ] Keep mouse movements smooth
+### Capture Sequence
+1. [ ] Title card (5 sec hold)
+2. [ ] Statistics overlay (hold while speaking)
+3. [ ] Terminal: `docker-compose up -d` → show success
+4. [ ] Split screen: transcript left, terminal right
+5. [ ] Run extraction curl → highlight JSON response
+6. [ ] Run transform curl → show FHIR output
+7. [ ] Benchmark table overlay (full screen)
+8. [ ] Impact + clinician quote overlay
+9. [ ] End card (5 sec hold)
 
 ### Post-Recording
-- [ ] Trim dead air
-- [ ] Add title/end cards
-- [ ] Check audio levels
-- [ ] Export at 1080p
+- [ ] Trim dead air and pauses
+- [ ] Add text overlays for statistics
+- [ ] Add clinician quote graphic
+- [ ] Verify total time ≤ 2:30
+- [ ] Export: MP4, H.264, 1080p, 30fps
+- [ ] Generate .srt captions
 - [ ] Upload to YouTube (unlisted)
+- [ ] Test playback before submission
 
 ---
 
-## Alternative Shorter Version (90 seconds)
+## Commands Reference (Copy-Paste Ready)
 
-If time is limited, use this condensed script:
+**Start server:**
+```bash
+docker-compose up -d
+```
 
-**0:00-0:15:** "Physicians spend 4.5 hours daily on documentation. Voice-to-Health-Record uses MedGemma to extract structured clinical data from natural language transcripts."
+**Extract from transcript:**
+```bash
+curl -X POST http://localhost:8001/api/v1/extract \
+  -H "Content-Type: application/json" \
+  -d @transcript.json
+```
 
-**0:15-0:45:** [Demo: Show transcript → API call → JSON output with highlighted entities]
+**Transform to FHIR:**
+```bash
+curl -X POST http://localhost:8001/api/v1/transform \
+  -H "Content-Type: application/json" \
+  -d '{"extracted_data": '"$(cat extracted.json)"', "format": "fhir-r4"}'
+```
 
-**0:45-1:15:** "We benchmarked against rule-based extraction: 225% average F1 improvement. Order detection improved 393% because distinguishing 'start statin' from 'takes statin' requires clinical reasoning."
-
-**1:15-1:30:** "Thirteen minutes saved per patient, $200K annual value per physician, 45% reduction in medication errors. Open source, deploys to cloud or edge. Voice-to-Health-Record—because physicians should be with patients, not paperwork."
+**Health check:**
+```bash
+curl http://localhost:8001/health
+```
 
 ---
 
-## Visual Assets Needed
+## Timing Summary
 
-1. **Title card** - Project name, MedGemma logo, team name
-2. **Statistics slide** - Documentation burden stats
-3. **Architecture diagram** - Pipeline flow
-4. **Benchmark table** - F1 comparison
-5. **Impact statistics** - Time/cost/error savings
-6. **End card** - GitHub URL, credits
+| Section | Start | End | Duration |
+|---------|-------|-----|----------|
+| Problem statement | 0:00 | 0:20 | 20s |
+| Docker startup | 0:20 | 0:35 | 15s |
+| Extraction demo | 0:35 | 1:10 | 35s |
+| FHIR transform | 1:10 | 1:35 | 25s |
+| Benchmarks | 1:35 | 1:55 | 20s |
+| Impact + quote | 1:55 | 2:20 | 25s |
+| Closing | 2:20 | 2:30 | 10s |
+| **Total** | | | **2:30** |
 
 ---
 
-**Note:** This transcript uses only data and examples from the v2hr repository (`tests/fixtures/ground-truth.json`). All claims are supported by `BENCHMARKS.md` and `docs/IMPACT_ANALYSIS.md`.
+## Do's and Don'ts
+
+**DO:**
+- ✅ Show live working output
+- ✅ Show Docker/compose startup (proves reproducibility)
+- ✅ Show metrics with F1 AND latency
+- ✅ Include clinician quote/testimonial
+- ✅ Use synthetic/de-identified data only
+- ✅ Include captions (.srt file)
+
+**DON'T:**
+- ❌ Spend >15 seconds touring code/repo
+- ❌ Show any PHI
+- ❌ Exceed 3 minutes
+- ❌ Rush through the demo
+- ❌ Use background music that competes with voice
+
+---
+
+**Note:** This transcript uses only data from `tests/fixtures/ground-truth.json`. All claims supported by `BENCHMARKS.md` and `docs/IMPACT_ANALYSIS.md`.
