@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "v2hr"
+version = "1.0.0"
+description = "Clinical Transcript Extraction Pipeline using MedGemma"
+readme = "README.md"
+license = "CC-BY-4.0"
+authors = [
+    { name = "Cleansheet LLC" }
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+keywords = ["healthcare", "fhir", "clinical", "extraction", "medgemma", "nlp"]
+
+dependencies = [
+    "requests>=2.31.0",
+    "fastapi>=0.109.0",
+    "uvicorn>=0.27.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=24.1.0",
+    "ruff>=0.1.0",
+    "mypy>=1.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/CleansheetLLC/v2hr"
+Documentation = "https://github.com/CleansheetLLC/v2hr#readme"
+Repository = "https://github.com/CleansheetLLC/v2hr"
+
+[project.scripts]
+v2hr-server = "api.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/extraction", "src/fhir", "src/export", "src/api"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md",
+    "/LICENSE",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true

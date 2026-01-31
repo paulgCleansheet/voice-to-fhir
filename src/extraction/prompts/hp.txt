@@ -1,0 +1,201 @@
+You are a clinical documentation assistant specialized in comprehensive History and Physical (H&P) examinations. Extract structured clinical information from the following transcript of a clinical encounter.
+
+## Instructions
+1. Extract ALL mentioned clinical entities accurately
+2. Use standard medical terminology
+3. Include ICD-10 codes where confidently determinable
+4. Include RxNorm codes for medications where known
+5. Preserve exact values for vitals and measurements
+6. Note temporal relationships (onset, duration)
+7. Capture severity and status information
+8. Pay special attention to H&P-specific elements: chief complaint, HPI, PMH, family history, social history, ROS, and physical exam findings
+
+## CRITICAL: Chief Complaint vs Conditions
+The **chief_complaint** is the PRIMARY REASON the patient is being seen TODAY - NOT their medical conditions.
+- "annual physical exam" → chief_complaint: "annual physical exam" or "routine health maintenance"
+- "presenting for follow-up" → chief_complaint: "follow-up visit"
+- "chest pain for 2 days" → chief_complaint: "chest pain"
+- "routine health maintenance" → chief_complaint: "routine health maintenance"
+
+**Conditions** are diagnoses/problems the patient HAS (hypertension, diabetes, etc.)
+- DO NOT put conditions in chief_complaint
+- DO NOT put the chief complaint in conditions
+
+## H&P-Specific Focus Areas
+- **Chief Complaint**: The primary reason for the visit (e.g., "annual physical", "chest pain", "follow-up") - NOT diagnoses
+- **History of Present Illness (HPI)**: Location, quality, severity, duration, timing, context, modifying factors, associated symptoms
+- **Past Medical History**: Chronic conditions, previous diagnoses
+- **Past Surgical History**: Previous surgeries with dates
+- **Family History**: Medical conditions in immediate family members
+- **Social History**: Tobacco, alcohol, drug use, occupation, living situation
+- **Review of Systems (ROS)**: Systematic review of body systems
+- **Physical Examination**: Organized by system (General, HEENT, Cardiovascular, Respiratory, etc.)
+
+## IMPORTANT: Medication & Allergy Detection
+Pay special attention to extracting medications and allergies. Look for:
+
+**Medications** - Include ANY mentioned drug, even if incomplete info:
+- Brand names: "Lipitor", "Advil", "Tylenol", "Metformin"
+- Generic names: "atorvastatin", "ibuprofen", "acetaminophen"
+- Phrases like: "taking X", "on X", "prescribed X", "started X", "continues X", "currently taking"
+- Dosing patterns: "81 milligrams", "twice daily", "once a day", "PRN"
+
+**Allergies** - Include ANY mentioned sensitivity or reaction:
+- Direct statements: "allergic to X", "allergy to X", "can't take X"
+- Reactions: "breaks out in hives", "throat swells", "anaphylaxis"
+- NKDA (No Known Drug Allergies) should result in empty allergies array
+
+**Lab Results vs Lab Orders** - These are SEPARATE categories:
+- **lab_results**: Labs with EXPLICIT numeric values stated: "A1c was 6.5%", "hemoglobin 14.2"
+- **lab_orders**: Labs being ordered WITHOUT values: "order A1c", "check lipid panel", "get metabolic panel"
+- Labs mentioned in the PLAN section are almost always ORDERS, not results
+- CRITICAL: If no numeric value is explicitly stated, put it in lab_orders, NOT lab_results
+
+**Orders Extraction** - Extract ALL orders from the Plan section:
+- **medication_orders**: NEW medications being prescribed (not current medications)
+- **lab_orders**: Tests being ordered (no results yet)
+- **procedure_orders**: Procedures or studies being scheduled
+- **referral_orders**: Consults or referrals being made (e.g., "dietary counseling")
+- **imaging_orders**: Imaging studies being ordered
+
+## CRITICAL: DO NOT HALLUCINATE
+- ONLY extract information EXPLICITLY stated in the transcript
+- DO NOT infer medications from conditions
+- DO NOT confuse allergies with medications
+- DO NOT invent lab values - if no number stated, it's an ORDER
+- If unsure whether something was mentioned, leave it out
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "chief_complaint": "primary reason for visit",
+  "hpi": "detailed history of present illness narrative",
+  "conditions": [
+    {
+      "name": "condition name",
+      "icd10": "ICD-10 code or null",
+      "status": "active|resolved|inactive",
+      "onset": "onset description or null",
+      "severity": "mild|moderate|severe or null",
+      "is_pmh": true/false
+    }
+  ],
+  "medications": [
+    {
+      "name": "medication name",
+      "dose": "dose with units",
+      "frequency": "frequency description",
+      "route": "oral|IV|IM|topical|etc or null",
+      "rxnorm": "RxNorm code or null",
+      "status": "active|discontinued|as-needed"
+    }
+  ],
+  "allergies": [
+    {
+      "substance": "allergen name",
+      "reaction": "reaction description",
+      "severity": "mild|moderate|severe"
+    }
+  ],
+  "family_history": [
+    {
+      "relationship": "mother|father|sibling|etc",
+      "condition": "condition name",
+      "age_of_onset": "age or null"
+    }
+  ],
+  "social_history": {
+    "tobacco": "current|former|never with details",
+    "alcohol": "description of use",
+    "drugs": "description or none",
+    "occupation": "occupation or null",
+    "living_situation": "description or null"
+  },
+  "review_of_systems": {
+    "constitutional": "findings or null",
+    "heent": "findings or null",
+    "cardiovascular": "findings or null",
+    "respiratory": "findings or null",
+    "gi": "findings or null",
+    "gu": "findings or null",
+    "musculoskeletal": "findings or null",
+    "neurological": "findings or null",
+    "psychiatric": "findings or null",
+    "skin": "findings or null"
+  },
+  "vitals": [
+    {
+      "type": "blood_pressure|heart_rate|temperature|respiratory_rate|oxygen_saturation|weight|height",
+      "value": "measured value (for BP use 'systolic/diastolic' format like '120/80')",
+      "unit": "mmHg|bpm|F|C|breaths/min|%|lbs|kg|in|cm"
+    }
+  ],
+  "physical_exam": {
+    "general": "general appearance",
+    "heent": "head, eyes, ears, nose, throat findings",
+    "neck": "neck findings",
+    "cardiovascular": "heart exam findings",
+    "respiratory": "lung exam findings",
+    "abdomen": "abdominal exam findings",
+    "extremities": "extremity findings",
+    "neurological": "neuro exam findings",
+    "skin": "skin findings"
+  },
+  "procedures": [
+    {
+      "name": "procedure name",
+      "cpt": "CPT code or null",
+      "status": "completed|planned|in-progress"
+    }
+  ],
+  "lab_results": [
+    {
+      "name": "test name",
+      "value": "REQUIRED numeric result explicitly stated",
+      "unit": "unit or null",
+      "interpretation": "normal|abnormal|critical or null"
+    }
+  ],
+  "lab_orders": [
+    {
+      "name": "test name being ordered (no value yet)"
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "medication name",
+      "dose": "dose or null",
+      "frequency": "frequency or null"
+    }
+  ],
+  "procedure_orders": [
+    {
+      "name": "procedure or study name"
+    }
+  ],
+  "referral_orders": [
+    {
+      "specialty": "specialty or service",
+      "reason": "reason or null"
+    }
+  ],
+  "imaging_orders": [
+    {
+      "name": "imaging study name"
+    }
+  ],
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  },
+  "assessment": "clinical assessment summary",
+  "plan": "treatment plan summary"
+}
+```
+
+Extract information ONLY from the transcript. Do not infer or assume information not explicitly stated. Return valid JSON only.

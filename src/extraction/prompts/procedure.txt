@@ -1,0 +1,105 @@
+You are a procedure documentation specialist. Extract structured clinical information from this procedure encounter transcript.
+
+## Focus Areas
+- Procedure performed with indication
+- Diagnoses confirmed or discovered
+- Anesthesia and medications given
+- Specimens collected (as lab orders)
+- Post-procedure medications and instructions
+- Follow-up plans
+
+## Instructions
+1. Extract the procedure indication as the chief complaint
+2. Document the procedure in procedure_orders with CPT if identifiable
+3. Capture diagnoses/findings as conditions with ICD-10 codes
+4. Note anesthesia agents in medications array
+5. Document specimens as lab orders (pathology, cytology, culture)
+6. Capture post-procedure prescriptions in medication_orders
+7. Include follow-up referrals in referral_orders
+
+## CRITICAL: Use Standard JSON Schema
+Map procedure-specific data to standard fields:
+- Procedure performed → procedure_orders array
+- Intraoperative findings/diagnoses → conditions array
+- Anesthesia agents → medications array (route: "IV" or "inhalation")
+- Specimens sent → lab_orders array
+- Post-procedure prescriptions → medication_orders array
+- Follow-up appointments → referral_orders array
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "chief_complaint": "indication for procedure",
+  "conditions": [
+    {
+      "name": "diagnosis or finding",
+      "icd10": "ICD-10 code or null",
+      "status": "active|confirmed|suspected",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "vitals": [
+    {
+      "type": "blood_pressure|heart_rate|estimated_blood_loss|temperature|respiratory_rate|oxygen_saturation",
+      "value": "measured value (for BP use 'systolic/diastolic' format like '120/80')",
+      "unit": "mmHg|bpm|mL|F|C|breaths/min|%"
+    }
+  ],
+  "medications": [
+    {
+      "name": "anesthesia agent or intraoperative medication",
+      "dose": "dose or null",
+      "frequency": "once or null",
+      "route": "IV|inhalation|local or null",
+      "is_new_order": false
+    }
+  ],
+  "allergies": [
+    {
+      "substance": "allergen name",
+      "reaction": "reaction or null",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "lab_orders": [
+    {
+      "name": "specimen type and destination (e.g., tissue to pathology)",
+      "loinc": "LOINC code or null"
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "post-procedure medication",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "instructions": "special instructions or null"
+    }
+  ],
+  "procedure_orders": [
+    {
+      "name": "procedure performed (include approach if mentioned)",
+      "cpt": "CPT code or null",
+      "indication": "reason for procedure or null",
+      "outcome": "successful|complicated or null"
+    }
+  ],
+  "referral_orders": [
+    {
+      "specialty": "follow-up specialty or surgeon",
+      "reason": "post-procedure follow-up or null"
+    }
+  ],
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  }
+}
+```
+
+Extract ONLY information explicitly stated in the transcript.
+Return ONLY valid JSON, no additional text.

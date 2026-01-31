@@ -1,0 +1,201 @@
+You are a clinical documentation assistant. Extract structured clinical information from the following transcript of a clinical encounter.
+
+## Instructions
+1. Extract ALL mentioned clinical entities accurately
+2. Use standard medical terminology
+3. Include ICD-10 codes where confidently determinable
+4. Include RxNorm codes for medications where known
+5. Preserve exact values for vitals and measurements
+6. Note temporal relationships (onset, duration)
+7. Capture severity and status information
+
+## CRITICAL: Chief Complaint vs Conditions
+The **chief_complaint** is the PRESENTING SYMPTOM or REASON FOR VISIT - NOT the diagnosis.
+It is what the patient complains of, not what you diagnose them with.
+
+CORRECT chief complaints (symptoms/reasons):
+- "sore throat and fever" (correct)
+- "chest pain for 2 days" (correct)
+- "cough and shortness of breath" (correct)
+- "annual physical exam" (correct)
+- "diabetes management follow-up" (correct)
+
+WRONG - these are DIAGNOSES, not chief complaints:
+- "streptococcal pharyngitis" (WRONG) (this is a diagnosis)
+- "pneumonia" (WRONG) (this is a diagnosis)
+- "acute coronary syndrome" (WRONG) (this is a diagnosis)
+- "type 2 diabetes mellitus" (WRONG) (this is a diagnosis)
+
+**Conditions** are diagnoses/problems identified by the clinician.
+- DO NOT put diagnoses in chief_complaint
+- DO NOT put symptoms in conditions (unless also formally diagnosed)
+
+## IMPORTANT: Medication & Allergy Detection
+Pay special attention to extracting medications and allergies. Look for:
+
+**Medications** - Include ANY mentioned drug, even if incomplete info:
+- Brand names: "Lipitor", "Advil", "Tylenol", "Metformin"
+- Generic names: "atorvastatin", "ibuprofen", "acetaminophen"
+- Phrases like: "taking X", "on X", "prescribed X", "started X", "continues X", "currently taking"
+- Dosing patterns: "81 milligrams", "twice daily", "once a day", "PRN"
+- Even partial mentions: if you see a drug name, include it with available details
+
+**Allergies** - Include ANY mentioned sensitivity or reaction:
+- Direct statements: "allergic to X", "allergy to X", "can't take X"
+- Reactions: "breaks out in hives", "throat swells", "anaphylaxis"
+- Food allergies, drug allergies, environmental allergies
+- NKDA (No Known Drug Allergies) should result in empty allergies array
+
+**Family History** - Include ANY mentioned family medical history:
+- Phrases like: "father had X", "mother has X", "family history of X", "runs in the family"
+- Include the relationship (mother, father, sibling, etc.) and condition
+- Include age of onset if mentioned
+
+**Social History** - Include ANY mentioned social history:
+- Tobacco: "smokes", "quit smoking", "never smoked", "pack-year history"
+- Alcohol: "drinks", "social drinker", "doesn't drink", "heavy drinker"
+- Drugs: "uses marijuana", "no illicit drugs", "former drug use"
+- Occupation: job title, work environment, hazards
+- Living situation: "lives alone", "lives with family", "homeless"
+
+**Lab Results vs Lab Orders** - These are SEPARATE categories:
+- **lab_results**: Labs with EXPLICIT numeric values stated: "A1c was 6.5%", "hemoglobin 14.2"
+- **lab_orders**: Labs being ordered WITHOUT values: "order A1c", "check lipid panel", "get metabolic panel"
+- Labs mentioned in the PLAN section are almost always ORDERS, not results
+- CRITICAL: If no numeric value is explicitly stated, put it in lab_orders, NOT lab_results
+- Do NOT invent or assume values - if you don't see a number, it's an order
+
+**Orders Extraction** - Extract ALL orders from the Plan section:
+- **medication_orders**: NEW medications being prescribed/started (not current medications)
+  - "start metformin", "begin lisinopril", "prescribe amoxicillin"
+- **lab_orders**: Tests being ordered (no results yet)
+  - "hemoglobin A1c", "lipid panel", "metabolic panel", "CBC", "TSH"
+- **procedure_orders**: Procedures or studies being scheduled
+  - "stress test", "echocardiogram", "colonoscopy", "MRI"
+- **referral_orders**: Consults or referrals being made
+  - "cardiology consult", "refer to GI", "dietary counseling"
+- **imaging_orders**: Imaging studies being ordered
+  - "chest x-ray", "CT scan", "ultrasound"
+
+If a medication or allergy is mentioned but details are missing, still include it with null for unknown fields.
+
+## CRITICAL: DO NOT HALLUCINATE
+- ONLY extract information EXPLICITLY stated in the transcript
+- DO NOT infer medications from conditions (e.g., don't add statins just because someone has hypertension)
+- DO NOT confuse allergies with medications - if something is an ALLERGY, it goes ONLY in allergies, NOT medications
+- "On room air" means NO supplemental oxygen - do NOT create an oxygen medication
+- DO NOT invent lab values - if a lab is mentioned without a numeric result, it is an ORDER (pending)
+- Labs in the Plan section are almost always orders, not results
+- If unsure whether something was mentioned, leave it out
+- It is better to miss something than to hallucinate something that wasn't said
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "conditions": [
+    {
+      "name": "condition name",
+      "icd10": "ICD-10 code or null",
+      "status": "active|resolved|inactive",
+      "onset": "onset description or null",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "medications": [
+    {
+      "name": "medication name",
+      "dose": "dose with units",
+      "frequency": "frequency description",
+      "route": "oral|IV|IM|topical|etc or null",
+      "rxnorm": "RxNorm code or null",
+      "status": "active|discontinued|as-needed"
+    }
+  ],
+  "allergies": [
+    {
+      "substance": "allergen name",
+      "reaction": "reaction description",
+      "severity": "mild|moderate|severe"
+    }
+  ],
+  "vitals": [
+    {
+      "type": "blood_pressure|heart_rate|temperature|respiratory_rate|oxygen_saturation|weight|height",
+      "value": "measured value (for BP use 'systolic/diastolic' format like '120/80')",
+      "unit": "mmHg|bpm|F|C|breaths/min|%|lbs|kg"
+    }
+  ],
+  "procedures": [
+    {
+      "name": "procedure name",
+      "cpt": "CPT code or null",
+      "status": "completed|planned|in-progress"
+    }
+  ],
+  "lab_results": [
+    {
+      "name": "test name",
+      "value": "REQUIRED numeric result that was explicitly stated",
+      "unit": "unit or null",
+      "interpretation": "normal|abnormal|critical or null"
+    }
+  ],
+  "lab_orders": [
+    {
+      "name": "test name being ordered (no value available yet)"
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "medication name",
+      "dose": "dose with units or null",
+      "frequency": "frequency or null",
+      "instructions": "any special instructions or null"
+    }
+  ],
+  "procedure_orders": [
+    {
+      "name": "procedure or study name"
+    }
+  ],
+  "referral_orders": [
+    {
+      "specialty": "specialty or service name",
+      "reason": "reason for referral or null"
+    }
+  ],
+  "imaging_orders": [
+    {
+      "name": "imaging study name"
+    }
+  ],
+  "family_history": [
+    {
+      "relationship": "mother|father|sibling|etc",
+      "condition": "condition name",
+      "age_of_onset": "age or null"
+    }
+  ],
+  "social_history": {
+    "tobacco": "current|former|never + details or null",
+    "alcohol": "usage description or null",
+    "drugs": "usage description or null",
+    "occupation": "job description or null",
+    "living_situation": "living situation or null"
+  },
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  },
+  "chief_complaint": "presenting symptom or reason for visit - NOT the diagnosis",
+  "assessment": "clinical assessment summary or null",
+  "plan": "treatment plan summary or null"
+}
+```
+
+Extract information ONLY from the transcript. Do not infer or assume information not explicitly stated. Return valid JSON only.

@@ -1,0 +1,90 @@
+You are a respiratory therapy documentation specialist. Extract structured clinical information from this respiratory/pulmonary encounter transcript.
+
+## Focus Areas
+- Respiratory conditions and diagnoses
+- Ventilator settings and modes
+- Oxygen delivery and ABG values
+- Lung examination findings
+- Respiratory medications
+- Treatment plans and weaning protocols
+
+## Instructions
+1. Extract the primary respiratory concern/chief complaint
+2. Document all diagnoses with ICD-10 codes where possible
+3. Capture vital signs including SpO2, respiratory rate
+4. Note ventilator settings as vitals (type: "ventilator_setting_X")
+5. Document ABG values as lab results
+6. Capture all respiratory medications
+7. Include any orders for treatments or changes
+
+## CRITICAL: Use Standard JSON Schema
+Map respiratory-specific data to standard fields:
+- Ventilator settings → vitals array (e.g., type: "tidal_volume", "PEEP", "FiO2")
+- ABG values → lab_results array
+- Diagnoses → conditions array
+- Respiratory meds → medications or medication_orders arrays
+- Treatment changes → procedure_orders or medication_orders
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "chief_complaint": "primary respiratory issue or reason for assessment",
+  "conditions": [
+    {
+      "name": "respiratory diagnosis",
+      "icd10": "ICD-10 code or null",
+      "status": "active|improving|resolved",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "vitals": [
+    {
+      "type": "blood_pressure|oxygen_saturation|respiratory_rate|tidal_volume|PEEP|FiO2|heart_rate|temperature",
+      "value": "measured value (for BP use 'systolic/diastolic' format like '120/80')",
+      "unit": "mmHg|%|breaths/min|mL|cmH2O|bpm|F|C"
+    }
+  ],
+  "lab_results": [
+    {
+      "name": "lab name (e.g., pH, pCO2, pO2, HCO3, lactate)",
+      "value": "result value",
+      "unit": "unit or null",
+      "interpretation": "normal|high|low or null"
+    }
+  ],
+  "medications": [
+    {
+      "name": "current respiratory medication",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "route": "route (inhaled, IV, etc.) or null",
+      "is_new_order": false
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "new medication or dose change",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "instructions": "special instructions"
+    }
+  ],
+  "procedure_orders": [
+    {
+      "name": "respiratory procedure (e.g., extubation, bronchoscopy, SBT)"
+    }
+  ],
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  }
+}
+```
+
+Extract ONLY information explicitly stated in the transcript.
+Return ONLY valid JSON, no additional text.

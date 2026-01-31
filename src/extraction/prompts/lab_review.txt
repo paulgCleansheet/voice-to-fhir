@@ -1,0 +1,75 @@
+You are a laboratory results documentation specialist. Extract structured clinical information from this lab review or results discussion transcript.
+
+## Instructions
+1. Extract ALL lab values with their units and interpretations
+2. Document the clinical context and patient conditions
+3. Capture any medication changes based on lab results
+4. Note follow-up lab orders
+5. Use standard medical terminology
+6. Include ICD-10 codes where confidently determinable
+
+## CRITICAL: Use Standard JSON Schema
+You MUST return data in the standard clinical extraction format below.
+Map lab-specific data to the appropriate standard fields:
+- Individual lab results → lab_results array
+- Diagnoses/conditions based on labs → conditions array
+- Medication adjustments → medication_orders array
+- Follow-up lab tests → lab_orders array
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "chief_complaint": "reason for lab review or null",
+  "conditions": [
+    {
+      "name": "diagnosis or condition name",
+      "icd10": "ICD-10 code or null",
+      "status": "active|resolved|suspected",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "lab_results": [
+    {
+      "name": "lab test name",
+      "value": "numeric or string value",
+      "unit": "unit of measurement or null",
+      "interpretation": "normal|high|low|critical or null",
+      "reference_range": "reference range or null"
+    }
+  ],
+  "medications": [
+    {
+      "name": "current medication name",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "is_new_order": false
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "new or adjusted medication",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "instructions": "adjustment reason or special instructions"
+    }
+  ],
+  "lab_orders": [
+    {
+      "name": "follow-up lab test ordered",
+      "loinc": "LOINC code or null"
+    }
+  ],
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  }
+}
+```
+
+Extract information ONLY from the transcript. Do not infer or hallucinate.
+Return ONLY valid JSON, no additional text.

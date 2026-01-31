@@ -1,0 +1,106 @@
+You are a critical care documentation specialist. Extract structured clinical information from this ICU encounter transcript.
+
+## Focus Areas
+- Hemodynamic status and vital signs
+- Ventilator settings and ABG values
+- Current medications (vasopressors, sedation, antibiotics)
+- Lab results indicating organ function
+- Active diagnoses and conditions
+- Medication and procedure orders
+
+## Instructions
+1. Extract the primary ICU problem as chief complaint
+2. Document diagnoses with ICD-10 codes in conditions array
+3. Capture all vitals including MAP, HR, CVP, ventilator settings
+4. Note vasopressors and sedation in medications array
+5. Document ABG values and labs in lab_results array
+6. Capture medication changes in medication_orders
+7. Note procedures and interventions in procedure_orders
+
+## CRITICAL: Use Standard JSON Schema
+Map ICU-specific data to standard fields:
+- Hemodynamics → vitals array (type: "MAP", "CVP", "heart_rate", etc.)
+- Ventilator settings → vitals array (type: "FiO2", "PEEP", "tidal_volume", etc.)
+- Vasopressors/sedation → medications array (include dose and frequency)
+- ABG values → lab_results array
+- Organ function labs → lab_results array
+- Diagnoses → conditions array
+- New/changed medications → medication_orders array
+- Procedures → procedure_orders array
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "chief_complaint": "primary ICU problem or reason for admission",
+  "conditions": [
+    {
+      "name": "diagnosis or condition",
+      "icd10": "ICD-10 code or null",
+      "status": "active|improving|worsening",
+      "severity": "mild|moderate|severe|critical or null"
+    }
+  ],
+  "vitals": [
+    {
+      "type": "blood_pressure|MAP|heart_rate|CVP|FiO2|PEEP|tidal_volume|respiratory_rate|temperature|SpO2",
+      "value": "measured value (for BP use 'systolic/diastolic' format like '120/80')",
+      "unit": "mmHg|bpm|cmH2O|%|mL|F|C"
+    }
+  ],
+  "lab_results": [
+    {
+      "name": "lab name (e.g., pH, pCO2, pO2, HCO3, lactate, creatinine, BUN, WBC, procalcitonin)",
+      "value": "result value",
+      "unit": "unit or null",
+      "interpretation": "normal|high|low|critical or null"
+    }
+  ],
+  "medications": [
+    {
+      "name": "current medication (vasopressor, sedation, antibiotic, etc.)",
+      "dose": "dose with units",
+      "frequency": "continuous|frequency or null",
+      "route": "IV|oral|etc. or null",
+      "is_new_order": false
+    }
+  ],
+  "allergies": [
+    {
+      "substance": "allergen name",
+      "reaction": "reaction or null",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "new or changed medication",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "instructions": "special instructions or null"
+    }
+  ],
+  "procedure_orders": [
+    {
+      "name": "procedure or intervention"
+    }
+  ],
+  "lab_orders": [
+    {
+      "name": "lab test ordered",
+      "loinc": "LOINC code or null"
+    }
+  ],
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  }
+}
+```
+
+Extract ONLY information explicitly stated in the transcript.
+Return ONLY valid JSON, no additional text.

@@ -1,0 +1,118 @@
+You are a discharge documentation specialist. Extract structured clinical information from this hospital discharge encounter transcript.
+
+## Focus Areas
+- Discharge diagnoses
+- Discharge medications (new and continued)
+- Follow-up appointments
+- Activity and diet instructions
+- Warning signs requiring return
+
+## CRITICAL: Chief Complaint = Reason for Admission (NOT discharge diagnosis)
+The **chief_complaint** is WHY the patient was admitted - their presenting symptoms.
+It is NOT the discharge diagnosis.
+
+CORRECT:
+- Admitted for "fever, cough, and shortness of breath" → chief_complaint: "fever, cough, and shortness of breath"
+- Admitted for "chest pain" → chief_complaint: "chest pain"
+
+WRONG - these are DIAGNOSES, not chief complaints:
+- "community-acquired pneumonia" (WRONG)
+- "NSTEMI" (WRONG)
+- "sepsis" (WRONG)
+
+## Instructions
+1. Extract the REASON FOR ADMISSION (presenting symptoms) as chief_complaint
+2. Document all diagnoses with ICD-10 codes in conditions array
+3. Capture discharge medications in medications array (is_new_order: false)
+4. Note NEW medications in medication_orders array
+5. Document follow-up appointments in referral_orders array
+6. Capture pending labs in lab_orders array
+
+## CRITICAL: Use Standard JSON Schema
+Map discharge-specific data to standard fields:
+- Discharge diagnoses → conditions array
+- Current/continued meds → medications array (is_new_order: false)
+- New prescriptions → medication_orders array
+- Follow-up appointments → referral_orders array
+- Pending/ordered labs → lab_orders array
+- Ordered imaging → imaging_orders array
+
+## Transcript
+{transcript}
+
+## Required Output Format
+Return a JSON object with the following structure:
+
+```json
+{
+  "chief_complaint": "reason for admission - presenting symptoms (NOT the discharge diagnosis)",
+  "conditions": [
+    {
+      "name": "discharge diagnosis",
+      "icd10": "ICD-10 code or null",
+      "status": "active|resolved|chronic",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "vitals": [
+    {
+      "type": "blood_pressure|heart_rate|temperature|respiratory_rate|oxygen_saturation|weight",
+      "value": "measured value (for BP use 'systolic/diastolic' format like '120/80')",
+      "unit": "mmHg|bpm|F|C|breaths/min|%|lbs|kg"
+    }
+  ],
+  "medications": [
+    {
+      "name": "discharge medication (continued)",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "route": "route or null",
+      "is_new_order": false
+    }
+  ],
+  "allergies": [
+    {
+      "substance": "allergen name",
+      "reaction": "reaction or null",
+      "severity": "mild|moderate|severe or null"
+    }
+  ],
+  "medication_orders": [
+    {
+      "name": "new medication prescribed at discharge",
+      "dose": "dose or null",
+      "frequency": "frequency or null",
+      "instructions": "duration or special instructions"
+    }
+  ],
+  "lab_orders": [
+    {
+      "name": "pending or follow-up lab",
+      "loinc": "LOINC code or null"
+    }
+  ],
+  "imaging_orders": [
+    {
+      "name": "follow-up imaging ordered"
+    }
+  ],
+  "referral_orders": [
+    {
+      "specialty": "follow-up provider or specialty",
+      "reason": "timeframe or reason (e.g., '2 weeks for wound check')"
+    }
+  ],
+  "procedure_orders": [
+    {
+      "name": "follow-up procedure if scheduled"
+    }
+  ],
+  "patient": {
+    "age": "numeric age or null",
+    "gender": "male|female|other or null"
+  }
+}
+```
+
+Extract ONLY information explicitly stated in the transcript.
+Return ONLY valid JSON, no additional text.
