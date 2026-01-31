@@ -59,16 +59,16 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 ```bash
 # Clone repository
-git clone https://github.com/[your-repo]/clinical-transcript-extraction.git
-cd clinical-transcript-extraction
+git clone https://github.com/paulgCleansheet/v2hr.git
+cd v2hr
 
 # Create virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
 # or: .venv\Scripts\activate  # Windows
 
-# Install dependencies
-pip install -r requirements.txt
+# Install package and dependencies
+pip install -e .
 ```
 
 ### Configuration
@@ -100,6 +100,21 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8001
 
 # Server will be available at http://localhost:8001
 # API documentation at http://localhost:8001/docs
+```
+
+### Docker (Alternative)
+
+```bash
+# Copy environment file and configure
+cp .env.example .env
+# Edit .env with your HuggingFace endpoint and token
+
+# Build and run with Docker Compose
+docker-compose up -d
+
+# Or build manually
+docker build -t v2hr .
+docker run -p 8001:8001 --env-file .env v2hr
 ```
 
 ## API Usage
@@ -210,22 +225,24 @@ The extraction output undergoes deterministic validation:
 ## Testing
 
 ```bash
-# Run extraction on sample transcript
-python -m pytest tests/ -v
+# Test the API health endpoint
+curl http://localhost:8001/health
 
-# Test with specific transcript file
-python scripts/test_extraction.py --input sample_transcript.txt
+# Test extraction with a sample transcript
+curl -X POST http://localhost:8001/api/v1/extract \
+  -H "Content-Type: application/json" \
+  -d '{"transcript": "55 year old male with hypertension on lisinopril 10mg daily.", "workflow": "general"}'
 ```
 
 ## Terminology Databases
 
-This project uses publicly available terminology databases:
+This project uses publicly available terminology databases embedded in the source code:
 
-- **RxNorm** — National Library of Medicine medication database
-- **ICD-10-CM** — CMS diagnosis code set
-- **LOINC** — Regenstrief Institute laboratory codes
+- **RxNorm** — National Library of Medicine medication database (common medications)
+- **ICD-10-CM** — CMS diagnosis code set (common diagnoses)
+- **LOINC** — Regenstrief Institute laboratory codes (common lab tests)
 
-Database files are included in `data/` or downloaded on first run.
+Terminology matching uses fuzzy string matching to handle variations in naming.
 
 ## Acknowledgments
 
