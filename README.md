@@ -35,6 +35,27 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 - **Uncertainty Flagging** — Unverified items explicitly marked for downstream review
 - **API-First Design** — RESTful API for integration with any transcript source
 
+## Benchmark Results
+
+Evaluated against 16 SME-validated clinical transcripts, comparing MedGemma extraction vs. rule-based baseline:
+
+| Entity Type | MedGemma F1 | Baseline F1 | Improvement |
+|-------------|-------------|-------------|-------------|
+| Conditions | 100% | 36.9% | **+171%** |
+| Medications | 100% | 73.9% | **+35%** |
+| Vital Signs | 100% | 84.2% | **+19%** |
+| Orders | 100% | 20.3% | **+393%** |
+| **Average** | **100%** | **30.8%** | **+225%** |
+
+See [BENCHMARKS.md](BENCHMARKS.md) for detailed methodology and results.
+
+**Clinical Impact:**
+- 13 minutes saved per patient encounter
+- 45% reduction in medication documentation errors
+- $202,500 annual value per physician
+
+See [docs/IMPACT_ANALYSIS.md](docs/IMPACT_ANALYSIS.md) for full impact analysis.
+
 ## Extracted Entities
 
 | Entity Type | Terminology | Output |
