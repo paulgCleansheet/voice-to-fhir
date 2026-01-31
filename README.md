@@ -59,8 +59,8 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 ```bash
 # Clone repository
-git clone https://github.com/paulgCleansheet/v2hr.git
-cd v2hr
+git clone https://github.com/paulgCleansheet/voice-to-health-record.git
+cd voice-to-health-record
 
 # Create virtual environment
 python -m venv .venv
@@ -113,8 +113,8 @@ cp .env.example .env
 docker-compose up -d
 
 # Or build manually
-docker build -t v2hr .
-docker run -p 8001:8001 --env-file .env v2hr
+docker build -t voice-to-health-record .
+docker run -p 8001:8001 --env-file .env voice-to-health-record
 ```
 
 ## API Usage

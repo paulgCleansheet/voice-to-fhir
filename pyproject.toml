@@ -41,9 +41,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/paulgCleansheet/v2hr"
-Documentation = "https://github.com/paulgCleansheet/v2hr#readme"
-Repository = "https://github.com/paulgCleansheet/v2hr"
+Homepage = "https://github.com/paulgCleansheet/voice-to-health-record"
+Documentation = "https://github.com/paulgCleansheet/voice-to-health-record#readme"
+Repository = "https://github.com/paulgCleansheet/voice-to-health-record"
 
 [project.scripts]
 v2hr-server = "api.main:main"
