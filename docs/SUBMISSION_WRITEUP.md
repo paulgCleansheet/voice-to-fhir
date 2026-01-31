@@ -68,33 +68,36 @@ Clinical Transcript → MedGemma Extraction → Terminology Validation → Multi
 
 ### Benchmark Results
 
-We evaluated v2hr against a rule-based baseline (regex pattern matching) on 16 SME-validated clinical transcripts:
+We evaluated v2hr against a rule-based baseline (regex pattern matching) on 181 independently annotated entities from 15 clinical transcripts:
 
-| Entity Type | MedGemma F1 | Baseline F1 | Improvement |
-|-------------|-------------|-------------|-------------|
-| Conditions | 100% | 36.9% | **+171%** |
-| Medications | 100% | 73.9% | **+35%** |
-| Orders | 100% | 20.3% | **+393%** |
-| **Average** | **100%** | **30.8%** | **+225%** |
+| Entity Type | MedGemma F1 | Baseline F1 | Delta |
+|-------------|-------------|-------------|-------|
+| Conditions | 68% | 56% | **+12%** |
+| Medications | 83% | 69% | **+14%** |
+| Allergies | 89% | 0% | **+89%** |
+| Family History | 80% | 0% | **+80%** |
+| **Overall** | **66%** | **55%** | **+11%** |
+
+**Key metric:** MedGemma recall (66%) significantly outperforms baseline (44%), a +22 percentage point improvement in entity detection.
 
 ### Why MedGemma Excels
 
-**Order Detection (+393%):** Rule-based extraction cannot reliably distinguish:
-- "Start lisinopril" (new order) vs. "takes lisinopril" (current medication)
-- "Order CBC" (lab order) vs. "CBC showed anemia" (lab result)
+**Complex Entity Recognition:** Rule-based extraction completely fails (0% F1) on:
+- Allergies: "allergic to penicillin" requires semantic understanding
+- Family history: "father had MI at 55" requires relationship parsing
 
-MedGemma's medical training enables clinical reasoning that regex patterns cannot achieve.
+MedGemma achieves 80-89% F1 on these entities that regex patterns cannot capture.
 
-**Condition Recognition (+171%):** MedGemma understands:
+**Contextual Understanding:** MedGemma understands:
 - Synonyms ("high blood pressure" = "hypertension" = I10)
-- Implied diagnoses ("chest pain with elevated troponin" → possible ACS)
-- Chief complaint identification from narrative context
+- Implied diagnoses from clinical context
+- Chief complaint identification from narrative
 
-**Complex Entities:** Rule-based approaches fail completely on allergies, family history, and social history—entities that require natural language understanding.
+**Honest Assessment:** Both systems struggle with order detection (30% vs 24% F1). Distinguishing "start lisinopril" from "takes lisinopril" remains challenging and represents an area for future improvement.
 
 ---
 
-## 4. Clinical Impact
+## 4. Projected Clinical Impact
 
 ### Time Savings
 
@@ -104,14 +107,16 @@ MedGemma's medical training enables clinical reasoning that regex patterns canno
 | Daily time saved (25 patients) | 5.4 hours |
 | Annual value per physician | $202,500 |
 
-### Error Reduction
+### Extraction Accuracy
 
-| Error Type | Reduction |
-|------------|-----------|
-| Medication documentation | 45% |
-| Diagnosis miscoding | 28% |
-| Missing allergies | 86% |
-| Incomplete orders | 78% |
+| Entity Type | MedGemma Accuracy | Baseline Comparison |
+|-------------|-------------------|---------------------|
+| Medications | 83% F1 | +14% over baseline |
+| Allergies | 89% F1 | Baseline fails (0%) |
+| Conditions | 68% F1 | +12% over baseline |
+| Overall | 66% F1 | +11% over baseline |
+
+*Note: All extractions require clinician review before EHR entry.*
 
 ### Health Equity
 
@@ -174,8 +179,8 @@ cp .env.example .env
 # Run API server
 uvicorn api.main:app --port 8001
 
-# Run benchmark
-python scripts/benchmark.py
+# Run benchmark (compares MedGemma vs baseline against human-annotated ground truth)
+python scripts/benchmark_v2_with_baseline.py
 ```
 
 **Repository:** https://github.com/paulgCleansheet/voice-to-health-record
@@ -187,14 +192,15 @@ python scripts/benchmark.py
 
 v2hr demonstrates that MedGemma can transform clinical documentation by:
 
-1. **Achieving 225% accuracy improvement** over rule-based extraction
-2. **Saving 13 minutes per patient** in documentation time
-3. **Enabling affordable automation** for underserved settings
-4. **Maintaining safety** through clinician-in-the-loop design
+1. **Achieving 66% F1 extraction accuracy** with +11% improvement over rule-based baseline
+2. **Capturing complex entities** (allergies, family history) that regex patterns completely miss
+3. **Saving an estimated 13 minutes per patient** in documentation time
+4. **Enabling affordable automation** for underserved settings
+5. **Maintaining safety** through clinician-in-the-loop design
 
-The hardest clinical NLP problems—order detection, diagnosis linking, context understanding—are exactly where medical language models like MedGemma provide the greatest value.
+The hardest clinical NLP problems—allergy recognition, family history parsing, context understanding—are exactly where medical language models like MedGemma provide the greatest value. While 66% F1 indicates room for improvement, MedGemma's ability to extract entities that rule-based systems cannot even attempt (0% baseline on allergies/family history) demonstrates the fundamental advantage of medical language models.
 
-**v2hr is open-source, production-ready, and designed for real clinical workflows.**
+**v2hr is open-source and designed for real clinical workflows with human-in-the-loop review.**
 
 ---
 
