@@ -432,7 +432,12 @@ def main():
         transcript = recording.get('transcript', '')
         workflow = recording.get('workflow', 'general')
         if filename and transcript:
+            # Store with both original and normalized names
             transcript_lookup[filename] = {'transcript': transcript, 'workflow': workflow}
+            # Normalize: "h-p" -> "hp", "follow-up" -> "follow-up" (keep hyphen for multi-word)
+            normalized = filename.replace('h-p', 'hp')
+            if normalized != filename:
+                transcript_lookup[normalized] = {'transcript': transcript, 'workflow': workflow}
 
     recordings_dir = fixtures_dir / 'recordings'
 
