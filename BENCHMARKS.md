@@ -93,14 +93,19 @@ Performance: 70% F1 (P: 72%, R: 69%)
 
 ### Cumulative Performance by Stage
 
-| Stage | Description | Cumulative F1 | Delta | % of Total |
-|-------|-------------|--------------|-------|------------|
-| **Pristine Input** | Original dictation (no ASR) | 77% | — | 110% (ceiling) |
-| **Stage 0** | + MedASR transcription | 68% | -9% | 97% |
-| **Stage 1** | + AI extraction (MedGemma) | 67% | -1% | 96% |
-| **Stages 2-4** | + Rules, codes, linking | **70%** | **+3%** | **100%** |
+| Stage | Description | Cumulative F1 | Delta from Previous |
+|-------|-------------|--------------|---------------------|
+| **Pristine Input** | Original dictation (no ASR) | **77%** | **— (ceiling)** |
+| **Stage 0** | + MedASR transcription | 68% | **-9%** (ASR errors) |
+| **Stage 1** | + AI extraction (MedGemma) | 67% | -1% |
+| **Stages 2-4** | + Rules, codes, linking | **70%** | **+3%** |
 
-**Key Insight:** AI (Stage 1) provides 67% of the 70% final F1 score (96%). Post-processing (Stages 2-4) adds structured extraction and metadata but contributes only +3% to overall accuracy.
+**Performance Attribution:**
+- **AI contribution:** 67% F1 (represents 96% of final 70% F1)
+- **Post-processing contribution:** +3% F1 (represents 4% of final 70% F1)
+- **ASR error penalty:** -9% F1 (difference between 77% ceiling and 68% with ASR)
+
+**Key Insight:** The 77% F1 with pristine input represents the **extraction ceiling** - the best possible performance with perfect transcription. Real-world performance (70% F1) includes a -9% penalty from ASR errors plus the pipeline's own limitations (30% gap from perfect).
 
 ### Why Hybrid?
 
