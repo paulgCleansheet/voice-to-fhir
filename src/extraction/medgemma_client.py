@@ -309,6 +309,116 @@ TRANSCRIPT:
 
         return entities
 
+    def extract_with_stages(
+        self,
+        transcript: str,
+        workflow: str = "general"
+    ) -> tuple[ClinicalEntities, ClinicalEntities]:
+        """
+        Extract clinical entities and return both Stage 1 (AI-only) and final output.
+
+        This method enables comparison of AI-only extraction (Stage 1) vs the full
+        pipeline (Stages 1-4) to attribute accuracy improvements to AI vs post-processing.
+
+        Pipeline Stages:
+            Stage 1: MedGemma AI extraction (semantic understanding)
+            Stage 2: Deterministic rules (chief complaints, BP normalization, etc.)
+            Stage 3: Code enrichment (ICD-10, RxNorm lookups)
+            Stage 4: Order-diagnosis linking
+
+        Returns:
+            Tuple of (stage1_entities, final_entities)
+            - stage1_entities: Raw AI output before any post-processing
+            - final_entities: Full pipeline output after all stages
+        """
+        import copy
+
+        # Build prompt
+        full_prompt = self._build_prompt(transcript, workflow)
+
+        backend = self.config.backend
+        print(f"[MedGemma] Extracting with backend: {backend}")
+
+        # Build payload based on backend
+        if backend == "dedicated":
+            # OpenAI-compatible chat completions format
+            payload = {
+                "model": self.config.model_id,
+                "messages": [
+                    {"role": "user", "content": full_prompt}
+                ],
+                "max_tokens": self.config.max_tokens,
+                "temperature": self.config.temperature,
+            }
+        elif backend == "local":
+            # Simple prompt format for local server
+            payload = {
+                "prompt": full_prompt,
+                "max_tokens": self.config.max_tokens,
+                "temperature": self.config.temperature,
+            }
+        else:
+            # Serverless HF Inference format
+            payload = {
+                "inputs": full_prompt,
+                "parameters": {
+                    "max_new_tokens": self.config.max_tokens,
+                    "temperature": self.config.temperature,
+                    "return_full_text": False,
+                },
+            }
+
+        response = requests.post(
+            self._endpoint,
+            headers=self._headers,
+            json=payload,
+            timeout=self.config.timeout_seconds,
+        )
+
+        if response.status_code != 200:
+            raise RuntimeError(
+                f"MedGemma API error: {response.status_code} - {response.text[:500]}"
+            )
+
+        result = response.json()
+
+        # Parse response based on backend format
+        if backend == "dedicated":
+            # OpenAI format: {"choices": [{"message": {"content": "..."}}]}
+            choices = result.get("choices", [])
+            if choices:
+                generated_text = choices[0].get("message", {}).get("content", "")
+            else:
+                generated_text = ""
+        elif backend == "local":
+            # Local server format: {"text": "..."}
+            generated_text = result.get("text", "")
+        else:
+            # Serverless format: [{"generated_text": "..."}] or {"generated_text": "..."}
+            if isinstance(result, list) and result:
+                generated_text = result[0].get("generated_text", "")
+            elif isinstance(result, dict):
+                generated_text = result.get("generated_text", "")
+            else:
+                generated_text = str(result)
+
+        # Debug: Log raw MedGemma response
+        print(f"[MedGemma] Raw response length: {len(generated_text)}")
+
+        # Parse JSON from response (Stage 1: AI-only extraction)
+        entities = self._parse_response(generated_text, transcript, workflow)
+
+        # Deep copy to preserve Stage 1 state before mutation
+        stage1_entities = copy.deepcopy(entities)
+
+        # Apply post-processing (Stages 2-4: Rules, Enrichment, Linking)
+        final_entities = post_process(entities, transcript)
+
+        print(f"[MedGemma] Stage 1 (AI-only) entities extracted")
+        print(f"[MedGemma] Stage 4 (Full pipeline) entities extracted")
+
+        return (stage1_entities, final_entities)
+
     def _parse_response(
         self, response_text: str, transcript: str = "", workflow: str = "general"
     ) -> ClinicalEntities:
