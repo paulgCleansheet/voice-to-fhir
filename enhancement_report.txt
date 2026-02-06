@@ -1,0 +1,22 @@
+
+================================================================================
+GROUND TRUTH ENHANCEMENT REPORT
+================================================================================
+
+Overall Coverage:
+  RxNorm:  40/42 (95.2%) medications have codes
+  LOINC:   13/14 (92.9%) lab orders have codes
+  Linking: 16/49 (32.7%) orders have linked diagnoses
+
+Files Processed: 16
+
+Missing Medications (need research):
+  - Consider sacubitril-valsartan (in complex1.1.wav)
+  - Hold metformin (in complex1.1.wav)
+
+Missing Lab Tests (need research):
+  - Lipid panel (in hp.webm, intake.webm)
+  - Metabolic panel (in hp.webm)
+  - Pathology - colon polyps (in procedure.webm)
+
+================================================================================

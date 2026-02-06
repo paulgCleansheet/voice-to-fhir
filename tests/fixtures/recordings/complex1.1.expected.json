@@ -1,0 +1,556 @@
+{
+  "metadata": {
+    "script_file": "complex1.1.wav",
+    "workflow": "hp",
+    "description": "Complex patient - 78yo male with acute CHF exacerbation, multiple comorbidities, polypharmacy"
+  },
+  "patient": {
+    "age": 78,
+    "gender": "male",
+    "age_unit": "years"
+  },
+  "ehr_data": {
+    "chief_complaint": "worsening shortness of breath and leg swelling",
+    "conditions": [
+      {
+        "name": "Congestive heart failure exacerbation",
+        "icd10": "I50.9",
+        "status": "active"
+      },
+      {
+        "name": "Coronary artery disease",
+        "icd10": "I25.10",
+        "status": "active"
+      },
+      {
+        "name": "Atrial fibrillation",
+        "icd10": "I48.91",
+        "status": "active"
+      },
+      {
+        "name": "Type 2 diabetes mellitus with neuropathy",
+        "icd10": "E11.42",
+        "status": "active"
+      },
+      {
+        "name": "Chronic kidney disease stage 3B",
+        "icd10": "N18.32",
+        "status": "active"
+      },
+      {
+        "name": "Hypertension",
+        "icd10": "I10",
+        "status": "active"
+      },
+      {
+        "name": "Hyperlipidemia",
+        "icd10": "E78.5",
+        "status": "active"
+      },
+      {
+        "name": "COPD",
+        "icd10": "J44.9",
+        "status": "active"
+      },
+      {
+        "name": "Osteoarthritis",
+        "icd10": "M17.9",
+        "status": "active"
+      },
+      {
+        "name": "Major depressive disorder",
+        "icd10": "F32.9",
+        "status": "active"
+      },
+      {
+        "name": "Benign prostatic hyperplasia",
+        "icd10": "N40.0",
+        "status": "active"
+      },
+      {
+        "name": "Gout",
+        "icd10": "M10.9",
+        "status": "active"
+      },
+      {
+        "name": "Acute kidney injury",
+        "icd10": "N17.9",
+        "status": "active"
+      }
+    ],
+    "vitals": [
+      {
+        "type": "blood_pressure",
+        "value": "158/92",
+        "unit": "mmHg"
+      },
+      {
+        "type": "heart_rate",
+        "value": "88",
+        "unit": "bpm"
+      },
+      {
+        "type": "respiratory_rate",
+        "value": "22",
+        "unit": "breaths/min"
+      },
+      {
+        "type": "oxygen_saturation",
+        "value": "91",
+        "unit": "%"
+      },
+      {
+        "type": "temperature",
+        "value": "98.2",
+        "unit": "F"
+      },
+      {
+        "type": "weight",
+        "value": "198",
+        "unit": "lbs"
+      },
+      {
+        "type": "bmi",
+        "value": "29.2",
+        "unit": "kg/m2"
+      }
+    ],
+    "allergies": [
+      {
+        "substance": "Penicillin",
+        "reaction": "anaphylaxis",
+        "severity": "severe"
+      },
+      {
+        "substance": "Sulfa drugs",
+        "reaction": "severe rash",
+        "severity": "severe"
+      },
+      {
+        "substance": "Codeine",
+        "reaction": "nausea and vomiting",
+        "severity": "mild"
+      },
+      {
+        "substance": "Contrast dye",
+        "reaction": "hives",
+        "severity": "mild"
+      }
+    ],
+    "medications": [
+      {
+        "name": "Carvedilol",
+        "dose": "25 mg",
+        "frequency": "twice daily",
+        "status": "active",
+        "rxcui": "20352",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "beta_blocker",
+        "linked_diagnosis": {
+          "icd10": "I10",
+          "display": "Essential hypertension",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Lisinopril",
+        "dose": "20 mg",
+        "frequency": "daily",
+        "status": "active",
+        "rxcui": "29046",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "ace_inhibitor",
+        "linked_diagnosis": {
+          "icd10": "I10",
+          "display": "Essential hypertension",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Furosemide",
+        "dose": "40 mg",
+        "frequency": "twice daily",
+        "status": "active",
+        "rxcui": "4603",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "diuretic",
+        "linked_diagnosis": {
+          "icd10": "I10",
+          "display": "Essential hypertension",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Spironolactone",
+        "dose": "25 mg",
+        "frequency": "daily",
+        "status": "active",
+        "rxcui": "9997",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "diuretic",
+        "linked_diagnosis": {
+          "icd10": "I10",
+          "display": "Essential hypertension",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Metformin",
+        "dose": "1000 mg",
+        "frequency": "twice daily",
+        "status": "active",
+        "rxcui": "6809",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "diabetes_oral",
+        "linked_diagnosis": {
+          "icd10": "E11.9",
+          "display": "Type 2 diabetes mellitus without complications",
+          "confidence": 0.95,
+          "method": "rule"
+        }
+      },
+      {
+        "name": "Glipizide",
+        "dose": "10 mg",
+        "frequency": "twice daily",
+        "status": "active",
+        "rxcui": "4821",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "diabetes_oral",
+        "linked_diagnosis": {
+          "icd10": "E11.9",
+          "display": "Type 2 diabetes mellitus without complications",
+          "confidence": 0.95,
+          "method": "rule"
+        }
+      },
+      {
+        "name": "Atorvastatin",
+        "dose": "80 mg",
+        "frequency": "at bedtime",
+        "status": "active",
+        "rxcui": "83367",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "statin",
+        "linked_diagnosis": {
+          "icd10": "E78.5",
+          "display": "Hyperlipidemia, unspecified",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Warfarin",
+        "dose": "5 mg",
+        "frequency": "daily",
+        "status": "active",
+        "rxcui": "11289",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "anticoagulant",
+        "linked_diagnosis": {
+          "icd10": "I48.91",
+          "display": "Unspecified atrial fibrillation",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Allopurinol",
+        "dose": "300 mg",
+        "frequency": "daily",
+        "status": "active",
+        "rxcui": "519",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "gout",
+        "linked_diagnosis": {
+          "icd10": "M10.9",
+          "display": "Gout, unspecified",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Tiotropium",
+        "dose": "18 mcg",
+        "frequency": "daily",
+        "route": "inhaled",
+        "status": "active",
+        "rxcui": "274766",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "anticholinergic",
+        "linked_diagnosis": {
+          "icd10": "J44.9",
+          "display": "Chronic obstructive pulmonary disease, unspecified",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Albuterol inhaler",
+        "frequency": "as needed",
+        "status": "active",
+        "rxcui": "435",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "bronchodilator",
+        "linked_diagnosis": {
+          "icd10": "J44.9",
+          "display": "Chronic obstructive pulmonary disease, unspecified",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Gabapentin",
+        "dose": "300 mg",
+        "frequency": "three times daily",
+        "status": "active",
+        "rxcui": "25480",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "anticonvulsant",
+        "linked_diagnosis": {
+          "icd10": "G40.909",
+          "display": "Epilepsy, unspecified, not intractable, without status epilepticus",
+          "confidence": 0.85,
+          "method": "rule"
+        }
+      },
+      {
+        "name": "Sertraline",
+        "dose": "100 mg",
+        "frequency": "daily",
+        "status": "active",
+        "rxcui": "36437",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "ssri",
+        "linked_diagnosis": {
+          "icd10": "F32.9",
+          "display": "Major depressive disorder, single episode, unspecified",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Tamsulosin",
+        "dose": "0.4 mg",
+        "frequency": "at bedtime",
+        "status": "active",
+        "rxcui": "77492",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "alpha_blocker",
+        "linked_diagnosis": {
+          "icd10": "N40.0",
+          "display": "Benign prostatic hyperplasia without lower urinary tract symptoms",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Acetaminophen",
+        "dose": "650 mg",
+        "frequency": "as needed",
+        "status": "active",
+        "rxcui": "161",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "analgesic",
+        "linked_diagnosis": {
+          "icd10": "R52",
+          "display": "Pain, unspecified",
+          "confidence": 0.85,
+          "method": "rule"
+        }
+      }
+    ],
+    "family_history": [
+      {
+        "relationship": "father",
+        "condition": "myocardial infarction",
+        "age_of_onset": 62,
+        "deceased": true
+      },
+      {
+        "relationship": "mother",
+        "condition": "type 2 diabetes",
+        "deceased": true
+      },
+      {
+        "relationship": "mother",
+        "condition": "stroke",
+        "age_of_onset": 75,
+        "deceased": true
+      },
+      {
+        "relationship": "brother",
+        "condition": "coronary artery disease"
+      },
+      {
+        "relationship": "brother",
+        "condition": "diabetes"
+      },
+      {
+        "relationship": "sister",
+        "condition": "breast cancer",
+        "age_of_onset": 58
+      },
+      {
+        "relationship": "paternal grandfather",
+        "condition": "heart failure"
+      }
+    ],
+    "social_history": {
+      "tobacco": "former smoker, quit 15 years ago, 40 pack-year history",
+      "alcohol": "occasional, 1-2 beers weekly",
+      "drugs": "denies",
+      "occupation": "retired electrician",
+      "living_situation": "lives with wife"
+    },
+    "lab_results": [
+      {
+        "name": "BNP",
+        "value": "1850",
+        "interpretation": "elevated"
+      },
+      {
+        "name": "Troponin",
+        "value": "0.04",
+        "interpretation": "mildly elevated"
+      },
+      {
+        "name": "Sodium",
+        "value": "132",
+        "interpretation": "low"
+      },
+      {
+        "name": "Potassium",
+        "value": "4.8"
+      },
+      {
+        "name": "Creatinine",
+        "value": "2.1",
+        "interpretation": "elevated"
+      },
+      {
+        "name": "BUN",
+        "value": "38",
+        "interpretation": "elevated"
+      },
+      {
+        "name": "Glucose",
+        "value": "186",
+        "interpretation": "elevated"
+      },
+      {
+        "name": "Hemoglobin A1c",
+        "value": "7.8%"
+      },
+      {
+        "name": "INR",
+        "value": "2.4",
+        "interpretation": "therapeutic"
+      },
+      {
+        "name": "Hemoglobin",
+        "value": "11.2",
+        "interpretation": "low"
+      }
+    ]
+  },
+  "orders": {
+    "medication_orders": [
+      {
+        "name": "Furosemide",
+        "dose": "80 mg IV now, then 40 mg IV twice daily",
+        "reason": "CHF exacerbation",
+        "rxcui": "4603",
+        "rxcui_verified": true,
+        "rxcui_confidence": 1.0,
+        "drug_class": "diuretic",
+        "linked_diagnosis": {
+          "icd10": "I10",
+          "display": "Essential hypertension",
+          "confidence": 0.95,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Hold metformin",
+        "reason": "acute kidney injury",
+        "rxcui": null,
+        "rxcui_verified": false,
+        "linked_diagnosis": {
+          "icd10": "N17.9",
+          "display": "Acute kidney injury",
+          "confidence": 0.9,
+          "method": "patient_condition"
+        }
+      },
+      {
+        "name": "Consider sacubitril-valsartan",
+        "reason": "if kidney function improves",
+        "rxcui": null,
+        "rxcui_verified": false
+      }
+    ],
+    "lab_orders": [
+      {
+        "name": "BMP",
+        "timing": "tomorrow",
+        "loinc": "51990-0",
+        "loinc_verified": true,
+        "loinc_confidence": 1.0
+      },
+      {
+        "name": "BNP",
+        "timing": "tomorrow",
+        "loinc": "33762-6",
+        "loinc_verified": true,
+        "loinc_confidence": 1.0
+      },
+      {
+        "name": "INR",
+        "timing": "daily",
+        "loinc": "6301-6",
+        "loinc_verified": true,
+        "loinc_confidence": 1.0
+      }
+    ],
+    "referral_orders": [
+      {
+        "name": "Cardiology consult",
+        "reason": "heart failure optimization"
+      },
+      {
+        "name": "Diabetes consult",
+        "reason": "glycemic management"
+      },
+      {
+        "name": "Social work consult",
+        "reason": "medication assistance programs"
+      }
+    ],
+    "procedure_orders": [
+      {
+        "name": "DVT prophylaxis with compression devices"
+      }
+    ],
+    "imaging_orders": []
+  }
+}

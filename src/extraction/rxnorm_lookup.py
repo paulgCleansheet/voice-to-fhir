@@ -385,6 +385,37 @@ RXNORM_DATABASE: dict[str, RxNormCode] = {
     "colchicine": RxNormCode("2683", "Colchicine", "gout", ("Colcrys",)),
 
     # -------------------------------------------------------------------------
+    # Heart Failure - Advanced Therapies
+    # -------------------------------------------------------------------------
+    "sacubitril-valsartan": RxNormCode("1656328", "Sacubitril-Valsartan", "arni", ("Entresto",)),
+    "entresto": RxNormCode("1656328", "Sacubitril-Valsartan", "arni", ("Entresto",)),
+    "sacubitril/valsartan": RxNormCode("1656328", "Sacubitril-Valsartan", "arni", ("Entresto",)),
+
+    # -------------------------------------------------------------------------
+    # Critical Care - Vasopressors
+    # -------------------------------------------------------------------------
+    "norepinephrine": RxNormCode("7313", "Norepinephrine", "vasopressor", ("Levophed",)),
+    "levophed": RxNormCode("7313", "Norepinephrine", "vasopressor", ("Levophed",)),
+    "epinephrine": RxNormCode("3992", "Epinephrine", "vasopressor", ("Adrenalin",)),
+    "vasopressin": RxNormCode("11128", "Vasopressin", "vasopressor", ("Pitressin",)),
+    "dopamine": RxNormCode("3628", "Dopamine", "vasopressor", ()),
+    "phenylephrine": RxNormCode("8163", "Phenylephrine", "vasopressor", ("Neo-Synephrine",)),
+
+    # -------------------------------------------------------------------------
+    # Antibiotics - Carbapenems (Critical Care)
+    # -------------------------------------------------------------------------
+    "meropenem": RxNormCode("2365", "Meropenem", "antibiotic_carbapenem", ("Merrem",)),
+    "imipenem-cilastatin": RxNormCode("5688", "Imipenem-Cilastatin", "antibiotic_carbapenem", ("Primaxin",)),
+    "ertapenem": RxNormCode("274786", "Ertapenem", "antibiotic_carbapenem", ("Invanz",)),
+    "doripenem": RxNormCode("704255", "Doripenem", "antibiotic_carbapenem", ("Doribax",)),
+
+    # -------------------------------------------------------------------------
+    # Decongestants
+    # -------------------------------------------------------------------------
+    "pseudoephedrine": RxNormCode("8702", "Pseudoephedrine", "decongestant", ("Sudafed",)),
+    "phenylephrine oral": RxNormCode("8163", "Phenylephrine", "decongestant", ("Sudafed PE",)),
+
+    # -------------------------------------------------------------------------
     # Other Common Medications
     # -------------------------------------------------------------------------
     "potassium chloride": RxNormCode("8591", "Potassium Chloride", "electrolyte", ("K-Dur", "Klor-Con")),
@@ -401,6 +432,11 @@ RXNORM_DATABASE: dict[str, RxNormCode] = {
     "lactulose": RxNormCode("6028", "Lactulose", "laxative", ()),
     "tamsulosin": RxNormCode("77492", "Tamsulosin", "alpha_blocker", ("Flomax",)),
     "finasteride": RxNormCode("4449", "Finasteride", "5ari", ("Proscar", "Propecia")),
+
+    # -------------------------------------------------------------------------
+    # Generic Terms (map to common medications)
+    # -------------------------------------------------------------------------
+    "statin": RxNormCode("83367", "Atorvastatin", "statin", ("Generic Statin",)),  # Default to atorvastatin
 }
 
 
