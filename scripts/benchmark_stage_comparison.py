@@ -295,7 +295,7 @@ def print_stage_comparison_table(all_results: list, verbose: bool = False):
     # Header
     header = f"{'Entity Type':<20} {'Stage 1 (AI-only)':<40} {'Stage 4 (Full Pipeline)':<40} {'Delta':<10}"
     print(header)
-    print(f"{'':<20} {'P      R      F1':<40} {'P      R      F1':<40} {'F1 Δ':<10}")
+    print(f"{'':<20} {'P      R      F1':<40} {'P      R      F1':<40} {'F1 Delta':<10}")
     print("-"*120)
 
     # Aggregate metrics by entity type
