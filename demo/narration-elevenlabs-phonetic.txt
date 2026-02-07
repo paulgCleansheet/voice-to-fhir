@@ -18,7 +18,7 @@ Notice the I-C-D-10 code for an-jai-nah, the R-X-Norm code for aspirin verified 
 
 Now I'll transform this to a Fire R4 Bundle. Ready for Epic, Cerner, or any Fire server. We also support C-D-A and H-L-7 version 2.
 
-We benchmarked against rule-based extraction using 181 human-annotated entities. Med-Gemma achieves 66 percent F1, an 11 point improvement over baseline. Critically, Med-Gemma catches allergies and family history that rule-based systems completely miss.
+We benchmarked against rule-based extraction using 199 human-annotated entities. Med-Gemma achieves 69 percent F1, a 13 point improvement over baseline. Critically, Med-Gemma catches allergies and family history that rule-based systems completely miss.
 
 The projected impact: thirteen minutes saved per patient, over two hundred thousand dollars annual value per physician.
 

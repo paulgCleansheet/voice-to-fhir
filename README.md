@@ -37,15 +37,15 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 ## Benchmark Results
 
-Evaluated against 181 independently annotated entities from 15 clinical transcripts, comparing MedGemma extraction vs. rule-based baseline:
+Evaluated against 199 independently annotated entities from 16 clinical transcripts, comparing MedGemma extraction vs. rule-based baseline:
 
 | Entity Type | MedGemma F1 | Baseline F1 | Delta |
 |-------------|-------------|-------------|-------|
-| Conditions | 68% | 56% | **+12%** |
-| Medications | 83% | 69% | **+14%** |
-| Allergies | 89% | 0% | **+89%** |
-| Family History | 80% | 0% | **+80%** |
-| **Overall** | **66%** | **55%** | **+11%** |
+| Conditions | 71% | 57% | **+14%** |
+| Medications | 84% | 71% | **+12%** |
+| Allergies | 84% | 0% | **+84%** |
+| Family History | 82% | 0% | **+82%** |
+| **Overall** | **69%** | **56%** | **+13%** |
 
 ### What This Means in Plain Terms
 
@@ -54,13 +54,34 @@ Evaluated against 181 independently annotated entities from 15 clinical transcri
 - **Was it accurate?** (Precision) — Out of everything it extracted, how much was correct?
 
 **In practical terms:**
-- MedGemma correctly extracts **about 2 out of 3** clinical entities from physician dictation
+- MedGemma correctly extracts **about 7 out of 10** clinical entities from physician dictation
 - The simple rule-based system only gets **about 1 out of 2** correct
-- For allergies and family history, rule-based extraction **completely fails** (0%) while MedGemma succeeds (80-89%)
+- For allergies and family history, rule-based extraction **completely fails** (0%) while MedGemma succeeds (82-84%)
 
 **Why this matters:** A physician dictating "patient is allergic to penicillin, father had heart attack at 55" will have both items captured by MedGemma. Rule-based regex patterns miss them entirely.
 
+**ASR Error Analysis:** With pristine transcripts (no transcription errors), MedGemma achieves **77% F1** — a 9 percentage point improvement. This represents the extraction model's ceiling performance.
+
 See [BENCHMARKS.md](BENCHMARKS.md) for detailed methodology and results.
+
+### Reproducing Benchmark Results
+
+All data required to reproduce these results is included in the repository:
+
+```bash
+# Run MedGemma vs Baseline comparison
+python scripts/benchmark_v2_with_baseline.py
+
+# Run ASR error analysis (requires HuggingFace API token)
+cp .env.example .env
+# Edit .env with your HF_API_TOKEN
+python scripts/benchmark_pristine.py --verbose
+```
+
+**Test data included:**
+- `tests/fixtures/recordings/*.expected.json` — 16 ground truth files (199 entities)
+- `tests/fixtures/scripts/script.md` — Pristine dictation scripts
+- `tests/fixtures/bulk-export.json` — MedGemma+ASR extraction results
 
 **Projected Clinical Impact:**
 - 13 minutes saved per patient encounter

@@ -1,0 +1,2132 @@
+{
+  "exportedAt": "2026-01-31T16:04:06.149Z",
+  "totalItems": 16,
+  "summary": {
+    "successful": 16,
+    "failed": 0,
+    "workflows": [
+      "cardiology",
+      "general",
+      "discharge",
+      "emergency",
+      "followup",
+      "hp",
+      "icu",
+      "intake",
+      "lab_review",
+      "neurology",
+      "pediatrics",
+      "procedure",
+      "radiology",
+      "respiratory",
+      "soap"
+    ]
+  },
+  "results": [
+    {
+      "metadata": {
+        "script_file": "cardiology-consult.webm",
+        "workflow": "cardiology",
+        "description": "Extracted from cardiology-consult.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 364.5,
+          "transcription_ms": 6224.5,
+          "extraction_ms": 25477.1,
+          "fhir_transform_ms": 0.3,
+          "total_ms": 32117.2,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Cardiology consultation for chest pain evaluation. The patient is a 48-year-old male with new onset exertional chest pain for the past two weeks. Pain is substernal, pressure-like, occurs with walking uphill, relieved with rest. No radiation. Risk factors include smoking one pack per day for 20 years. Family history of CAD and hyperlipidemia. [CURRENT MEDICATIONS] Include aspirin 80 mg daily. Blood pressure 142/88. Heart rate 78. ECG soow shows normal sinus rhythm. No ST changes. [IMPRESSION] Atypical chest pain, possible stable angina. Recommend stress and cardi- echocardiogram. Start statin therapy, aggressive smoking cessation counseling.",
+        "chief_complaint": "stable angina",
+        "conditions": [
+          {
+            "name": "stable angina",
+            "icd10": "I20.9",
+            "status": "active",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "142/88",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "78",
+            "unit": "bpm"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "aspirin",
+            "dose": "80 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "statin",
+            "dose": null,
+            "frequency": null,
+            "route": null
+          }
+        ],
+        "family_history": [
+          {
+            "relationship": "family member",
+            "condition": "CAD",
+            "age_of_onset": null,
+            "deceased": null
+          },
+          {
+            "relationship": "family member",
+            "condition": "hyperlipidemia",
+            "age_of_onset": null,
+            "deceased": null
+          }
+        ],
+        "social_history": {
+          "tobacco": "current",
+          "alcohol": null,
+          "drugs": null,
+          "occupation": null,
+          "living_situation": null
+        },
+        "lab_results": [
+          {
+            "name": "ECG",
+            "value": "normal sinus rhythm",
+            "unit": null,
+            "interpretation": "normal"
+          }
+        ]
+      },
+      "orders": {
+        "transcript": "Cardiology consultation for chest pain evaluation. The patient is a 48-year-old male with new onset exertional chest pain for the past two weeks. Pain is substernal, pressure-like, occurs with walking uphill, relieved with rest. No radiation. Risk factors include smoking one pack per day for 20 years. Family history of CAD and hyperlipidemia. [CURRENT MEDICATIONS] Include aspirin 80 mg daily. Blood pressure 142/88. Heart rate 78. ECG soow shows normal sinus rhythm. No ST changes. [IMPRESSION] Atypical chest pain, possible stable angina. Recommend stress and cardi- echocardiogram. Start statin therapy, aggressive smoking cessation counseling.",
+        "medication_orders": [
+          {
+            "name": "statin",
+            "dose": null,
+            "frequency": null,
+            "route": null,
+            "duration": null,
+            "instructions": null
+          }
+        ],
+        "lab_orders": [
+          {
+            "name": "serial troponins",
+            "loinc": "2012-09-02-1"
+          },
+          {
+            "name": "lipid panel",
+            "loinc": "2012-09-02-2"
+          }
+        ],
+        "referral_orders": [
+          {
+            "specialty": "cardiology",
+            "reason": null
+          }
+        ],
+        "procedure_orders": [
+          {
+            "name": "stress and cardi- echocardiogram"
+          }
+        ],
+        "imaging_orders": [
+          {
+            "name": "stress and cardi- echocardiogram"
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "complex1.1.wav",
+        "workflow": "general",
+        "description": "Extracted from complex1.1.wav",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 915.2,
+          "transcription_ms": 56674,
+          "extraction_ms": 131893.2,
+          "fhir_transform_ms": 1.4,
+          "total_ms": 189729.7,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "This is a 78 year-old male presenting for hospital ams with acute exacerbation of congestive heart failure. Chief complaint is worsening shortness of breath and leg swelling for five days.Hitory of present illness, Ptient reports discress progress dyspnea on exertion nowocurring with minimal activity He has gained weight over the past week despite adherence to fluid restriction. He slees on three pillows due to orthopnea and reports paroxal paroxism nocturnal dyspnea twice this week. He denies chest pain, palpitations or syncope. He ran out of his furosemide five days ago and was unable to refill it.Ast medical history shows significant for congestive heart failure with reduced ejection fraction of 35% diagnosed four years ago, coronary artery disease, status post three vessel CABG in 2019. atrial fibrillation on anticoagulation, type two diabetes mellitus with peripheral neuropathy, chronic kidney disease stage three B with a baseline creatinine of 1.8. hypertension, hyperlipidemia, COPD GOLD stage two, osteoarthritis of bilateral knees and lumbar spine, major depressive disorder,nign prostatic hyperplasia and gout.Ast surgical history includes coronary artery bypass, grafting in 2019, appendectomy 1972, right total knee replacement 218, cataract surgery, bilateral 2021.urrN medications carvedilol 25 mg twice daily, lisinopril 20 mg daily, furosemide 40 mg twice daily which he ran out of,pirro lact 25 mg daily, metformin 1000 mg twice daily, glipizide 10 mg twice daily, ator a statin 80 mg at bedtime, warfarin 5 mg daily,uur- allopurinol 300 mg daily, Toroptooum 18 mcg inhaled daily, albuterol inhaler as needed, gabapentin 300 mg three times daily, sertraline 100 mg daily,tamsosin 0.4 mg at bedtime, acetaminophen 650 mg as needed for pain. [ALLERGI] Penicillin causes anaphylaxis, sulfa drugs cause severe rash, codeine causes nausea and vomiting contrast dye causes hives, requires premedication. Family history, Father died of myocardial infarction at age 62. Mother had type two diabetes and died of stroke at age 75. Brother has coronary artery disease and diabetes. Sister has breast cancer diagnosed at age 58. Pternal grandather had heart failure. [SOCIA HTory] Former smoker, quit 15 years ago with a 40 packyear history,occasional alcohol one to two beers weekly, denies recreational drug use.Rtired electrician, lives with wife of 52 years in a single story home.H two adult children who live nearby, uses a cane for ambulation, independent with activities of daily living, but wife helps with medication management. [REVeEW of systems Positive for fatigue, lower extremity edema, dyspnea, orthopnea and nocturia Negative for fever, chest pain, palpitations, cough, abdominal pain and diarrhea. Vital signs, blood pressure 158/92, heart rate 88 and irregularly irregular, respiratory rate 22, oxygen saturation 91% on room air, temperature 98.2 Fahrenheit, weight 198 pounds, up from 190 pounds at last visit, height 5 feet 9 inches, BMI 29.2. Physical exam. General, alert, oriented in mild respiratory distress. HEENT, JVP elevated at 12 cm, cardiovascul irregularly irregular rhythm, S3 gallop present 2/6 systolic murmur at apex, lungs bibasilar crackles1 third up. Abdomen soft, hep hepatomegaly with liver edge 3 cm below costal margin.xtremities 2+ pitting edema bilateral lower extremit to mid shin. Neuro, decreased sensation bilateral feet consistent with neuropathy.LABs. BNP 1850, significantly elevated. Troponin 0.04, mildly elevated. Sodium 132, low potassium 4.8, creatinine 2.1 up from baseline 1.2. BUN 38, glucose 186, Hemoglobin A1c 7.8%, INR 2.4 therapeutic. Hemoglobin 11.2 slightly low. aging Chest x-ray shows cardiomegaly, bilateral pleural effusions and pulmonary vascular congestion consistent with heart failure. Echocardiogram from three months ago showed ejection fraction 35%, moderate mitral regurgitation and grade two diastolic dysfunction. [ASSESSME] Number one, acute on chronic heart chronic systolic heart failure exacerbation likely due to medication nonadherence. umber two, acute kidney injury on chronic kidney disease, likely cardiorenal syndrome. Number three, atrial fibrillation with controlled ventricular rate on anticoagulation. Number four, type two diabetes mellitus suboptimally controlled. Number five, hypertension, andcontroll. Number six, COPD, stable. [PLAN] Admit to telemetry, IV furosemide 80 mg now, the 40 mg IV twice daily.Dily weights and strict intake and output. fluid restriction 1.5 L daily, low sodium diet. Ctinue home carvedilol, lisinopril, and spiro no lactone. Hold metformin due to acute injury. Ctinue warfarin, Check INR daily, cardiology consult for optimization of heart failure regimen. Csider addition of secubr valsartan if kidney function improves. diabetes consult for glycemic management, repeat BMP and BNP tomorrow. Scial work consult for medication assist programs, DVT prophylaxis with compression given.Dvices given anticoagulation. Code status full. The code status is full code, confirmed with patient.",
+        "chief_complaint": "worsening shortness of breath and leg swelling for five days",
+        "conditions": [
+          {
+            "name": "congestive heart failure",
+            "icd10": "I50.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "coronary artery disease",
+            "icd10": "I25.10",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "atrial fibrillation",
+            "icd10": "I48.91",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "type 2 diabetes mellitus",
+            "icd10": "E11.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "hypertension",
+            "icd10": "I10",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "chronic kidney disease",
+            "icd10": "N18.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "COPD",
+            "icd10": "J44.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "osteoarthritis",
+            "icd10": "M19.90",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "major depressive disorder",
+            "icd10": "F32.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "nigh prostatic hyperplasia",
+            "icd10": "N40.0",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "gout",
+            "icd10": "M10.9",
+            "status": "active",
+            "severity": "moderate"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "158/92",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "88",
+            "unit": "bpm"
+          },
+          {
+            "type": "respiratory_rate",
+            "value": "22",
+            "unit": "breaths/min"
+          },
+          {
+            "type": "oxygen_saturation",
+            "value": "91",
+            "unit": "%"
+          },
+          {
+            "type": "temperature",
+            "value": "98.2",
+            "unit": "F"
+          },
+          {
+            "type": "weight",
+            "value": "198",
+            "unit": "lbs"
+          },
+          {
+            "type": "BMI",
+            "value": "29.2",
+            "unit": "kg/m2"
+          }
+        ],
+        "allergies": [
+          {
+            "substance": "penicillin",
+            "reaction": "anaphylaxis",
+            "severity": "severe"
+          },
+          {
+            "substance": "sulfa drugs",
+            "reaction": "severe rash",
+            "severity": "severe"
+          },
+          {
+            "substance": "contrast dye",
+            "reaction": "hives",
+            "severity": "mild"
+          },
+          {
+            "substance": "codeine",
+            "reaction": "nausea and vomiting",
+            "severity": "mild"
+          }
+        ],
+        "medications": [
+          {
+            "name": "carvedilol",
+            "dose": "25 mg",
+            "frequency": "twice daily",
+            "route": "oral"
+          },
+          {
+            "name": "lisinopril",
+            "dose": "20 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "furosemide",
+            "dose": "40 mg",
+            "frequency": "twice daily",
+            "route": "oral"
+          },
+          {
+            "name": "pirro lactone",
+            "dose": "25 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "metformin",
+            "dose": "1000 mg",
+            "frequency": "twice daily",
+            "route": "oral"
+          },
+          {
+            "name": "glipizide",
+            "dose": "10 mg",
+            "frequency": "twice daily",
+            "route": "oral"
+          },
+          {
+            "name": "atorvastatin",
+            "dose": "80 mg",
+            "frequency": "at bedtime",
+            "route": "oral"
+          },
+          {
+            "name": "warfarin",
+            "dose": "5 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "allopurinol",
+            "dose": "300 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "Toroptooum",
+            "dose": "18 mcg",
+            "frequency": "inhaled daily",
+            "route": "inhalation"
+          },
+          {
+            "name": "albuterol inhaler",
+            "dose": "as needed",
+            "frequency": "as needed",
+            "route": "inhalation"
+          },
+          {
+            "name": "gabapentin",
+            "dose": "300 mg",
+            "frequency": "three times daily",
+            "route": "oral"
+          },
+          {
+            "name": "sertraline",
+            "dose": "100 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "tamsosin",
+            "dose": "0.4 mg",
+            "frequency": "at bedtime",
+            "route": "oral"
+          },
+          {
+            "name": "acetaminophen",
+            "dose": "650 mg",
+            "frequency": "as needed",
+            "route": "oral"
+          }
+        ],
+        "family_history": [
+          {
+            "relationship": "father",
+            "condition": "myocardial infarction",
+            "age_of_onset": "62",
+            "deceased": null
+          },
+          {
+            "relationship": "mother",
+            "condition": "type 2 diabetes mellitus",
+            "age_of_onset": "unknown",
+            "deceased": null
+          },
+          {
+            "relationship": "brother",
+            "condition": "coronary artery disease",
+            "age_of_onset": "unknown",
+            "deceased": null
+          },
+          {
+            "relationship": "sister",
+            "condition": "breast cancer",
+            "age_of_onset": "58",
+            "deceased": null
+          },
+          {
+            "relationship": "father",
+            "condition": "heart failure",
+            "age_of_onset": "unknown",
+            "deceased": null
+          },
+          {
+            "relationship": "Mother",
+            "condition": "type two diabetes and died of stroke",
+            "age_of_onset": "75",
+            "deceased": null
+          },
+          {
+            "relationship": "Brother",
+            "condition": "coronary artery disease and diabetes",
+            "age_of_onset": null,
+            "deceased": null
+          },
+          {
+            "relationship": "Sister",
+            "condition": "breast cancer diagnosed",
+            "age_of_onset": "58",
+            "deceased": null
+          }
+        ],
+        "social_history": {
+          "tobacco": "former smoker, quit 15 years ago with a 40 packyear history",
+          "alcohol": "occasional alcohol one to two beers weekly",
+          "drugs": "denies recreational drug use",
+          "occupation": "retired electrician",
+          "living_situation": null
+        },
+        "lab_results": [
+          {
+            "name": "BNP",
+            "value": "1850",
+            "unit": "pg/mL",
+            "interpretation": null
+          },
+          {
+            "name": "Troponin",
+            "value": "0.04",
+            "unit": "ng/mL",
+            "interpretation": null
+          },
+          {
+            "name": "Sodium",
+            "value": "132",
+            "unit": "mEq/L",
+            "interpretation": null
+          },
+          {
+            "name": "Potassium",
+            "value": "4.8",
+            "unit": "mEq/L",
+            "interpretation": null
+          },
+          {
+            "name": "Creatinine",
+            "value": "2.1",
+            "unit": "mg/dL",
+            "interpretation": null
+          },
+          {
+            "name": "BUN",
+            "value": "38",
+            "unit": "mg/dL",
+            "interpretation": null
+          },
+          {
+            "name": "Glucose",
+            "value": "186",
+            "unit": "mg/dL",
+            "interpretation": null
+          },
+          {
+            "name": "Hemoglobin A1c",
+            "value": "7.8",
+            "unit": "%",
+            "interpretation": null
+          },
+          {
+            "name": "Hemoglobin",
+            "value": "11.2",
+            "unit": "g/dL",
+            "interpretation": null
+          }
+        ]
+      },
+      "orders": {
+        "transcript": "This is a 78 year-old male presenting for hospital ams with acute exacerbation of congestive heart failure. Chief complaint is worsening shortness of breath and leg swelling for five days.Hitory of present illness, Ptient reports discress progress dyspnea on exertion nowocurring with minimal activity He has gained weight over the past week despite adherence to fluid restriction. He slees on three pillows due to orthopnea and reports paroxal paroxism nocturnal dyspnea twice this week. He denies chest pain, palpitations or syncope. He ran out of his furosemide five days ago and was unable to refill it.Ast medical history shows significant for congestive heart failure with reduced ejection fraction of 35% diagnosed four years ago, coronary artery disease, status post three vessel CABG in 2019. atrial fibrillation on anticoagulation, type two diabetes mellitus with peripheral neuropathy, chronic kidney disease stage three B with a baseline creatinine of 1.8. hypertension, hyperlipidemia, COPD GOLD stage two, osteoarthritis of bilateral knees and lumbar spine, major depressive disorder,nign prostatic hyperplasia and gout.Ast surgical history includes coronary artery bypass, grafting in 2019, appendectomy 1972, right total knee replacement 218, cataract surgery, bilateral 2021.urrN medications carvedilol 25 mg twice daily, lisinopril 20 mg daily, furosemide 40 mg twice daily which he ran out of,pirro lact 25 mg daily, metformin 1000 mg twice daily, glipizide 10 mg twice daily, ator a statin 80 mg at bedtime, warfarin 5 mg daily,uur- allopurinol 300 mg daily, Toroptooum 18 mcg inhaled daily, albuterol inhaler as needed, gabapentin 300 mg three times daily, sertraline 100 mg daily,tamsosin 0.4 mg at bedtime, acetaminophen 650 mg as needed for pain. [ALLERGI] Penicillin causes anaphylaxis, sulfa drugs cause severe rash, codeine causes nausea and vomiting contrast dye causes hives, requires premedication. Family history, Father died of myocardial infarction at age 62. Mother had type two diabetes and died of stroke at age 75. Brother has coronary artery disease and diabetes. Sister has breast cancer diagnosed at age 58. Pternal grandather had heart failure. [SOCIA HTory] Former smoker, quit 15 years ago with a 40 packyear history,occasional alcohol one to two beers weekly, denies recreational drug use.Rtired electrician, lives with wife of 52 years in a single story home.H two adult children who live nearby, uses a cane for ambulation, independent with activities of daily living, but wife helps with medication management. [REVeEW of systems Positive for fatigue, lower extremity edema, dyspnea, orthopnea and nocturia Negative for fever, chest pain, palpitations, cough, abdominal pain and diarrhea. Vital signs, blood pressure 158/92, heart rate 88 and irregularly irregular, respiratory rate 22, oxygen saturation 91% on room air, temperature 98.2 Fahrenheit, weight 198 pounds, up from 190 pounds at last visit, height 5 feet 9 inches, BMI 29.2. Physical exam. General, alert, oriented in mild respiratory distress. HEENT, JVP elevated at 12 cm, cardiovascul irregularly irregular rhythm, S3 gallop present 2/6 systolic murmur at apex, lungs bibasilar crackles1 third up. Abdomen soft, hep hepatomegaly with liver edge 3 cm below costal margin.xtremities 2+ pitting edema bilateral lower extremit to mid shin. Neuro, decreased sensation bilateral feet consistent with neuropathy.LABs. BNP 1850, significantly elevated. Troponin 0.04, mildly elevated. Sodium 132, low potassium 4.8, creatinine 2.1 up from baseline 1.2. BUN 38, glucose 186, Hemoglobin A1c 7.8%, INR 2.4 therapeutic. Hemoglobin 11.2 slightly low. aging Chest x-ray shows cardiomegaly, bilateral pleural effusions and pulmonary vascular congestion consistent with heart failure. Echocardiogram from three months ago showed ejection fraction 35%, moderate mitral regurgitation and grade two diastolic dysfunction. [ASSESSME] Number one, acute on chronic heart chronic systolic heart failure exacerbation likely due to medication nonadherence. umber two, acute kidney injury on chronic kidney disease, likely cardiorenal syndrome. Number three, atrial fibrillation with controlled ventricular rate on anticoagulation. Number four, type two diabetes mellitus suboptimally controlled. Number five, hypertension, andcontroll. Number six, COPD, stable. [PLAN] Admit to telemetry, IV furosemide 80 mg now, the 40 mg IV twice daily.Dily weights and strict intake and output. fluid restriction 1.5 L daily, low sodium diet. Ctinue home carvedilol, lisinopril, and spiro no lactone. Hold metformin due to acute injury. Ctinue warfarin, Check INR daily, cardiology consult for optimization of heart failure regimen. Csider addition of secubr valsartan if kidney function improves. diabetes consult for glycemic management, repeat BMP and BNP tomorrow. Scial work consult for medication assist programs, DVT prophylaxis with compression given.Dvices given anticoagulation. Code status full. The code status is full code, confirmed with patient.",
+        "medication_orders": [
+          {
+            "name": "furosemide",
+            "dose": null,
+            "frequency": "IV",
+            "route": null,
+            "duration": null,
+            "instructions": "IV now, then 40 mg IV twice daily"
+          },
+          {
+            "name": "carvedilol",
+            "dose": null,
+            "frequency": "twice daily",
+            "route": null,
+            "duration": null,
+            "instructions": "Continue home"
+          },
+          {
+            "name": "lisinopril",
+            "dose": null,
+            "frequency": "daily",
+            "route": null,
+            "duration": null,
+            "instructions": "Continue home"
+          },
+          {
+            "name": "spironolactone",
+            "dose": null,
+            "frequency": "daily",
+            "route": null,
+            "duration": null,
+            "instructions": "Continue home"
+          },
+          {
+            "name": "metformin",
+            "dose": null,
+            "frequency": "twice daily",
+            "route": null,
+            "duration": null,
+            "instructions": "Hold due to acute injury"
+          },
+          {
+            "name": "warfarin",
+            "dose": null,
+            "frequency": "daily",
+            "route": null,
+            "duration": null,
+            "instructions": "Check INR daily"
+          },
+          {
+            "name": "secubr valsartan",
+            "dose": null,
+            "frequency": "as needed",
+            "route": null,
+            "duration": null,
+            "instructions": "Consider addition if kidney function improves"
+          },
+          {
+            "name": "diabetes consult",
+            "dose": null,
+            "frequency": "as needed",
+            "route": null,
+            "duration": null,
+            "instructions": "for glycemic management"
+          },
+          {
+            "name": "hemoglobin A1c",
+            "dose": null,
+            "frequency": "as needed",
+            "route": null,
+            "duration": null,
+            "instructions": "tomorrow"
+          },
+          {
+            "name": "metabolic panel",
+            "dose": null,
+            "frequency": "as needed",
+            "route": null,
+            "duration": null,
+            "instructions": "tomorrow"
+          },
+          {
+            "name": "BNP",
+            "dose": null,
+            "frequency": "as needed",
+            "route": null,
+            "duration": null,
+            "instructions": "tomorrow"
+          }
+        ],
+        "lab_orders": [
+          {
+            "name": "A1c",
+            "loinc": null
+          },
+          {
+            "name": "lipid panel",
+            "loinc": null
+          },
+          {
+            "name": "metabolic panel",
+            "loinc": null
+          },
+          {
+            "name": "CBC",
+            "loinc": null
+          },
+          {
+            "name": "TSH",
+            "loinc": null
+          }
+        ],
+        "referral_orders": [
+          {
+            "specialty": "cardiology",
+            "reason": "optimization of heart failure regimen"
+          },
+          {
+            "specialty": "diabetes",
+            "reason": "glycemic management"
+          }
+        ],
+        "procedure_orders": [],
+        "imaging_orders": [
+          {
+            "name": "chest x-ray"
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "discharge.webm",
+        "workflow": "discharge",
+        "description": "Extracted from discharge.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 347.8,
+          "transcription_ms": 5957.6,
+          "extraction_ms": 13133.4,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 19457.1,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Discharge summary for hospital stay. [ADMISSION DIAGNOSIS] Community-acquired pneumonia. [HOSPITAL COURSE] 72-year-old male admitted with fever, cough, and shortness of breath. Chest x-ray showed right lower lobe consolidation. Started on ceftriaxone and azithromycin IV, improved clinically over three days. Oxygen requirements weaned. [DISCHARGE DIAGNOSIS] Community-acquired pneumonia, resolved. [DISCHARGE MEDICATIONS] Azithromycin 250 mg daily for two more days. Albuterol inhaler as needed. Follow up with primary care in one week. Return precautions, worsening shortness of breath, fever, and chest pain.",
+        "chief_complaint": "fever, cough, and shortness of breath",
+        "conditions": [
+          {
+            "name": "community-acquired pneumonia",
+            "icd10": "J18.9",
+            "status": "resolved",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "Azithromycin",
+            "dose": "250 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "Albuterol inhaler",
+            "dose": "as needed",
+            "frequency": "as needed",
+            "route": "inhaler"
+          }
+        ],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Discharge summary for hospital stay. [ADMISSION DIAGNOSIS] Community-acquired pneumonia. [HOSPITAL COURSE] 72-year-old male admitted with fever, cough, and shortness of breath. Chest x-ray showed right lower lobe consolidation. Started on ceftriaxone and azithromycin IV, improved clinically over three days. Oxygen requirements weaned. [DISCHARGE DIAGNOSIS] Community-acquired pneumonia, resolved. [DISCHARGE MEDICATIONS] Azithromycin 250 mg daily for two more days. Albuterol inhaler as needed. Follow up with primary care in one week. Return precautions, worsening shortness of breath, fever, and chest pain.",
+        "medication_orders": [
+          {
+            "name": "Azithromycin",
+            "dose": null,
+            "frequency": "daily",
+            "route": null,
+            "duration": null,
+            "instructions": "for two more days"
+          }
+        ],
+        "lab_orders": [],
+        "referral_orders": [
+          {
+            "specialty": "primary care",
+            "reason": "one week"
+          }
+        ],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "emergency.webm",
+        "workflow": "emergency",
+        "description": "Extracted from emergency.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 513.3,
+          "transcription_ms": 7428.6,
+          "extraction_ms": 29593.2,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 37573.7,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "female",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "[CHIEF COMPLAINT] Is shortness of breath and chest pain. 55-year-old female with a history of hypertension and type two diabetes. She has a mild sulfa allergy causing rash. [FAMILY HISTORY] Significant for stroke in mother, onset at age 58, deceased at age age 83. She is a former smoker, quit 10 years ago, 20-pack-year history. She drinks socially occasional wine with dinner. She works with an as an accountant and lives with her husband. Blood pressure 165/95, heart rate 102, oxygen saturation 94% on room air, temperature 98.6, respiratory rate 22. EKG shows sinus tachycardia with ST depression in leads V4 through V6. Troponin pending. [ASSESSMENT] Is a possible acute coronary syndrome, rule out NSTEMI. [PLAN] Is aspirin 325 mg chewed. Start heparin drip per protocol. Cardiology consult, seerial troponins every six hours. Continuous telemetry. Patient is full code.",
+        "chief_complaint": "shortness of breath and chest pain",
+        "conditions": [
+          {
+            "name": "acute coronary syndrome",
+            "icd10": "I24.9",
+            "status": "suspected",
+            "severity": "moderate"
+          },
+          {
+            "name": "hypertension",
+            "icd10": "I10",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "type 2 diabetes",
+            "icd10": "E11.9",
+            "status": "active",
+            "severity": "moderate"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "165/95",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "102",
+            "unit": "bpm"
+          },
+          {
+            "type": "oxygen_saturation",
+            "value": "94",
+            "unit": "%"
+          },
+          {
+            "type": "respiratory_rate",
+            "value": "22",
+            "unit": "breaths/min"
+          },
+          {
+            "type": "temperature",
+            "value": "98.6",
+            "unit": "F"
+          }
+        ],
+        "allergies": [
+          {
+            "substance": "sulfa",
+            "reaction": "rash",
+            "severity": "mild"
+          }
+        ],
+        "medications": [
+          {
+            "name": "aspirin",
+            "dose": "325 mg",
+            "frequency": "chewed",
+            "route": "oral"
+          },
+          {
+            "name": "heparin",
+            "dose": "drip",
+            "frequency": "per protocol",
+            "route": "IV"
+          }
+        ],
+        "family_history": [
+          {
+            "relationship": "Mother",
+            "condition": "stroke",
+            "age_of_onset": null,
+            "deceased": null
+          }
+        ],
+        "social_history": {
+          "tobacco": "Former smoker",
+          "alcohol": "Occasional alcohol use",
+          "drugs": null,
+          "occupation": null,
+          "living_situation": null
+        },
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "[CHIEF COMPLAINT] Is shortness of breath and chest pain. 55-year-old female with a history of hypertension and type two diabetes. She has a mild sulfa allergy causing rash. [FAMILY HISTORY] Significant for stroke in mother, onset at age 58, deceased at age age 83. She is a former smoker, quit 10 years ago, 20-pack-year history. She drinks socially occasional wine with dinner. She works with an as an accountant and lives with her husband. Blood pressure 165/95, heart rate 102, oxygen saturation 94% on room air, temperature 98.6, respiratory rate 22. EKG shows sinus tachycardia with ST depression in leads V4 through V6. Troponin pending. [ASSESSMENT] Is a possible acute coronary syndrome, rule out NSTEMI. [PLAN] Is aspirin 325 mg chewed. Start heparin drip per protocol. Cardiology consult, seerial troponins every six hours. Continuous telemetry. Patient is full code.",
+        "medication_orders": [],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "follow-up.webm",
+        "workflow": "followup",
+        "description": "Extracted from follow-up.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 417.1,
+          "transcription_ms": 5174,
+          "extraction_ms": 17605.2,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 23213.8,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": null,
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Followup visit for diabetes management. Patient reports glu- good glucose control with fasting sugars between 100 and 120. She denies any hypoglycemic episodes. She has been compliant with metformin and dietary modifications. Last A1c was 6.8%. Blood pressure today 128/78. Weight stable at 60 at 165 pounds. [ASSESSMENT] Diab- type two diabetes mellitus, well controlled. [PLAN] Continue metformin 1000 mg twice daily. Repeat hemoglobin A1c in three months. Continue lifestyle modifications. Follow up in three months.",
+        "chief_complaint": "diabetes management follow-up",
+        "conditions": [
+          {
+            "name": "diabetes mellitus",
+            "icd10": "E11.9",
+            "status": "active",
+            "severity": null
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "128/78",
+            "unit": "mmHg"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "metformin",
+            "dose": "1000 mg",
+            "frequency": "twice daily",
+            "route": null
+          }
+        ],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Followup visit for diabetes management. Patient reports glu- good glucose control with fasting sugars between 100 and 120. She denies any hypoglycemic episodes. She has been compliant with metformin and dietary modifications. Last A1c was 6.8%. Blood pressure today 128/78. Weight stable at 60 at 165 pounds. [ASSESSMENT] Diab- type two diabetes mellitus, well controlled. [PLAN] Continue metformin 1000 mg twice daily. Repeat hemoglobin A1c in three months. Continue lifestyle modifications. Follow up in three months.",
+        "medication_orders": [
+          {
+            "name": "Metformin",
+            "dose": null,
+            "frequency": "twice daily",
+            "route": null,
+            "duration": null,
+            "instructions": null
+          }
+        ],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "general.webm",
+        "workflow": "general",
+        "description": "Extracted from general.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 413.5,
+          "transcription_ms": 7219.9,
+          "extraction_ms": 21879.1,
+          "fhir_transform_ms": 1.1,
+          "total_ms": 29530.5,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "female",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Office visit for upper respiratory infection. 42-year-old female presents with nasal congestion, sore throat, mild cough for four days. No fever. No shortness of breath. She has tried over-the-counter decongestant decongestants with minimal relief. [PAST MEDICAL HISTORY] Significant for seasonal allergies. Currently takes cetirizine 10 mg daily. No known drug allergies. Vital signs, blood pressure 122/76, heart rate 74, 90 temperature 98.4, respiratory fo- rate 14, oxygen saturation 99% on room air. [PHYSICAL EXAM] Reveals mild na- nasal mucosal edema. Clear posterior pharynx without exudates. Lungs clear to auscultation. [ASSESSMENT] Acute viral upper respiratory infection. [PLAN] Supportive care. Increase fluids. Continue antihistamines. May add pseudephedrine for congestion. Retur if symptoms worsen or persist beyond 10 days.",
+        "chief_complaint": "nasal congestion, sore throat, mild cough for four days",
+        "conditions": [
+          {
+            "name": "seasonal allergies",
+            "icd10": "J30.2",
+            "status": "active",
+            "severity": "mild"
+          },
+          {
+            "name": "acute viral upper respiratory infection",
+            "icd10": "J06.9",
+            "status": "active",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "122/76",
+            "unit": "mmHg"
+          },
+          {
+            "type": "temperature",
+            "value": "98.4",
+            "unit": "F"
+          },
+          {
+            "type": "heart_rate",
+            "value": "74",
+            "unit": "bpm"
+          },
+          {
+            "type": "oxygen_saturation",
+            "value": "99",
+            "unit": "%"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "cetirizine",
+            "dose": "10 mg",
+            "frequency": "daily",
+            "route": "oral"
+          }
+        ],
+        "family_history": [],
+        "social_history": {
+          "tobacco": "never smoked",
+          "alcohol": "doesn't drink",
+          "drugs": "no illicit drugs",
+          "occupation": "unknown",
+          "living_situation": null
+        },
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Office visit for upper respiratory infection. 42-year-old female presents with nasal congestion, sore throat, mild cough for four days. No fever. No shortness of breath. She has tried over-the-counter decongestant decongestants with minimal relief. [PAST MEDICAL HISTORY] Significant for seasonal allergies. Currently takes cetirizine 10 mg daily. No known drug allergies. Vital signs, blood pressure 122/76, heart rate 74, 90 temperature 98.4, respiratory fo- rate 14, oxygen saturation 99% on room air. [PHYSICAL EXAM] Reveals mild na- nasal mucosal edema. Clear posterior pharynx without exudates. Lungs clear to auscultation. [ASSESSMENT] Acute viral upper respiratory infection. [PLAN] Supportive care. Increase fluids. Continue antihistamines. May add pseudephedrine for congestion. Retur if symptoms worsen or persist beyond 10 days.",
+        "medication_orders": [],
+        "lab_orders": [
+          {
+            "name": "A1c",
+            "loinc": null
+          }
+        ],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "h-p.webm",
+        "workflow": "hp",
+        "description": "Extracted from h-p.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 469.4,
+          "transcription_ms": 8841.2,
+          "extraction_ms": 42395.2,
+          "fhir_transform_ms": 0.7,
+          "total_ms": 51721.7,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "This is a 62-year-old male presenting on annual physical exam. [CHIEF COMPLAINT] Is routine health maintenance. [PAST MEDICAL HISTORY] Includes hypertension diagnosed five years ago, hyperlipidemia and prediabetes. Currently on lisinopril 10 mg daily, and atorvastatin 20 mg daily. No known drug allergies. [FAMILY HISTORY] Father had myocardial infarction at age 65. Mother has type two diabetes. [SOCIAL HISTORY] Never smoker. Occasional alcohol on weekends. Retired teacher. Lives with wife. [REVIEW OF SYMPTOMS] Is negative. Vital signs, blood pressure 138/82, heart rate 72, temperature 98.2, respiratory rate 16, oxygen saturation 98%. Weight 185 pounds. [PHYSICAL EXAM] Well-appearing male in no acute distress. HEENT, normal. Cardiovascular, regular rate and rhythm without murmurs. Lungs clear bilaterally. Abdomen, soft, nontender. Extremities, no edema. [ASSESSMENT] Hypertension, controlled, hyperlipidemia on statin, prediabetes. [PLAN] Continue current medications, hemoglobin A1c, lipid panel, metabolic panel, dietary counseling. Followu in six months.",
+        "chief_complaint": "routine health maintenance",
+        "conditions": [
+          {
+            "name": "hypertension",
+            "icd10": "I10",
+            "status": "active",
+            "severity": "controlled"
+          },
+          {
+            "name": "hyperlipidemia",
+            "icd10": "E78.5",
+            "status": "active",
+            "severity": "unknown"
+          },
+          {
+            "name": "prediabetes",
+            "icd10": "R73.03",
+            "status": "active",
+            "severity": "unknown"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "138/82",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "72",
+            "unit": "bpm"
+          },
+          {
+            "type": "temperature",
+            "value": "98.2",
+            "unit": "F"
+          },
+          {
+            "type": "respiratory_rate",
+            "value": "16",
+            "unit": "breaths/min"
+          },
+          {
+            "type": "oxygen_saturation",
+            "value": "98",
+            "unit": "%"
+          },
+          {
+            "type": "weight",
+            "value": "185",
+            "unit": "lbs"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "lisinopril",
+            "dose": "10 mg",
+            "frequency": "daily",
+            "route": "oral"
+          },
+          {
+            "name": "atorvastatin",
+            "dose": "20 mg",
+            "frequency": "daily",
+            "route": "oral"
+          }
+        ],
+        "family_history": [
+          {
+            "relationship": "father",
+            "condition": "myocardial infarction",
+            "age_of_onset": "65",
+            "deceased": null
+          },
+          {
+            "relationship": "mother",
+            "condition": "type two diabetes",
+            "age_of_onset": "unknown",
+            "deceased": null
+          }
+        ],
+        "social_history": {
+          "tobacco": "never",
+          "alcohol": "occasional on weekends",
+          "drugs": "none",
+          "occupation": "retired teacher",
+          "living_situation": null
+        },
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "This is a 62-year-old male presenting on annual physical exam. [CHIEF COMPLAINT] Is routine health maintenance. [PAST MEDICAL HISTORY] Includes hypertension diagnosed five years ago, hyperlipidemia and prediabetes. Currently on lisinopril 10 mg daily, and atorvastatin 20 mg daily. No known drug allergies. [FAMILY HISTORY] Father had myocardial infarction at age 65. Mother has type two diabetes. [SOCIAL HISTORY] Never smoker. Occasional alcohol on weekends. Retired teacher. Lives with wife. [REVIEW OF SYMPTOMS] Is negative. Vital signs, blood pressure 138/82, heart rate 72, temperature 98.2, respiratory rate 16, oxygen saturation 98%. Weight 185 pounds. [PHYSICAL EXAM] Well-appearing male in no acute distress. HEENT, normal. Cardiovascular, regular rate and rhythm without murmurs. Lungs clear bilaterally. Abdomen, soft, nontender. Extremities, no edema. [ASSESSMENT] Hypertension, controlled, hyperlipidemia on statin, prediabetes. [PLAN] Continue current medications, hemoglobin A1c, lipid panel, metabolic panel, dietary counseling. Followu in six months.",
+        "medication_orders": [],
+        "lab_orders": [
+          {
+            "name": "hemoglobin A1c",
+            "loinc": null
+          },
+          {
+            "name": "lipid panel",
+            "loinc": null
+          },
+          {
+            "name": "metabolic panel",
+            "loinc": null
+          }
+        ],
+        "referral_orders": [
+          {
+            "specialty": "dietary counseling",
+            "reason": "unknown"
+          }
+        ],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "icu.webm",
+        "workflow": "icu",
+        "description": "Extracted from icu.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 686.8,
+          "transcription_ms": 10431.9,
+          "extraction_ms": 29498.5,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 40719.4,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "female",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Critical care progress note. Patient is a 45-year-old female admitted to the medical ICU with septic shock secondary to pyelononephritis. ICU day three. Overnight events.Required vasosuppressor wean. Norepinephrine discontinued at 0300. No acute events. Current status alert and oriented. Off sedation. Hemodynamically stable off pressors. Mean arterial pressure greater than 65 without support. O 2 L nasal cannula with oxygen saturation 96%. Urine output adequate at 0.8 mL/kg/ hour. Vitals, blood pressure 118/72, heart rate 88, temperature 37.8, respiratory rate 16. Labs, white blood cell count trending down from 18 to 12. Lactate normalized at 1.2. Creatinine improving from 2.4 to 1.8. Procalcitonin 1.2 down from 8. Currently on mero- meropenem. day three improving. Acute kidney injury, resolving. [PLAN] Continue antibiotics. Deescalate to oral ciproflocin when tolerating diet. Target 14-day total course. Transfer to floor today if stable. Infectious disease following.",
+        "chief_complaint": "septic shock",
+        "conditions": [
+          {
+            "name": "septic shock",
+            "icd10": "R65.21",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "pyelonephritis",
+            "icd10": "N10",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "acute kidney injury",
+            "icd10": "N17.9",
+            "status": "improving",
+            "severity": "moderate"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "118/72",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "88",
+            "unit": "bpm"
+          },
+          {
+            "type": "temperature",
+            "value": "37.8",
+            "unit": "C"
+          },
+          {
+            "type": "respiratory_rate",
+            "value": "16",
+            "unit": "breaths/min"
+          },
+          {
+            "type": "SpO2",
+            "value": "96",
+            "unit": "%"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "meropenem",
+            "dose": "not specified",
+            "frequency": "IV",
+            "route": "IV"
+          },
+          {
+            "name": "norepinephrine",
+            "dose": "not specified",
+            "frequency": "not specified",
+            "route": "IV"
+          }
+        ],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": [
+          {
+            "name": "WBC",
+            "value": "12",
+            "unit": "cells/uL",
+            "interpretation": "normal"
+          },
+          {
+            "name": "Lactate",
+            "value": "1.2",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "Creatinine",
+            "value": "1.8",
+            "unit": "mg/dL",
+            "interpretation": "normal"
+          },
+          {
+            "name": "Procalcitonin",
+            "value": "1.2",
+            "unit": "ng/mL",
+            "interpretation": "normal"
+          }
+        ]
+      },
+      "orders": {
+        "transcript": "Critical care progress note. Patient is a 45-year-old female admitted to the medical ICU with septic shock secondary to pyelononephritis. ICU day three. Overnight events.Required vasosuppressor wean. Norepinephrine discontinued at 0300. No acute events. Current status alert and oriented. Off sedation. Hemodynamically stable off pressors. Mean arterial pressure greater than 65 without support. O 2 L nasal cannula with oxygen saturation 96%. Urine output adequate at 0.8 mL/kg/ hour. Vitals, blood pressure 118/72, heart rate 88, temperature 37.8, respiratory rate 16. Labs, white blood cell count trending down from 18 to 12. Lactate normalized at 1.2. Creatinine improving from 2.4 to 1.8. Procalcitonin 1.2 down from 8. Currently on mero- meropenem. day three improving. Acute kidney injury, resolving. [PLAN] Continue antibiotics. Deescalate to oral ciproflocin when tolerating diet. Target 14-day total course. Transfer to floor today if stable. Infectious disease following.",
+        "medication_orders": [
+          {
+            "name": "ciproflocin",
+            "dose": null,
+            "frequency": "oral",
+            "route": null,
+            "duration": null,
+            "instructions": "deescalate to oral ciproflocin when tolerating diet"
+          }
+        ],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "intake.webm",
+        "workflow": "intake",
+        "description": "Extracted from intake.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 682.9,
+          "transcription_ms": 15074.7,
+          "extraction_ms": 42128.7,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 57917.4,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "New patient intake visit. This is a 58-year-old male establish care after belocating from calornia.HIEFOLAint I routine health maintenance and medication refills. [PAST MEDICAL HITORY] Includes type two diabetes diagnosed eight years ago, hypertension for 10 years, hyperlipidemia, and mild osteoarthritis of both knees. [PAST SURGICAL HISTORY] Includes appendectomy in 1995 and right knee arthroscopy in 218. [CURRENT MEDICATIONS] A metformin 1000 mg twice daily, lisinopril 20 mg daily, amlodipine 5 mg daily, atorvastatin 40 mg daily, and acetaminophen as needed for knee pain. [ALLERGIES] Include penicillin causing hives and shellfish causing throat swelling. [FAMILY HISTORY] Mother had breast cancer at age 62. Father had myocardial infarction at 58 and died at 72 from stroke. Brother has type two diabetes. [SOCIAL HISTORY] Former smoker, quit 15 years ago with a 20-packyear history. Drinks two beers weekly. Denies recreational drug use. Works as a financial adviser. Married with two adult children. Exercises by walking 30 minutes daily. [REVIEW OF SYSTEMS] Occasional knee stiffness, otherwise negative. Vital signs, blood pressure 134/84, heart rate 68. Weight 198 pounds. Height 5 feet 10 inches. BMI 28.4. [PHYSICAL EXAM] Well-developed male in no acute discre- uh distress. Cardiac, regular rate and rhythm. Lungs clear. Abdomen soft. Extremities with mild crepitus bilateral knees without effusion. [ASSESSMENT] Type two diabetes mellitus, hypertension, hyperlipidemia, osteoarthritis. [PLN] Continue current medications. Order hemoglobin A1c, comprehensive metabolic panel, lipid panel, urinalysis,schedule colonoscopy for age appropriate screening. Folu in two weeks to review labs and establish care plan.",
+        "chief_complaint": null,
+        "conditions": [],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "134/84",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "68",
+            "unit": "bpm"
+          },
+          {
+            "type": "weight",
+            "value": "198",
+            "unit": "lbs"
+          },
+          {
+            "type": "bmi",
+            "value": "28.4",
+            "unit": null
+          }
+        ],
+        "allergies": [
+          {
+            "substance": "penicillin",
+            "reaction": "hives",
+            "severity": "mild"
+          },
+          {
+            "substance": "shellfish",
+            "reaction": "throat swelling",
+            "severity": "moderate"
+          }
+        ],
+        "medications": [
+          {
+            "name": "metformin",
+            "dose": "1000 mg",
+            "frequency": "twice daily",
+            "route": null
+          },
+          {
+            "name": "lisinopril",
+            "dose": "20 mg",
+            "frequency": "daily",
+            "route": null
+          },
+          {
+            "name": "amlodipine",
+            "dose": "5 mg",
+            "frequency": "daily",
+            "route": null
+          },
+          {
+            "name": "atorvastatin",
+            "dose": "40 mg",
+            "frequency": "daily",
+            "route": null
+          },
+          {
+            "name": "acetaminophen",
+            "dose": null,
+            "frequency": "as needed",
+            "route": null
+          }
+        ],
+        "family_history": [
+          {
+            "relationship": "mother",
+            "condition": "breast cancer",
+            "age_of_onset": "62",
+            "deceased": null
+          },
+          {
+            "relationship": "father",
+            "condition": "myocardial infarction",
+            "age_of_onset": "58",
+            "deceased": null
+          },
+          {
+            "relationship": "brother",
+            "condition": "type two diabetes mellitus",
+            "age_of_onset": null,
+            "deceased": null
+          },
+          {
+            "relationship": "Father",
+            "condition": "myocardial infarction at 58 and died at 72 from stroke",
+            "age_of_onset": null,
+            "deceased": null
+          },
+          {
+            "relationship": "Brother",
+            "condition": "type two diabetes",
+            "age_of_onset": null,
+            "deceased": null
+          }
+        ],
+        "social_history": {
+          "tobacco": "Former smoker",
+          "alcohol": {
+            "status": "current",
+            "amount": "2 beers weekly"
+          },
+          "drugs": {
+            "status": "never",
+            "substances": []
+          },
+          "occupation": "financial adviser",
+          "living_situation": null
+        },
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "New patient intake visit. This is a 58-year-old male establish care after belocating from calornia.HIEFOLAint I routine health maintenance and medication refills. [PAST MEDICAL HITORY] Includes type two diabetes diagnosed eight years ago, hypertension for 10 years, hyperlipidemia, and mild osteoarthritis of both knees. [PAST SURGICAL HISTORY] Includes appendectomy in 1995 and right knee arthroscopy in 218. [CURRENT MEDICATIONS] A metformin 1000 mg twice daily, lisinopril 20 mg daily, amlodipine 5 mg daily, atorvastatin 40 mg daily, and acetaminophen as needed for knee pain. [ALLERGIES] Include penicillin causing hives and shellfish causing throat swelling. [FAMILY HISTORY] Mother had breast cancer at age 62. Father had myocardial infarction at 58 and died at 72 from stroke. Brother has type two diabetes. [SOCIAL HISTORY] Former smoker, quit 15 years ago with a 20-packyear history. Drinks two beers weekly. Denies recreational drug use. Works as a financial adviser. Married with two adult children. Exercises by walking 30 minutes daily. [REVIEW OF SYSTEMS] Occasional knee stiffness, otherwise negative. Vital signs, blood pressure 134/84, heart rate 68. Weight 198 pounds. Height 5 feet 10 inches. BMI 28.4. [PHYSICAL EXAM] Well-developed male in no acute discre- uh distress. Cardiac, regular rate and rhythm. Lungs clear. Abdomen soft. Extremities with mild crepitus bilateral knees without effusion. [ASSESSMENT] Type two diabetes mellitus, hypertension, hyperlipidemia, osteoarthritis. [PLN] Continue current medications. Order hemoglobin A1c, comprehensive metabolic panel, lipid panel, urinalysis,schedule colonoscopy for age appropriate screening. Folu in two weeks to review labs and establish care plan.",
+        "medication_orders": [],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "lab-review.webm",
+        "workflow": "lab_review",
+        "description": "Extracted from lab-review.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 421.7,
+          "transcription_ms": 8029.7,
+          "extraction_ms": 42087.3,
+          "fhir_transform_ms": 0.5,
+          "total_ms": 50593.8,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "female",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "[LAB REVEW F routine metabolic panel. Patient is a 61-year-old female with a history of type two diabetes and chronic kidney disease stage three. Labs from this morning, comprehensive metabolic panel shows sodium 138, potassium 4.2, chloride 102, CO2 24, BUN 32, creatinine 1.6, which is stable from prior. GFR estimated at 38, glucose 142 which is mildly elevated. Hemoglobin A1c is 7.2% up from 6.8% three months ago. Lipid panel shows total cholesterol 198, LDL 112, HDL 52, triglycerides 170. [ASSESSMENT] Diabetes with slightly worsening glycemic control, A1c now above goal, chronic kidney disease stage B3 three B stable. mild dylipidemia. [PLAN] Increase metformin to 1000 mg twice daily if tolerated. Reinforc diamary modifications. Recheck A1c in three months. Continue current statin. Follow up in three months.",
+        "chief_complaint": "routine metabolic panel",
+        "conditions": [
+          {
+            "name": "type 2 diabetes",
+            "icd10": "E11.9",
+            "status": "active",
+            "severity": "mild"
+          },
+          {
+            "name": "chronic kidney disease stage 3",
+            "icd10": "N18.5",
+            "status": "active",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "metformin",
+            "dose": "1000 mg",
+            "frequency": "twice daily",
+            "route": null
+          },
+          {
+            "name": "statin",
+            "dose": "unknown",
+            "frequency": "unknown",
+            "route": null
+          }
+        ],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": [
+          {
+            "name": "sodium",
+            "value": "138",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "potassium",
+            "value": "4.2",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "chloride",
+            "value": "102",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "CO2",
+            "value": "24",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "BUN",
+            "value": "32",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "creatinine",
+            "value": "1.6",
+            "unit": "mmol/L",
+            "interpretation": "normal"
+          },
+          {
+            "name": "GFR",
+            "value": "38",
+            "unit": "mL/min/1.73m2",
+            "interpretation": "normal"
+          },
+          {
+            "name": "glucose",
+            "value": "142",
+            "unit": "mmol/L",
+            "interpretation": "mildly elevated"
+          },
+          {
+            "name": "Hemoglobin A1c",
+            "value": "7.2",
+            "unit": "%",
+            "interpretation": "above goal"
+          },
+          {
+            "name": "total cholesterol",
+            "value": "198",
+            "unit": "mmol/L",
+            "interpretation": "mild dylipidemia"
+          },
+          {
+            "name": "LDL",
+            "value": "112",
+            "unit": "mmol/L",
+            "interpretation": "mild dylipidemia"
+          },
+          {
+            "name": "HDL",
+            "value": "52",
+            "unit": "mmol/L",
+            "interpretation": "mild dylipidemia"
+          },
+          {
+            "name": "triglycerides",
+            "value": "170",
+            "unit": "mmol/L",
+            "interpretation": "mild dylipidemia"
+          }
+        ]
+      },
+      "orders": {
+        "transcript": "[LAB REVEW F routine metabolic panel. Patient is a 61-year-old female with a history of type two diabetes and chronic kidney disease stage three. Labs from this morning, comprehensive metabolic panel shows sodium 138, potassium 4.2, chloride 102, CO2 24, BUN 32, creatinine 1.6, which is stable from prior. GFR estimated at 38, glucose 142 which is mildly elevated. Hemoglobin A1c is 7.2% up from 6.8% three months ago. Lipid panel shows total cholesterol 198, LDL 112, HDL 52, triglycerides 170. [ASSESSMENT] Diabetes with slightly worsening glycemic control, A1c now above goal, chronic kidney disease stage B3 three B stable. mild dylipidemia. [PLAN] Increase metformin to 1000 mg twice daily if tolerated. Reinforc diamary modifications. Recheck A1c in three months. Continue current statin. Follow up in three months.",
+        "medication_orders": [
+          {
+            "name": "metformin",
+            "dose": null,
+            "frequency": "twice daily",
+            "route": null,
+            "duration": null,
+            "instructions": "if tolerated"
+          }
+        ],
+        "lab_orders": [
+          {
+            "name": "Hemoglobin A1c",
+            "loinc": "81869-5"
+          }
+        ],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "neurology.webm",
+        "workflow": "neurology",
+        "description": "Extracted from neurology.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 486.9,
+          "transcription_ms": 9955,
+          "extraction_ms": 20410.6,
+          "fhir_transform_ms": 0.3,
+          "total_ms": 30897.9,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "female",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Neurology consult for new onset seizure. Patient is a 28-year-old female with no prior seizure history who presented to the emergency department after witnessed general tonic-clonic seizure lasting approximately two minutes with postictal confusion for 15 minutes. No tongue bite or incontinence noted. She reports recent sleep deprivation due to work stress averaging four hours of sleep nightly for the last week. She denies alcoono- alcohol or recreational drug use. No head trauma. Family history notable for cousin with epilepsy. Vital signs stable. Neurological exam, alert and oriented. Cranial nerves intact. Motor strength 5/5 throughout. Sensation intact. Reflexes 2+ symmetric. Negative Romberg gait steady. MRI brain without contrast shows no acute abnormality. EEG deprivation. [PLAN] EEG to evaluate for epileptiform activity. Counsel on seizure precautions including no driving for six months per state law. Avoid sleep deprivation and excessive alcohol. Leve- levetiracetam 500 mg twice daily started as prophylaxis given presentation severity. Followu in clinic in two weeks with EEG results. Retur to ED if recurrent seizure.",
+        "chief_complaint": "seizure",
+        "conditions": [
+          {
+            "name": "seizure",
+            "icd10": "R56.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "epilepsy",
+            "icd10": "G40.909",
+            "status": "suspected",
+            "severity": null
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "120/80",
+            "unit": "mmHg"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "levetiracetam",
+            "dose": "500 mg",
+            "frequency": "twice daily",
+            "route": "oral"
+          }
+        ],
+        "family_history": [
+          {
+            "relationship": "cousin",
+            "condition": "epilepsy",
+            "age_of_onset": null,
+            "deceased": null
+          }
+        ],
+        "social_history": {
+          "tobacco": "no",
+          "alcohol": "no",
+          "drugs": "no",
+          "occupation": null,
+          "living_situation": null
+        },
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Neurology consult for new onset seizure. Patient is a 28-year-old female with no prior seizure history who presented to the emergency department after witnessed general tonic-clonic seizure lasting approximately two minutes with postictal confusion for 15 minutes. No tongue bite or incontinence noted. She reports recent sleep deprivation due to work stress averaging four hours of sleep nightly for the last week. She denies alcoono- alcohol or recreational drug use. No head trauma. Family history notable for cousin with epilepsy. Vital signs stable. Neurological exam, alert and oriented. Cranial nerves intact. Motor strength 5/5 throughout. Sensation intact. Reflexes 2+ symmetric. Negative Romberg gait steady. MRI brain without contrast shows no acute abnormality. EEG deprivation. [PLAN] EEG to evaluate for epileptiform activity. Counsel on seizure precautions including no driving for six months per state law. Avoid sleep deprivation and excessive alcohol. Leve- levetiracetam 500 mg twice daily started as prophylaxis given presentation severity. Followu in clinic in two weeks with EEG results. Retur to ED if recurrent seizure.",
+        "medication_orders": [],
+        "lab_orders": [
+          {
+            "name": "EEG",
+            "loinc": "82176-5"
+          }
+        ],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "pediatrics.webm",
+        "workflow": "pediatrics",
+        "description": "Extracted from pediatrics.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 411.7,
+          "transcription_ms": 10077.4,
+          "extraction_ms": 45745.9,
+          "fhir_transform_ms": 0.1,
+          "total_ms": 56264.3,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Well child visit for fo-year-old male. Mom reports he is doing well, eating and sleeping normally. No concerns. Developmental milestones appropriate, speaks in complete sentences, can contraw circle and cross, ps on one foot. Plays cooperatively with other children. [PAST MEDICAL HISTORyY] Significant for ear infections. Had bilateral myringotomy tubes placed at age two. Tubes extruded spontaneously at age three. [CURRENT MEDICATIONS] None. [ALLERGIES] No known drug allergies. Does have environmental allergy to cats. Immunizations are up to date. Vital signs, weight 38 pounds, which is 50th percentile. Height 40 inches, which is 45th percentile. Blood pressure 92/58. heart rate 96.Respiratory rate 20. [PHYySICal examM] Alerert, interactive. Ch in no distress. HEENT, tympanic membranes clear bilaterally with small perforations from prior tubes. Oropharynx clear. Heart regular. Lungs clear. Abdomen, soft. Developmentally appropriate for age. [ASSESSMENT] Healthy fo-year-old male, well-chil exam. [PLAN] Continue age-appropriate diet and activity, car seat safety counseling provided. Anticipatory guidance for kindergarten readiness discussed. Return for fiveyear well-ch visit. Due for DTAP, IPV, MMR and varicella boosters at next visit.",
+        "chief_complaint": "fiveyear well-ch visit follow-up",
+        "conditions": [],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "92/58",
+            "unit": "mmHg"
+          },
+          {
+            "type": "heart_rate",
+            "value": "96",
+            "unit": "bpm"
+          },
+          {
+            "type": "respiratory_rate",
+            "value": "20",
+            "unit": "breaths/min"
+          },
+          {
+            "type": "weight",
+            "value": "38",
+            "unit": "lbs"
+          },
+          {
+            "type": "height",
+            "value": "40",
+            "unit": "in"
+          }
+        ],
+        "allergies": [
+          {
+            "substance": "cats",
+            "reaction": "environmental allergy",
+            "severity": "mild"
+          }
+        ],
+        "medications": [],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Well child visit for fo-year-old male. Mom reports he is doing well, eating and sleeping normally. No concerns. Developmental milestones appropriate, speaks in complete sentences, can contraw circle and cross, ps on one foot. Plays cooperatively with other children. [PAST MEDICAL HISTORyY] Significant for ear infections. Had bilateral myringotomy tubes placed at age two. Tubes extruded spontaneously at age three. [CURRENT MEDICATIONS] None. [ALLERGIES] No known drug allergies. Does have environmental allergy to cats. Immunizations are up to date. Vital signs, weight 38 pounds, which is 50th percentile. Height 40 inches, which is 45th percentile. Blood pressure 92/58. heart rate 96.Respiratory rate 20. [PHYySICal examM] Alerert, interactive. Ch in no distress. HEENT, tympanic membranes clear bilaterally with small perforations from prior tubes. Oropharynx clear. Heart regular. Lungs clear. Abdomen, soft. Developmentally appropriate for age. [ASSESSMENT] Healthy fo-year-old male, well-chil exam. [PLAN] Continue age-appropriate diet and activity, car seat safety counseling provided. Anticipatory guidance for kindergarten readiness discussed. Return for fiveyear well-ch visit. Due for DTAP, IPV, MMR and varicella boosters at next visit.",
+        "medication_orders": [],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "procedure.webm",
+        "workflow": "procedure",
+        "description": "Extracted from procedure.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 483,
+          "transcription_ms": 8070.2,
+          "extraction_ms": 16726.7,
+          "fhir_transform_ms": 0.1,
+          "total_ms": 25353.7,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Procedure note for colonoscopy. Patient is a 55-year-old male undergoing screening colonoscopy. Informed consent obtained. Pre-procedure time-out performed confirming correct patient and procedure. Sedation with propofol administered by anesthesia. Scope inserted through anus and advanced to cecum. Cecal landmarks include appendic- appendi- appendiceal orifice and ileocal valve identified. Withdrawal time eight minutes. [FINDINGS] Two sessile polyps identified, one 6 mm polyp in the ascending colon and one 4 mm polyp in the sigmoid colon. Both polyps removed with cold snare polypectomy and retrieved for pathology. Mucosa otherwise normal throughout. No bleeding complications. Patient tolerated procedure well and transferred to recovery in stable condition. Estimated blood loss minimal. Specimen sent to pathology. [RECcoOMMENDATIONS] Await pathology results. Repeat colonoscopy in three to five years depending on histology. resume normal diet. Avoid driving for 24 hours.",
+        "chief_complaint": "sessile polyp",
+        "conditions": [
+          {
+            "name": "sessile polyp",
+            "icd10": "D12.1",
+            "status": "confirmed",
+            "severity": "mild"
+          },
+          {
+            "name": "sessile polyp",
+            "icd10": "D12.1",
+            "status": "confirmed",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "propofol",
+            "dose": null,
+            "frequency": "once",
+            "route": "IV"
+          }
+        ],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Procedure note for colonoscopy. Patient is a 55-year-old male undergoing screening colonoscopy. Informed consent obtained. Pre-procedure time-out performed confirming correct patient and procedure. Sedation with propofol administered by anesthesia. Scope inserted through anus and advanced to cecum. Cecal landmarks include appendic- appendi- appendiceal orifice and ileocal valve identified. Withdrawal time eight minutes. [FINDINGS] Two sessile polyps identified, one 6 mm polyp in the ascending colon and one 4 mm polyp in the sigmoid colon. Both polyps removed with cold snare polypectomy and retrieved for pathology. Mucosa otherwise normal throughout. No bleeding complications. Patient tolerated procedure well and transferred to recovery in stable condition. Estimated blood loss minimal. Specimen sent to pathology. [RECcoOMMENDATIONS] Await pathology results. Repeat colonoscopy in three to five years depending on histology. resume normal diet. Avoid driving for 24 hours.",
+        "medication_orders": [],
+        "lab_orders": [
+          {
+            "name": "tissue to pathology",
+            "loinc": "00003-2"
+          }
+        ],
+        "referral_orders": [
+          {
+            "specialty": "pathology",
+            "reason": "await pathology results"
+          }
+        ],
+        "procedure_orders": [
+          {
+            "name": "colonoscopy"
+          }
+        ],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "radiology.webm",
+        "workflow": "radiology",
+        "description": "Extracted from radiology.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 304.8,
+          "transcription_ms": 5331.5,
+          "extraction_ms": 8522.3,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 14201.4,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Chest x-ray, two views PA and lateral. [CLINICAL HISTORY] 67-year-old male with cough and shortness of breath. [COMPARISON] Prior chest x-ray from six months ago. [FINDING] Heart size is normal. Mediastinal contours are unremarkable. There is patchy airspace opacity in the right lower lobe concerning for pneumonia. No pleural effusion detected. Lungs are otherwise clear. No pneumothorax. Osseous structures appear intact. [IMPRESSION] Right lower lobe airspace opacity most consistent with pneumonia in the appropriate clinical setting. Recommend clinical correlation and followup imaging after treatment to document resolution.",
+        "chief_complaint": "cough and shortness of breath",
+        "conditions": [
+          {
+            "name": "right lower lobe airspace opacity",
+            "icd10": "J18.9",
+            "status": "active",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [],
+        "allergies": [],
+        "medications": [],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": []
+      },
+      "orders": {
+        "transcript": "Chest x-ray, two views PA and lateral. [CLINICAL HISTORY] 67-year-old male with cough and shortness of breath. [COMPARISON] Prior chest x-ray from six months ago. [FINDING] Heart size is normal. Mediastinal contours are unremarkable. There is patchy airspace opacity in the right lower lobe concerning for pneumonia. No pleural effusion detected. Lungs are otherwise clear. No pneumothorax. Osseous structures appear intact. [IMPRESSION] Right lower lobe airspace opacity most consistent with pneumonia in the appropriate clinical setting. Recommend clinical correlation and followup imaging after treatment to document resolution.",
+        "medication_orders": [],
+        "lab_orders": [],
+        "referral_orders": [
+          {
+            "specialty": "pulmonology",
+            "reason": "clinical correlation"
+          }
+        ],
+        "procedure_orders": [],
+        "imaging_orders": [
+          {
+            "name": "chest x-ray, two views PA and lateral"
+          },
+          {
+            "name": "followup imaging after treatment to document resolution"
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "respiratory.webm",
+        "workflow": "respiratory",
+        "description": "Extracted from respiratory.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 583.9,
+          "transcription_ms": 8503.6,
+          "extraction_ms": 30854.6,
+          "fhir_transform_ms": 0.3,
+          "total_ms": 40040.2,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": null,
+        "age": null,
+        "gender": "male",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "Respiratory therapy assessment for patient on mechanical ventilation. Patient is a 71-year-old male postoperative day two from coronary artery bypass graft, currently intubated in the cardiac ICU. Current ventilator settings assist control volume tidal volume 450 mL, respiratory rate 14, FiO2 40%, PEEP 5 cm of water. Current ABG pH 7.38, pCO2 42, pO2 98, bicarbonate 24, oxygen saturation 97%. Patient is initiating spontaneous spontaneous breaths over set rate at 18 breaths per minute. Secretions are scant, thin and white. Breath sounds are diminished at bases with scattered crackles. Chest x-ray shows lu- low lung volumes with bibasilar atelectais. [ASSESSMENT] Patient meeting criteria for spontaneous breathing trial. [PLAN] Proceed with 30 minute SVT on pressure support 8/5. If tolerated, recommend extubation with supplemental oxygen viaso- via nasal cannula. Continue incentive spirometry, early mobilization and aggressive pulmonary toilet.",
+        "chief_complaint": "Postoperative respiratory distress",
+        "conditions": [
+          {
+            "name": "Postoperative respiratory distress",
+            "icd10": "488.9",
+            "status": "active",
+            "severity": "moderate"
+          },
+          {
+            "name": "Atelectasis",
+            "icd10": "J98.11",
+            "status": "active",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "oxygen_saturation",
+            "value": "97",
+            "unit": "%"
+          },
+          {
+            "type": "respiratory_rate",
+            "value": "18",
+            "unit": "breaths/min"
+          },
+          {
+            "type": "tidal_volume",
+            "value": "450",
+            "unit": "mL"
+          },
+          {
+            "type": "PEEP",
+            "value": "5",
+            "unit": "cmH2O"
+          },
+          {
+            "type": "FiO2",
+            "value": "40",
+            "unit": "%"
+          },
+          {
+            "type": "pH",
+            "value": "7.38",
+            "unit": "unit"
+          },
+          {
+            "type": "pCO2",
+            "value": "42",
+            "unit": "unit"
+          },
+          {
+            "type": "pO2",
+            "value": "98",
+            "unit": "unit"
+          },
+          {
+            "type": "HCO3",
+            "value": "24",
+            "unit": "unit"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "Ventilator settings",
+            "dose": null,
+            "frequency": null,
+            "route": null
+          }
+        ],
+        "family_history": [],
+        "social_history": null,
+        "lab_results": [
+          {
+            "name": "pH",
+            "value": "7.38",
+            "unit": "unit",
+            "interpretation": "normal"
+          },
+          {
+            "name": "pCO2",
+            "value": "42",
+            "unit": "unit",
+            "interpretation": "normal"
+          },
+          {
+            "name": "pO2",
+            "value": "98",
+            "unit": "unit",
+            "interpretation": "normal"
+          },
+          {
+            "name": "HCO3",
+            "value": "24",
+            "unit": "unit",
+            "interpretation": "normal"
+          }
+        ]
+      },
+      "orders": {
+        "transcript": "Respiratory therapy assessment for patient on mechanical ventilation. Patient is a 71-year-old male postoperative day two from coronary artery bypass graft, currently intubated in the cardiac ICU. Current ventilator settings assist control volume tidal volume 450 mL, respiratory rate 14, FiO2 40%, PEEP 5 cm of water. Current ABG pH 7.38, pCO2 42, pO2 98, bicarbonate 24, oxygen saturation 97%. Patient is initiating spontaneous spontaneous breaths over set rate at 18 breaths per minute. Secretions are scant, thin and white. Breath sounds are diminished at bases with scattered crackles. Chest x-ray shows lu- low lung volumes with bibasilar atelectais. [ASSESSMENT] Patient meeting criteria for spontaneous breathing trial. [PLAN] Proceed with 30 minute SVT on pressure support 8/5. If tolerated, recommend extubation with supplemental oxygen viaso- via nasal cannula. Continue incentive spirometry, early mobilization and aggressive pulmonary toilet.",
+        "medication_orders": [
+          {
+            "name": "Supplemental oxygen",
+            "dose": null,
+            "frequency": null,
+            "route": null,
+            "duration": null,
+            "instructions": "Via nasal cannula"
+          }
+        ],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [
+          {
+            "name": "Extubation"
+          },
+          {
+            "name": "SBT"
+          }
+        ],
+        "imaging_orders": []
+      }
+    },
+    {
+      "metadata": {
+        "script_file": "soap.webm",
+        "workflow": "soap",
+        "description": "Extracted from soap.webm",
+        "processed_at": "2026-01-31T16:04:06.149Z",
+        "metrics": {
+          "conversion_ms": 298.5,
+          "transcription_ms": 5830.8,
+          "extraction_ms": 17684.3,
+          "fhir_transform_ms": 0.2,
+          "total_ms": 23832.9,
+          "transcription_model": "MedASR (local)",
+          "extraction_model": "MedGemma (dedicated)"
+        }
+      },
+      "patient": {
+        "name": "null",
+        "age": null,
+        "gender": "female",
+        "date_of_birth": null
+      },
+      "ehr_data": {
+        "transcript": "[SUBJECTIVE] 35-year-old female presents with sore throat and low-grade fever for three days. She reports difficulty swallowing and mild headache. No cough or nasal congestion. She took ibuprofen with some relief. No sick contacts. [OBJECTIVE] Temperature 100.8, heart rate 88, blood pressure 118/74. Oropharynx shows tonsillar exudates bilaterally. Tender anterior cervical lymphadenopathy. Rapid strep test positive. [ASSESSMENT] Streptococcal pharyngitis. [PLAN] Amoxicillin 500 mg three times daily for 10 days. Supportive care may return to work after 24 hours on antibiotics.",
+        "chief_complaint": "sore throat and low-grade fever for three days",
+        "conditions": [
+          {
+            "name": "Streptococcal pharyngitis",
+            "icd10": "J02.0",
+            "status": "active",
+            "severity": "mild"
+          }
+        ],
+        "vitals": [
+          {
+            "type": "blood_pressure",
+            "value": "118/74",
+            "unit": "mmHg"
+          },
+          {
+            "type": "temperature",
+            "value": "100.8",
+            "unit": "F"
+          },
+          {
+            "type": "heart_rate",
+            "value": "88",
+            "unit": "bpm"
+          }
+        ],
+        "allergies": [],
+        "medications": [
+          {
+            "name": "Amoxicillin",
+            "dose": "500 mg",
+            "frequency": "three times daily",
+            "route": "oral"
+          }
+        ],
+        "family_history": [],
+        "social_history": {
+          "tobacco": null,
+          "alcohol": null,
+          "drugs": null,
+          "occupation": null,
+          "living_situation": null
+        },
+        "lab_results": [
+          {
+            "name": "Rapid strep test",
+            "value": "positive",
+            "unit": null,
+            "interpretation": null
+          }
+        ]
+      },
+      "orders": {
+        "transcript": "[SUBJECTIVE] 35-year-old female presents with sore throat and low-grade fever for three days. She reports difficulty swallowing and mild headache. No cough or nasal congestion. She took ibuprofen with some relief. No sick contacts. [OBJECTIVE] Temperature 100.8, heart rate 88, blood pressure 118/74. Oropharynx shows tonsillar exudates bilaterally. Tender anterior cervical lymphadenopathy. Rapid strep test positive. [ASSESSMENT] Streptococcal pharyngitis. [PLAN] Amoxicillin 500 mg three times daily for 10 days. Supportive care may return to work after 24 hours on antibiotics.",
+        "medication_orders": [
+          {
+            "name": "Amoxicillin",
+            "dose": null,
+            "frequency": "three times daily",
+            "route": null,
+            "duration": null,
+            "instructions": "for 10 days"
+          }
+        ],
+        "lab_orders": [],
+        "referral_orders": [],
+        "procedure_orders": [],
+        "imaging_orders": []
+      }
+    }
+  ]
+}

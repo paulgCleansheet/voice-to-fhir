@@ -86,6 +86,23 @@ def wilson_ci(successes: int, total: int, confidence: float = 0.95) -> Tuple[flo
     return (max(0, center - spread), min(1, center + spread))
 
 
+def normalize_recording_name(name: str) -> str:
+    """Normalize recording names for consistent matching.
+
+    Handles variations like 'h-p' vs 'hp', 'follow-up' vs 'followup'.
+    """
+    # Remove file extensions
+    name = name.replace('.webm', '').replace('.wav', '').replace('.expected', '')
+    # Normalize common variations
+    name_map = {
+        'h-p': 'hp',
+        'follow-up': 'follow-up',  # keep as-is
+        'lab-review': 'lab-review',  # keep as-is
+        'cardiology-consult': 'cardiology-consult',  # keep as-is
+    }
+    return name_map.get(name, name)
+
+
 def fuzzy_match(s1: str, s2: str, threshold: float = 0.80) -> bool:
     """Check if two strings are fuzzy matches."""
     if not s1 or not s2:
@@ -240,6 +257,7 @@ def load_expected_files(expected_dir: Path) -> Dict[str, dict]:
     expected = {}
     for f in expected_dir.glob('*.expected.json'):
         name = f.stem.replace('.expected', '')
+        name = normalize_recording_name(name)
         with open(f, encoding='utf-8') as fp:
             expected[name] = json.load(fp)
     return expected
@@ -255,11 +273,85 @@ def load_actual_extractions(actual_path: Path) -> Dict[str, Tuple[dict, str]]:
     for item in pool:
         filename = item.get('filename', '')
         name = filename.replace('.webm', '').replace('.wav', '')
+        name = normalize_recording_name(name)
         transcript = item.get('transcript', '')
         extracted = item.get('extractedData', {})
         actual[name] = (extracted, transcript)
 
     return actual
+
+
+def load_bulk_export(export_path: Path) -> Dict[str, Tuple[dict, str]]:
+    """Load MedGemma extractions from bulk export format (voice-to-fhir-results-*.json).
+
+    Bulk export format:
+    {
+        "results": [
+            {
+                "metadata": {"script_file": "cardiology-consult.webm"},
+                "ehr_data": {"transcript": "...", "conditions": [...], ...},
+                "orders": {"medication_orders": [...], ...}
+            }
+        ]
+    }
+
+    Returns dict mapping recording name to (normalized_extraction, transcript).
+    """
+    with open(export_path, encoding='utf-8') as f:
+        data = json.load(f)
+
+    actual = {}
+    results = data.get('results', [])
+
+    for item in results:
+        # Get filename from metadata
+        metadata = item.get('metadata', {})
+        filename = metadata.get('script_file', '')
+        name = filename.replace('.webm', '').replace('.wav', '')
+        name = normalize_recording_name(name)
+
+        if not name:
+            continue
+
+        # Get ehr_data and orders
+        ehr_data = item.get('ehr_data', {})
+        orders = item.get('orders', {})
+
+        transcript = ehr_data.get('transcript', '')
+
+        # Normalize to the format compare_recording expects
+        extracted = {
+            'conditions': ehr_data.get('conditions', []),
+            'medications': ehr_data.get('medications', []),
+            'vitals': ehr_data.get('vitals', []),
+            'allergies': ehr_data.get('allergies', []),
+            'familyHistory': ehr_data.get('family_history', []),
+            'labResults': ehr_data.get('lab_results', []),
+            'orders': {
+                'medications': orders.get('medication_orders', []),
+                'labs': orders.get('lab_orders', []),
+                'imaging': orders.get('imaging_orders', []),
+                'procedures': orders.get('procedure_orders', []),
+                'consults': orders.get('referral_orders', []),
+            }
+        }
+
+        actual[name] = (extracted, transcript)
+
+    return actual
+
+
+def detect_file_format(file_path: Path) -> str:
+    """Detect whether a JSON file is bulk export or ground-truth format."""
+    with open(file_path, encoding='utf-8') as f:
+        data = json.load(f)
+
+    if 'results' in data and isinstance(data.get('results'), list):
+        return 'bulk_export'
+    elif 'state' in data and 'reviewPool' in data.get('state', {}):
+        return 'ground_truth'
+    else:
+        raise ValueError(f"Unknown file format: {file_path}")
 
 
 def aggregate_metrics(totals: Dict[str, Metrics]) -> Tuple[float, float, float, int]:
@@ -328,51 +420,86 @@ def main():
     parser = argparse.ArgumentParser(
         description='Benchmark MedGemma vs Baseline against human-defined ground truth'
     )
-    parser.add_argument('--expected-dir', '-e', default=None)
-    parser.add_argument('--actual', '-a', default=None)
-    parser.add_argument('--verbose', '-v', action='store_true')
-    parser.add_argument('--errors', '-E', action='store_true')
+    parser.add_argument('--expected-dir', '-e', default=None,
+                        help='Directory containing .expected.json files')
+    parser.add_argument('--actual', '-a', default=None,
+                        help='Path to MedGemma extractions (ground-truth.json or bulk export)')
+    parser.add_argument('--bulk-export', '-b', default=None,
+                        help='Path to bulk export file (voice-to-fhir-results-*.json)')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='Show per-recording details')
+    parser.add_argument('--errors', '-E', action='store_true',
+                        help='Show error analysis (false negatives)')
     args = parser.parse_args()
 
     script_dir = Path(__file__).parent.parent
 
-    # Find expected files
+    # Find expected files (ground truth)
     if args.expected_dir:
         expected_dir = Path(args.expected_dir)
     else:
         for p in [
-            script_dir / 'tests' / 'recordings',
-            Path('C:/Users/PaulGaljan/Github/cleansheet-voice-to-fhir/tests/recordings'),
+            script_dir / 'tests' / 'fixtures' / 'recordings',  # Primary: v2hr repo
+            script_dir / 'tests' / 'recordings',               # Legacy location
         ]:
-            if p.exists():
+            if p.exists() and list(p.glob('*.expected.json')):
                 expected_dir = p
                 break
         else:
             print("Error: Could not find expected files directory")
+            print("Expected: tests/fixtures/recordings/*.expected.json")
             return 1
 
-    # Find actual extractions
-    if args.actual:
+    # Find actual extractions - prefer bulk export if specified
+    if args.bulk_export:
+        actual_path = Path(args.bulk_export)
+        file_format = 'bulk_export'
+    elif args.actual:
         actual_path = Path(args.actual)
+        file_format = detect_file_format(actual_path)
     else:
-        for p in [
+        # Look for bulk export first, then ground-truth.json
+        bulk_paths = [
+            script_dir / 'tests' / 'fixtures' / 'bulk-export.json',  # Primary: v2hr repo
+        ]
+        ground_truth_paths = [
             script_dir / 'tests' / 'fixtures' / 'ground-truth.json',
-            script_dir / 'test' / 'fixtures' / 'ground-truth.json',
-            Path('C:/Users/PaulGaljan/Github/cleansheet-voice-to-fhir/test/fixtures/ground-truth.json'),
-        ]:
+        ]
+
+        actual_path = None
+        file_format = None
+
+        # Try bulk export first
+        for p in bulk_paths:
             if p.exists():
                 actual_path = p
+                file_format = 'bulk_export'
                 break
-        else:
-            print("Error: Could not find ground-truth.json")
+
+        # Fall back to ground-truth.json
+        if not actual_path:
+            for p in ground_truth_paths:
+                if p.exists():
+                    actual_path = p
+                    file_format = 'ground_truth'
+                    break
+
+        if not actual_path:
+            print("Error: Could not find MedGemma extractions file")
+            print("Use --bulk-export or --actual to specify the file path")
             return 1
 
     print(f"Expected files (human-defined): {expected_dir}")
     print(f"MedGemma extractions: {actual_path}")
+    print(f"File format: {file_format}")
 
-    # Load data
+    # Load data based on format
     expected = load_expected_files(expected_dir)
-    actual_data = load_actual_extractions(actual_path)  # Returns (extracted, transcript) tuples
+
+    if file_format == 'bulk_export':
+        actual_data = load_bulk_export(actual_path)
+    else:
+        actual_data = load_actual_extractions(actual_path)
 
     print(f"\nFound {len(expected)} expected files, {len(actual_data)} MedGemma extractions")
 
