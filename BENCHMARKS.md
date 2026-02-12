@@ -215,6 +215,7 @@ This methodology avoids circular reasoning where comparing a system to its own o
 | Vitals | 93% | 83% | 88% |
 | Allergies | 0% | 0% | 0% |
 | Family History | 0% | 0% | 0% |
+
 | Orders | 36% | 16% | 23% |
 
 ---
