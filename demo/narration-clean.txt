@@ -1,21 +1,17 @@
-Physicians spend four and a half hours every day on documentation. More time than they spend with patients. This is Voice to Health Record, a clinical extraction pipeline powered by Google's MedGemma.
+Physicians spend four and a half hours every day on documentation. More time than they spend with patients.
 
-The problem is a translation gap. Clinicians speak naturally, but EHRs need structured data with ICD-10 codes and RxNorm identifiers. Manual data entry is slow, error-prone, and burns out physicians.
+This is Voice to Health Record, a clinical extraction pipeline powered by Google's MedGemma that transforms voice dictation into structured EHR data automatically.
 
-Let me show you the working system. I'll start the server with Docker Compose. The server is now running.
+The problem: clinicians speak naturally, but EHRs require structured data with medical codes. Manual entry is slow and burns out physicians.
 
-Here's a cardiology consultation. A 48 year old male with chest pain, on aspirin. The physician orders a stress test and starts statin therapy.
+The solution: AI-powered extraction that listens to clinical dictation and automatically populates the EHR.
 
-I'll send this to the extraction API. In under three seconds, MedGemma extracts the complete clinical picture.
+Here's a live demo. A 48-year-old male with chest pain on aspirin. I'll send the clinical note to the extraction API.
 
-Notice the ICD-10 code for angina, the RxNorm code for aspirin verified against the national database, and the automated order extraction. Stress test, echo, and statin therapy.
+In under three seconds, MedGemma extracts the complete picture: diagnosis of angina with ICD-10 code, medications with RxNorm codes, vital signs, and orders for stress testing and statin therapy.
 
-Now I'll transform this to a FHIR R4 Bundle. Ready for Epic, Cerner, or any FHIR server. We also support CDA and HL7 version 2.
+We benchmarked against rule-based extraction on 199 clinical entities. MedGemma achieves 69 percent F1, a 13 point improvement over baseline. Critically, MedGemma catches allergies and family history that traditional rules completely miss.
 
-We benchmarked against regex-based extraction using 181 annotated entities. MedGemma achieves 66% F1, an 11 point improvement over baseline. Critically, MedGemma catches allergies and family history that rule-based systems completely miss.
-
-The potential impact: reduced documentation burden per patient, enabling clinicians to spend more time with patients.
-
-Deploys to the cloud at three cents per extraction, or on-premises for complete HIPAA compliance.
+The system exports to FHIR, CDA, or HL7 for any EHR system. Deploys to the cloud or on-premises with complete HIPAA compliance.
 
 Voice to Health Record. Open source. Because physicians should spend their time with patients, not paperwork.

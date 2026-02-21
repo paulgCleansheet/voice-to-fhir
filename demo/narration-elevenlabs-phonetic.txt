@@ -1,27 +1,23 @@
 Voice-to-Health-Record: Clinical Documentation Extraction with MedGemma
-Duration: 2 minutes 30 seconds
+Duration: 3 minutes
 Voice: Adam or Rachel (Professional Narrator)
 
 ---
 
-Physicians spend four and a half hours every day on documentation. More time than they spend with patients. This is Voice to Health Record, a clinical extraction pipeline powered by Google's Med-Gemma.
+Physicians spend four and a half hours every day on documentation. More time than they spend with patients.
 
-The problem is a translation gap. Clinicians speak naturally, but E-H-Rs need structured data with I-C-D-10 codes and R-X-Norm identifiers. Manual data entry is slow, error-prone, and burns out physicians.
+This is Voice to Health Record, a clinical extraction pipeline powered by Google's Med-Gemma that transforms voice dictation into structured EHR data automatically.
 
-Let me show you the working system. I'll start the server with Docker Compose. The server is now running.
+The problem: clinicians speak naturally, but E-H-Rs require structured data with medical codes. Manual entry is slow and burns out physicians.
 
-Here's a cardiology consultation. A 48 year old male with chest pain, on aspirin. The physician orders a stress test and starts statin therapy.
+The solution: A-I-powered extraction that listens to clinical dictation and automatically populates the E-H-R.
 
-I'll send this to the extraction A-P-I. In under three seconds, Med-Gemma extracts the complete clinical picture.
+Here's a live demo. A 48-year-old male with chest pain on aspirin. I'll send the clinical note to the extraction A-P-I.
 
-Notice the I-C-D-10 code for an-jai-nah, the R-X-Norm code for aspirin verified against the national database, and the automated order extraction. Stress test, echo, and statin therapy.
+In under three seconds, Med-Gemma extracts the complete picture: diagnosis of ANG-uh-nuh with I-C-D-10 code, medications with R-X-Norm codes, vital signs, and orders for stress testing and statin therapy.
 
-Now I'll transform this to a Fire R4 Bundle. Ready for Epic, Cerner, or any Fire server. We also support C-D-A and H-L-7 version 2.
+We benchmarked against rule-based extraction on 199 clinical entities. Med-Gemma achieves 69 percent F-1, a 13 point improvement over baseline. Critically, Med-Gemma catches allergies and family history that traditional rules completely miss.
 
-We benchmarked against rule-based extraction using 199 annotated entities. Med-Gemma achieves 69 percent F1, a 13 point improvement over baseline. Critically, Med-Gemma catches allergies and family history that rule-based systems completely miss.
-
-The potential impact: reduced documentation burden per patient, enabling clinicians to spend more time with patients.
-
-Deploys to the cloud at three cents per extraction, or on-premises for complete HIPAA compliance.
+The system exports to F-H-I-R, C-D-A, or H-L-7 for any E-H-R system. Deploys to the cloud or on-premises with complete H-I-P-A-A compliance.
 
 Voice to Health Record. Open source. Because physicians should spend their time with patients, not paperwork.
