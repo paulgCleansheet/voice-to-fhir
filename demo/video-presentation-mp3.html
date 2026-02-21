@@ -410,7 +410,7 @@
                 </p>
             </section>
 
-            <!-- Slide 9: Clinician Quote + Deployment -->
+            <!-- Slide 10: Clinician Quote -->
             <section>
                 <h2>Clinical Perspective</h2>
                 <div class="quote-box">
@@ -423,7 +423,7 @@
                 </p>
             </section>
 
-            <!-- Slide 10: Closing -->
+            <!-- Slide 11: Closing -->
             <section>
                 <div class="end-card" style="padding-bottom: 80px;">
                     <h1 style="font-size: 2em;">Voice to FHIR</h1>
@@ -456,7 +456,9 @@
 
     <!-- Controls Overlay -->
     <div class="controls-overlay" id="controls">
-        <button id="startBtn">▶ Play Presentation</button>
+        <button onclick="Reveal.prev()" title="Previous slide (←)">◀ Prev</button>
+        <button onclick="Reveal.next()" title="Next slide (→)">Next ▶</button>
+        <button id="startBtn">▶ Play</button>
         <button id="pauseBtn" disabled>⏸ Pause</button>
         <button id="restartBtn" disabled>↺ Restart</button>
         <button id="calibrateBtn">⚙ Calibrate</button>
@@ -480,15 +482,16 @@
         // Use the Calibrate button to record exact timestamps from the actual MP3.
         const SLIDE_TIMESTAMPS = [
             0,      // Slide 1:  Title       - 0:00
-            2,      // Slide 2:  Problem     - 0:02 "Physicians spend four and a half hours..."
-            12,     // Slide 3:  Docker      - 0:12 "This is Voice to FHIR..."
+            2,      // Slide 2:  Problem     - 0:15 "Physicians spend four and a half hours..."
+            12,     // Slide 3:  Docker      - 0:35 "This is Voice to FHIR..."
             43,     // Slide 4:  Transcript  - 0:43 "Here's a live demo..."
             50,     // Slide 5:  API Call    - 0:50 "I'll send the clinical note..."
             55,     // Slide 6:  Extraction  - 0:55 "In under three seconds..."
-            75,     // Slide 7:  Benchmarks  - 1:15 "We benchmarked against..."
-            91,     // Slide 8:  Impact      - 1:31 "This is a proof of concept..."
-            115,    // Slide 9:  Quote       - 1:55 "The system exports to FHIR..."
-            132,    // Slide 10: Closing     - 2:12 "Voice to FHIR. Open source..."
+            70,     // Slide 7:  FHIR        - 1:10 (brief visual)
+            75,     // Slide 8:  Benchmarks  - 1:15 "We benchmarked against..."
+            91,     // Slide 9:  Impact      - 1:31 "This is a proof of concept..."
+            115,    // Slide 10: Quote       - 1:55 "The system exports to FHIR..."
+            132,    // Slide 11: Closing     - 2:12 "Voice to FHIR. Open source..."
         ];
 
         // =========================================================
@@ -657,7 +660,7 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
         // CALIBRATION
         // =========================================================
 
-        const SLIDE_NAMES = ['Title', 'Problem', 'Docker', 'Transcript', 'API Call', 'Extraction', 'Benchmarks', 'Impact', 'Quote', 'Closing'];
+        const SLIDE_NAMES = ['Title', 'Problem', 'Docker', 'Transcript', 'API Call', 'Extraction', 'FHIR', 'Benchmarks', 'Impact', 'Quote', 'Closing'];
         let calibrating = false;
         let calibrateIdx = 0;
         let calibratedTimestamps = [];
@@ -732,6 +735,8 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
             document.getElementById('transcriptText').textContent = TRANSCRIPT;
             document.getElementById('extractionResult').textContent =
                 JSON.stringify(EXTRACTION_RESULT, null, 2);
+            document.getElementById('fhirResult').textContent =
+                JSON.stringify(FHIR_RESULT, null, 2);
 
             // Init Reveal
             await Reveal.initialize({
