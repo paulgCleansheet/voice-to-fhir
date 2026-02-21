@@ -452,11 +452,20 @@
         <source src="elevenlabs.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- Calibration Overlay -->
+    <div id="calibrateOverlay" style="display:none; position:fixed; top:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.95); border:2px solid #4a9eff; border-radius:12px; padding:20px 30px; z-index:2000; text-align:center; min-width:440px;">
+        <div style="color:#4a9eff; font-weight:700; margin-bottom:8px; font-size:0.9em;">CALIBRATION MODE — audio plays from start</div>
+        <div id="calibrateLabel" style="color:#fff; margin-bottom:15px; font-size:1em; line-height:1.4;"></div>
+        <button id="markBtn" style="background:#4a9eff; color:white; border:none; padding:12px 30px; border-radius:20px; font-size:1.1em; cursor:pointer; font-weight:700;">Mark Slide (M)</button>
+        <button onclick="exitCalibration()" style="background:#555; color:white; border:none; padding:12px 20px; border-radius:20px; font-size:0.9em; cursor:pointer; margin-left:10px;">Cancel</button>
+    </div>
+
     <!-- Controls Overlay -->
     <div class="controls-overlay" id="controls">
         <button id="startBtn">▶ Play Presentation</button>
         <button id="pauseBtn" disabled>⏸ Pause</button>
         <button id="restartBtn" disabled>↺ Restart</button>
+        <button id="calibrateBtn">⚙ Calibrate</button>
         <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
         <span class="status" id="status">Ready</span>
     </div>
@@ -473,18 +482,20 @@
         // Adjust these timestamps (in seconds) to match your MP3
         // Listen to the audio and note when each section ends
 
+        // Estimated from word-count analysis (282 words / 143s audio).
+        // Use the Calibrate button to record exact timestamps from the actual MP3.
         const SLIDE_TIMESTAMPS = [
-            0,      // Slide 1: Title - starts at 0:00
-            12,     // Slide 2: Problem - starts at 0:12
-            30,     // Slide 3: Docker - starts at 0:24
-            36,     // Slide 4: Transcript - starts at 0:32
-            46,     // Slide 5: API Call - starts at 0:42
-            50,     // Slide 6: Extraction - starts at 0:50
-            68,     // Slide 7: FHIR - starts at 1:02
-            77,     // Slide 8: Benchmarks - starts at 1:12
-            93,     // Slide 9: Impact - starts at 1:27
-            104,     // Slide 10: Quote - starts at 1:37
-            105,    // Slide 11: Closing - starts at 1:45
+            0,      // Slide 1:  Title       - 0:00
+            2,      // Slide 2:  Problem     - 0:02 "Physicians spend four and a half hours..."
+            12,     // Slide 3:  Docker      - 0:12 "This is Voice to FHIR..."
+            43,     // Slide 4:  Transcript  - 0:43 "Here's a live demo..."
+            50,     // Slide 5:  API Call    - 0:50 "I'll send the clinical note..."
+            55,     // Slide 6:  Extraction  - 0:55 "In under three seconds..."
+            70,     // Slide 7:  FHIR        - 1:10 (brief visual)
+            75,     // Slide 8:  Benchmarks  - 1:15 "We benchmarked against..."
+            91,     // Slide 9:  Impact      - 1:31 "This is a proof of concept..."
+            115,    // Slide 10: Quote       - 1:55 "The system exports to FHIR..."
+            132,    // Slide 11: Closing     - 2:12 "Voice to FHIR. Open source..."
         ];
 
         // =========================================================
@@ -650,6 +661,76 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
         }
 
         // =========================================================
+        // CALIBRATION
+        // =========================================================
+
+        const SLIDE_NAMES = ['Title', 'Problem', 'Docker', 'Transcript', 'API Call', 'Extraction', 'FHIR', 'Benchmarks', 'Impact', 'Quote', 'Closing'];
+        let calibrating = false;
+        let calibrateIdx = 0;
+        let calibratedTimestamps = [];
+
+        function enterCalibration() {
+            calibrating = true;
+            calibrateIdx = 1; // Slide 1 is always 0
+            calibratedTimestamps = [0];
+
+            // Reset and play from start
+            audio.pause();
+            audio.currentTime = 0;
+            clearInterval(syncInterval);
+            Reveal.slide(0);
+            document.getElementById('dockerOutput').innerHTML = '';
+
+            audio.play();
+            isPlaying = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('pauseBtn').disabled = false;
+            document.getElementById('restartBtn').disabled = false;
+            document.getElementById('status').textContent = 'Calibrating...';
+            syncInterval = setInterval(syncSlides, 100);
+
+            document.getElementById('calibrateOverlay').style.display = 'block';
+            updateCalibrateLabel();
+        }
+
+        function exitCalibration() {
+            calibrating = false;
+            document.getElementById('calibrateOverlay').style.display = 'none';
+            document.getElementById('status').textContent = isPlaying ? 'Playing...' : 'Ready';
+        }
+
+        function updateCalibrateLabel() {
+            if (calibrateIdx < SLIDE_TIMESTAMPS.length) {
+                document.getElementById('calibrateLabel').textContent =
+                    `Click when Slide ${calibrateIdx + 1}: "${SLIDE_NAMES[calibrateIdx]}" should appear`;
+            }
+        }
+
+        function markCalibration() {
+            if (!calibrating || calibrateIdx >= SLIDE_TIMESTAMPS.length) return;
+            calibratedTimestamps.push(Math.round(audio.currentTime * 10) / 10);
+            calibrateIdx++;
+            if (calibrateIdx >= SLIDE_TIMESTAMPS.length) {
+                showCalibrationResult();
+            } else {
+                updateCalibrateLabel();
+            }
+        }
+
+        function showCalibrationResult() {
+            calibrating = false;
+            const lines = calibratedTimestamps.map((t, i) => {
+                const m = Math.floor(t / 60);
+                const s = String(Math.floor(t % 60)).padStart(2, '0');
+                return `    ${String(t).padEnd(6)}// Slide ${i + 1}: ${SLIDE_NAMES[i]} — ${m}:${s}`;
+            }).join('\n');
+            document.getElementById('calibrateLabel').innerHTML =
+                `<strong style="color:#4ade80">Done! Paste into SLIDE_TIMESTAMPS:</strong>` +
+                `<pre style="text-align:left;font-size:0.75em;background:#111;padding:10px;border-radius:6px;margin-top:8px;overflow:auto">[\n${lines}\n];</pre>`;
+            document.getElementById('markBtn').style.display = 'none';
+        }
+
+        // =========================================================
         // INIT
         // =========================================================
 
@@ -697,6 +778,8 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
             document.getElementById('startBtn').addEventListener('click', startPresentation);
             document.getElementById('pauseBtn').addEventListener('click', togglePause);
             document.getElementById('restartBtn').addEventListener('click', restartPresentation);
+            document.getElementById('calibrateBtn').addEventListener('click', enterCalibration);
+            document.getElementById('markBtn').addEventListener('click', markCalibration);
 
             // Keyboard shortcuts
             document.addEventListener('keydown', (e) => {
@@ -707,6 +790,9 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
                     } else {
                         togglePause();
                     }
+                }
+                if (e.code === 'KeyM' && calibrating) {
+                    markCalibration();
                 }
             });
         });
