@@ -735,8 +735,7 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
             document.getElementById('transcriptText').textContent = TRANSCRIPT;
             document.getElementById('extractionResult').textContent =
                 JSON.stringify(EXTRACTION_RESULT, null, 2);
-            document.getElementById('fhirResult').textContent =
-                JSON.stringify(FHIR_RESULT, null, 2);
+
 
             // Init Reveal
             await Reveal.initialize({
