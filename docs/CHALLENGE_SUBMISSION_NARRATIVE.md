@@ -1,15 +1,15 @@
 # MedGemma Impact Challenge 2026: Submission Narrative
 
-**Project:** Voice-to-Health-Record
+**Project:** Voice to FHIR
 **Team:** Cleansheet LLC
 **Medical Advisor:** Leah Galjan Post, MD, FAAP
-**Repository:** https://github.com/paulgCleansheet/voice-to-health-record
+**Repository:** https://github.com/paulgCleansheet/voice-to-fhir
 
 ---
 
 ## Abstract
 
-Voice-to-Health-Record (v2hr) is an open-source clinical extraction pipeline that transforms natural language transcripts into structured, coded healthcare data using Google's MedGemma medical language model. The system achieves 225% average F1 improvement over rule-based extraction, enabling 13 minutes of documentation time savings per patient encounter. By combining MedGemma's clinical reasoning with deterministic terminology validation (RxNorm, ICD-10-CM, LOINC), v2hr produces interoperable FHIR R4, CDA, and HL7 v2.x output ready for EHR integration.
+Voice to FHIR (voice-to-fhir) is an open-source clinical extraction pipeline that transforms natural language transcripts into structured, coded healthcare data using Google's MedGemma medical language model. The system achieves 225% average F1 improvement over rule-based extraction, enabling 13 minutes of documentation time savings per patient encounter. By combining MedGemma's clinical reasoning with deterministic terminology validation (RxNorm, ICD-10-CM, LOINC), voice-to-fhir produces interoperable FHIR R4, CDA, and HL7 v2.x output ready for EHR integration.
 
 ---
 
@@ -48,11 +48,11 @@ Healthcare needs an **open, accurate, affordable solution** that:
 
 ---
 
-## 2. Solution: Voice-to-Health-Record
+## 2. Solution: Voice to FHIR
 
 ### Architecture
 
-v2hr implements a three-stage extraction pipeline:
+voice-to-fhir implements a three-stage extraction pipeline:
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
@@ -130,7 +130,7 @@ This supports medical necessity documentation required for billing compliance.
 
 ### Methodology
 
-We evaluated v2hr against a rule-based baseline (regex pattern matching) using 16 SME-validated clinical transcripts spanning multiple workflow types (cardiology, emergency, H&P, SOAP, pediatrics, neurology, ICU, etc.).
+We evaluated voice-to-fhir against a rule-based baseline (regex pattern matching) using 16 SME-validated clinical transcripts spanning multiple workflow types (cardiology, emergency, H&P, SOAP, pediatrics, neurology, ICU, etc.).
 
 **Ground Truth:** Each transcript was processed by MedGemma, then reviewed and corrected by a board-certified physician (Leah Galjan Post, MD, FAAP).
 
@@ -186,7 +186,7 @@ The extraction tasks where MedGemma provides the greatest advantage—order dete
 
 ### Error Reduction
 
-| Error Type | Baseline Rate | v2hr Rate | Reduction |
+| Error Type | Baseline Rate | voice-to-fhir Rate | Reduction |
 |------------|---------------|-----------|-----------|
 | Medication transcription | 8.2% | 4.5% | **45%** |
 | Diagnosis miscoding | 12.1% | 8.7% | **28%** |
@@ -195,7 +195,7 @@ The extraction tasks where MedGemma provides the greatest advantage—order dete
 
 ### Health Equity Impact
 
-v2hr enables affordable documentation automation for settings that cannot afford scribes or enterprise solutions:
+voice-to-fhir enables affordable documentation automation for settings that cannot afford scribes or enterprise solutions:
 
 | Setting | Facilities | Potential Patients |
 |---------|------------|-------------------|
@@ -220,7 +220,7 @@ v2hr enables affordable documentation automation for settings that cannot afford
 
 ### EHR Integration
 
-v2hr outputs three industry-standard formats:
+voice-to-fhir outputs three industry-standard formats:
 
 - **FHIR R4 Bundle** → Epic, Cerner, Azure FHIR, HAPI
 - **CDA R2 Document** → Epic Chart Import, legacy systems
@@ -268,8 +268,8 @@ v2hr outputs three industry-standard formats:
 
 ```bash
 # Clone repository
-git clone https://github.com/paulgCleansheet/voice-to-health-record.git
-cd voice-to-health-record
+git clone https://github.com/paulgCleansheet/voice-to-fhir.git
+cd voice-to-fhir
 
 # Install
 pip install -e .
@@ -294,7 +294,7 @@ python scripts/benchmark.py --verbose
 ### Repository Structure
 
 ```
-voice-to-health-record/
+voice-to-fhir/
 ├── src/
 │   ├── extraction/          # MedGemma client, prompts, post-processing
 │   ├── export/              # FHIR, CDA, HL7 output generators
@@ -314,7 +314,7 @@ voice-to-health-record/
 
 ## 8. Conclusion
 
-Voice-to-Health-Record demonstrates that MedGemma can transform clinical documentation by:
+Voice to FHIR demonstrates that MedGemma can transform clinical documentation by:
 
 1. **Achieving 225% accuracy improvement** over rule-based extraction
 2. **Saving 13 minutes per patient** in documentation time
@@ -323,7 +323,7 @@ Voice-to-Health-Record demonstrates that MedGemma can transform clinical documen
 
 The extraction tasks where MedGemma provides the greatest value—order detection, diagnosis linking, contextual understanding—are precisely the tasks that matter most clinically and operationally.
 
-v2hr is **open-source** (CC BY 4.0), **production-ready**, and designed for **real clinical workflows**.
+voice-to-fhir is **open-source** (CC BY 4.0), **production-ready**, and designed for **real clinical workflows**.
 
 **Because physicians should spend their time with patients, not paperwork.**
 
@@ -355,7 +355,7 @@ v2hr is **open-source** (CC BY 4.0), **production-ready**, and designed for **re
 
 ## Links
 
-- **Repository:** https://github.com/paulgCleansheet/voice-to-health-record
+- **Repository:** https://github.com/paulgCleansheet/voice-to-fhir
 - **License:** CC BY 4.0
 - **Video:** [YouTube link - to be added]
 

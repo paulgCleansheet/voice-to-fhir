@@ -1,4 +1,4 @@
-# V2HR Clinical Extraction Pipeline
+# Voice to FHIR Clinical Extraction Pipeline
 # Multi-stage build for minimal image size
 
 FROM python:3.11-slim AS base

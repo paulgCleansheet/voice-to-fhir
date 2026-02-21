@@ -1,5 +1,5 @@
 """
-V2HR API Server
+Voice to FHIR API Server
 
 FastAPI server for clinical transcript extraction and transformation.
 
@@ -51,7 +51,7 @@ class HealthResponse(BaseModel):
 # =============================================================================
 
 app = FastAPI(
-    title="V2HR Clinical Extraction API",
+    title="Voice to FHIR Clinical Extraction API",
     description="Extract structured, coded clinical data from transcripts using MedGemma",
     version="1.0.0",
     docs_url="/docs",

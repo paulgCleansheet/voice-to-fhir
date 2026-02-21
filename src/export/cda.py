@@ -231,12 +231,12 @@ class CDAExporter:
 
         author_id = ET.SubElement(assigned_author, "id")
         author_id.set("root", "2.16.840.1.113883.19.5")
-        author_id.set("extension", "V2HR")
+        author_id.set("extension", "voice-to-fhir")
 
         # Authoring device (software)
         device = ET.SubElement(assigned_author, "assignedAuthoringDevice")
         software = ET.SubElement(device, "softwareName")
-        software.text = "V2HR Clinical Documentation System"
+        software.text = "Voice to FHIR Clinical Documentation System"
 
     def _add_custodian(self, root: ET.Element) -> None:
         """Add custodian information."""

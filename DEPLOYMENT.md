@@ -1,6 +1,6 @@
 # Deployment Architecture
 
-**Voice-to-Health-Record Clinical Extraction Pipeline**
+**Voice to FHIR Clinical Extraction Pipeline**
 
 ---
 
@@ -18,7 +18,7 @@ This document outlines deployment options for the clinical extraction pipeline, 
 
 ```
 ┌─────────────┐     HTTPS      ┌─────────────────────┐     HTTPS      ┌───────────────────┐
-│   Client    │───────────────▶│  v2hr FastAPI       │───────────────▶│  HuggingFace      │
+│   Client    │───────────────▶│  voice-to-fhir FastAPI       │───────────────▶│  HuggingFace      │
 │  (EHR/App)  │◀───────────────│  (Container Apps)   │◀───────────────│  Inference API    │
 └─────────────┘                └─────────────────────┘                └───────────────────┘
                                         │
@@ -61,7 +61,7 @@ HF_TOKEN=hf_your_token
 ┌─────────────┐                ┌─────────────────────────────────────┐
 │   Client    │───────────────▶│         On-Premises Server          │
 │  (EHR/App)  │◀───────────────│  ┌───────────┐    ┌──────────────┐  │
-└─────────────┘                │  │  v2hr     │───▶│  MedGemma    │  │
+└─────────────┘                │  │  voice-to-fhir     │───▶│  MedGemma    │  │
                                │  │  FastAPI  │◀───│  (Local GPU) │  │
                                │  └───────────┘    └──────────────┘  │
                                │         │                           │
@@ -121,7 +121,7 @@ vllm serve google/medgemma-4b-it --port 8080 --gpu-memory-utilization 0.9
                                                       │
                                                       ▼
                     ┌─────────────────────────────────────────────────┐
-                    │              v2hr API Gateway                    │
+                    │              voice-to-fhir API Gateway                    │
                     │  Routes: real-time → edge, batch → cloud        │
                     └─────────────────────────────────────────────────┘
                                                       │
@@ -149,13 +149,13 @@ vllm serve google/medgemma-4b-it --port 8080 --gpu-memory-utilization 0.9
 
 **FHIR R4 REST API:**
 ```
-v2hr → FHIR R4 Bundle → Epic FHIR Server
+voice-to-fhir → FHIR R4 Bundle → Epic FHIR Server
                          └── POST /Bundle
 ```
 
 **CDA Import:**
 ```
-v2hr → CDA R2 Document → Epic CDA Importer
+voice-to-fhir → CDA R2 Document → Epic CDA Importer
                           └── Clinical Document Architecture
 ```
 
@@ -163,13 +163,13 @@ v2hr → CDA R2 Document → Epic CDA Importer
 
 **HL7 v2.x Interface:**
 ```
-v2hr → HL7 v2.x ORU^R01 → Cerner HL7 Interface Engine
+voice-to-fhir → HL7 v2.x ORU^R01 → Cerner HL7 Interface Engine
                           └── TCP/MLLP connection
 ```
 
 **FHIR R4:**
 ```
-v2hr → FHIR R4 Bundle → Cerner Millennium FHIR API
+voice-to-fhir → FHIR R4 Bundle → Cerner Millennium FHIR API
 ```
 
 ### Generic FHIR Server
@@ -188,7 +188,7 @@ Compatible with any FHIR R4 server:
 
 ```
 ┌──────────────┐    TLS 1.3    ┌──────────────┐    TLS 1.3    ┌──────────────┐
-│   Client     │──────────────▶│   v2hr API   │──────────────▶│  MedGemma    │
+│   Client     │──────────────▶│   voice-to-fhir API   │──────────────▶│  MedGemma    │
 │              │               │              │               │  Endpoint    │
 └──────────────┘               └──────────────┘               └──────────────┘
                                       │
@@ -216,7 +216,7 @@ Compatible with any FHIR R4 server:
 
 **Cloud Deployment:**
 - Transcripts transmitted to inference endpoint
-- No PHI stored by v2hr (stateless processing)
+- No PHI stored by voice-to-fhir (stateless processing)
 - HuggingFace Inference Endpoints offer HIPAA-eligible tiers
 
 **Edge Deployment:**
@@ -272,7 +272,7 @@ Compatible with any FHIR R4 server:
 - [ ] Install CUDA drivers
 - [ ] Download MedGemma model weights
 - [ ] Install vLLM or TGI
-- [ ] Deploy v2hr container
+- [ ] Deploy voice-to-fhir container
 - [ ] Configure network security
 - [ ] Test extraction pipeline
 - [ ] Set up local monitoring
@@ -296,7 +296,7 @@ Compatible with any FHIR R4 server:
 ## Contact
 
 For deployment assistance:
-- **Repository:** https://github.com/paulgCleansheet/voice-to-health-record
+- **Repository:** https://github.com/paulgCleansheet/voice-to-fhir
 - **Documentation:** See README.md for API usage
 
 ---

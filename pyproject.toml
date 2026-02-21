@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "v2hr"
+name = "voice-to-fhir"
 version = "1.0.0"
 description = "Clinical Transcript Extraction Pipeline using MedGemma"
 readme = "README.md"
@@ -41,12 +41,12 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/paulgCleansheet/voice-to-health-record"
-Documentation = "https://github.com/paulgCleansheet/voice-to-health-record#readme"
-Repository = "https://github.com/paulgCleansheet/voice-to-health-record"
+Homepage = "https://github.com/paulgCleansheet/voice-to-fhir"
+Documentation = "https://github.com/paulgCleansheet/voice-to-fhir#readme"
+Repository = "https://github.com/paulgCleansheet/voice-to-fhir"
 
 [project.scripts]
-v2hr-server = "api.main:main"
+voice-to-fhir-server = "api.main:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/extraction", "src/fhir", "src/export", "src/api"]

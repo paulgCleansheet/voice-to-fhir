@@ -10,6 +10,7 @@ Copyright (c) 2026 Cleansheet LLC
 License: CC BY 4.0
 """
 
+import logging
 import re
 from typing import Any
 from extraction.extraction_types import (
@@ -26,6 +27,7 @@ from extraction.icd10_lookup import enrich_conditions_with_icd10
 from extraction.rxnorm_lookup import enrich_medications_with_rxnorm
 from extraction.order_diagnosis_linker import enrich_orders_with_diagnoses
 
+logger = logging.getLogger(__name__)
 
 # Placeholder values to filter out
 PLACEHOLDER_VALUES = {
@@ -103,7 +105,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
     # 1. Try explicit [CHIEF COMPLAINT] marker first
     cc = extract_section(transcript, "CHIEF COMPLAINT", first_sentence_only=True)
     if cc:
-        print(f"[CC Extract] Found via [CHIEF COMPLAINT] marker: '{cc}'")
+        logger.debug("[CC Extract] Found via [CHIEF COMPLAINT] marker: '%s'", cc)
         return cc
 
     # 2. Try [CLINICAL HISTORY] marker (radiology reports)
@@ -114,10 +116,10 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
         match = re.search(r'(?:with|for|presents?\s+with)\s+(.+?)(?:\.|$)', cc, re.IGNORECASE)
         if match:
             symptoms = match.group(1).strip()
-            print(f"[CC Extract] Found via [CLINICAL HISTORY] marker: '{symptoms}'")
+            logger.debug("[CC Extract] Found via [CLINICAL HISTORY] marker: '%s'", symptoms)
             return symptoms
         # If no "with" pattern, return the whole thing
-        print(f"[CC Extract] Found via [CLINICAL HISTORY] marker (full): '{cc}'")
+        logger.debug("[CC Extract] Found via [CLINICAL HISTORY] marker (full): '%s'", cc)
         return cc
 
     # 3. Try [SUBJECTIVE] section for SOAP notes - look for "presents with"
@@ -126,7 +128,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
         match = re.search(r'presents?\s+with\s+(.+?)(?:for\s+\d|She\s+|He\s+|Patient\s+|No\s+|\.|$)', subj, re.IGNORECASE)
         if match:
             cc = match.group(1).strip().rstrip('.')
-            print(f"[CC Extract] Found via [SUBJECTIVE] 'presents with': '{cc}'")
+            logger.debug("[CC Extract] Found via [SUBJECTIVE] 'presents with': '%s'", cc)
             return cc
 
     # 4. Try "presents with" pattern anywhere in transcript
@@ -134,7 +136,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
     if match:
         cc = match.group(1).strip().rstrip('.')
         if not is_placeholder(cc):
-            print(f"[CC Extract] Found via 'presents with' pattern: '{cc}'")
+            logger.debug("[CC Extract] Found via 'presents with' pattern: '%s'", cc)
             return cc
 
     # 5. Try "CC:" pattern
@@ -142,7 +144,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
     if match:
         cc = match.group(1).strip()
         if not is_placeholder(cc):
-            print(f"[CC Extract] Found via 'CC:' pattern: '{cc}'")
+            logger.debug("[CC Extract] Found via 'CC:' pattern: '%s'", cc)
             return cc
 
     # 6. Try "admitted with/for" pattern (discharge summaries)
@@ -150,7 +152,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
     if match:
         cc = match.group(1).strip().rstrip('.')
         if not is_placeholder(cc):
-            print(f"[CC Extract] Found via 'admitted with/for' pattern: '{cc}'")
+            logger.debug("[CC Extract] Found via 'admitted with/for' pattern: '%s'", cc)
             return cc
 
     # 7. Try "follow-up/visit for X" pattern (follow-up visits)
@@ -160,7 +162,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
         if not is_placeholder(cc):
             # Append "follow-up" to clarify this is a follow-up visit
             cc_with_context = f"{cc} follow-up"
-            print(f"[CC Extract] Found via 'follow-up for' pattern: '{cc_with_context}'")
+            logger.debug("[CC Extract] Found via 'follow-up for' pattern: '%s'", cc_with_context)
             return cc_with_context
 
     # 8. Try "visit for X" pattern (general visits)
@@ -168,7 +170,7 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
     if match:
         cc = match.group(1).strip().rstrip('.')
         if not is_placeholder(cc):
-            print(f"[CC Extract] Found via 'visit for' pattern: '{cc}'")
+            logger.debug("[CC Extract] Found via 'visit for' pattern: '%s'", cc)
             return cc
 
     # 9. Fallback: use MedGemma's chief complaint if it looks like a symptom (not a diagnosis)
@@ -184,12 +186,12 @@ def extract_chief_complaint(transcript: str, entities: ClinicalEntities) -> str 
             name_lower = condition.name.lower()
             is_diagnosis = any(indicator in name_lower for indicator in diagnosis_indicators)
             if not is_diagnosis:
-                print(f"[CC Extract] Using MedGemma CC (looks like symptom): '{condition.name}'")
+                logger.debug("[CC Extract] Using MedGemma CC (looks like symptom): '%s'", condition.name)
                 return condition.name
             else:
-                print(f"[CC Extract] Skipping MedGemma CC (looks like diagnosis): '{condition.name}'")
+                logger.debug("[CC Extract] Skipping MedGemma CC (looks like diagnosis): '%s'", condition.name)
 
-    print("[CC Extract] No chief complaint found")
+    logger.debug("[CC Extract] No chief complaint found")
     return None
 
 
@@ -389,7 +391,7 @@ def extract_blood_pressure_from_transcript(transcript: str) -> Vital | None:
             systolic = match.group(1)
             diastolic = match.group(2)
             bp_value = f"{systolic}/{diastolic}"
-            print(f"[BP Extract] Found blood pressure from transcript: {bp_value}")
+            logger.debug("[BP Extract] Found blood pressure from transcript: %s", bp_value)
             return Vital(
                 type="blood_pressure",
                 value=bp_value,
@@ -414,10 +416,10 @@ def ensure_blood_pressure_from_transcript(entities: "ClinicalEntities", transcri
     bp_from_transcript = extract_blood_pressure_from_transcript(transcript)
 
     if not bp_from_transcript:
-        print("[BP Ensure] No blood pressure found in transcript")
+        logger.debug("[BP Ensure] No blood pressure found in transcript")
         return
 
-    print(f"[BP Ensure] Extracted BP from transcript: {bp_from_transcript.value}")
+    logger.debug("[BP Ensure] Extracted BP from transcript: %s", bp_from_transcript.value)
 
     # Remove ALL existing BP values (both partial and complete)
     # The deterministic extraction is the source of truth for BP
@@ -429,19 +431,19 @@ def ensure_blood_pressure_from_transcript(entities: "ClinicalEntities", transcri
 
         # Skip any blood pressure vitals (by type or by mmHg unit)
         if type_lower in ("blood_pressure", "bp"):
-            print(f"[BP Ensure] Removing existing BP: {value_str} {v.unit}")
+            logger.debug("[BP Ensure] Removing existing BP: %s %s", value_str, v.unit)
             continue
 
         # Also skip mmHg values that look like BP (partial or complete)
         if unit_lower in ("mmhg", "mm hg"):
             # Check if it's a BP-like value (contains "/" or is in BP numeric range)
             if "/" in value_str:
-                print(f"[BP Ensure] Removing existing BP: {value_str} {v.unit}")
+                logger.debug("[BP Ensure] Removing existing BP: %s %s", value_str, v.unit)
                 continue
             try:
                 numeric_val = float(value_str.replace(',', ''))
                 if 40 <= numeric_val <= 220:
-                    print(f"[BP Ensure] Removing partial BP value: {value_str} {v.unit}")
+                    logger.debug("[BP Ensure] Removing partial BP value: %s %s", value_str, v.unit)
                     continue
             except (ValueError, TypeError):
                 pass
@@ -451,7 +453,7 @@ def ensure_blood_pressure_from_transcript(entities: "ClinicalEntities", transcri
     # Add the single authoritative BP from transcript
     cleaned_vitals.insert(0, bp_from_transcript)
     entities.vitals = cleaned_vitals
-    print(f"[BP Ensure] Added complete BP: {bp_from_transcript.value} mmHg")
+    logger.debug("[BP Ensure] Added complete BP: %s mmHg", bp_from_transcript.value)
 
 
 def detect_resolved_status_from_transcript(entities: "ClinicalEntities", transcript: str) -> None:
@@ -485,7 +487,7 @@ def detect_resolved_status_from_transcript(entities: "ClinicalEntities", transcr
             condition_name = re.sub(r'[\.\s]+$', '', condition_name)
             if condition_name:
                 resolved_conditions.add(condition_name)
-                print(f"[Status Detect] Found resolved condition in transcript: '{condition_name}'")
+                logger.debug("[Status Detect] Found resolved condition in transcript: '%s'", condition_name)
 
     if not resolved_conditions:
         return
@@ -497,7 +499,10 @@ def detect_resolved_status_from_transcript(entities: "ClinicalEntities", transcr
             # Check for fuzzy match (resolved name contained in condition name or vice versa)
             if resolved_name in condition_lower or condition_lower in resolved_name:
                 if condition.status != "resolved":
-                    print(f"[Status Detect] Setting '{condition.name}' status to resolved (was: {condition.status})")
+                    logger.debug(
+                        "[Status Detect] Setting '%s' status to resolved (was: %s)",
+                        condition.name, condition.status
+                    )
                     condition.status = "resolved"
                 break
 
@@ -551,7 +556,7 @@ def merge_split_blood_pressure(vitals: list[Vital], transcript: str) -> tuple[li
         # Validate: systolic should be higher than diastolic by reasonable margin
         if systolic > diastolic and 20 <= (systolic - diastolic) <= 120:
             bp_value = f"{int(systolic)}/{int(diastolic)}"
-            print(f"[BP Merge] Merged split BP values: {bp_value}")
+            logger.debug("[BP Merge] Merged split BP values: %s", bp_value)
             return non_bp_vitals, Vital(
                 type="blood_pressure",
                 value=bp_value,
@@ -562,7 +567,7 @@ def merge_split_blood_pressure(vitals: list[Vital], transcript: str) -> tuple[li
     if potential_bp_values:
         bp_from_transcript = extract_blood_pressure_from_transcript(transcript)
         if bp_from_transcript:
-            print(f"[BP Merge] Using transcript BP instead of split values: {bp_from_transcript.value}")
+            logger.debug("[BP Merge] Using transcript BP instead of split values: %s", bp_from_transcript.value)
             return non_bp_vitals, bp_from_transcript
 
         # Fallback: if we have exactly 1 value, keep it as partial BP
@@ -608,7 +613,7 @@ def normalize_vitals(vitals: list[Vital], transcript: str) -> list[Vital]:
                 unit="mmHg"
             )
             has_bp = True
-            print(f"[Vitals Normalize] Detected BP format: {value_str}")
+            logger.debug("[Vitals Normalize] Detected BP format: %s", value_str)
 
         # If type is blood_pressure but value is single number, try to find full BP
         elif v.type and v.type.lower() in ("blood_pressure", "bp"):
@@ -677,7 +682,7 @@ def normalize_vitals(vitals: list[Vital], transcript: str) -> list[Vital]:
         bp_from_transcript = extract_blood_pressure_from_transcript(transcript)
         if bp_from_transcript:
             normalized.append(bp_from_transcript)
-            print(f"[Vitals Normalize] Added BP from transcript: {bp_from_transcript.value}")
+            logger.debug("[Vitals Normalize] Added BP from transcript: %s", bp_from_transcript.value)
 
     return normalized
 
@@ -745,14 +750,13 @@ def extract_medication_dosages_from_transcript(
         return medications
 
     transcript_lower = transcript.lower()
-    print(f"[MedDose DEBUG] Processing {len(medications)} medications")
-    print(f"[MedDose DEBUG] Transcript preview: {transcript_lower[:200]}...")
+    logger.debug("[med_dose] Processing %d medications", len(medications))
 
     for med in medications:
-        print(f"[MedDose DEBUG] Checking '{med.name}' - current dose: {med.dose}")
+        logger.debug("[med_dose] Checking '%s' - current dose: %s", med.name, med.dose)
         # Skip if already has dose
         if med.dose:
-            print(f"[MedDose DEBUG]   -> Skipping (already has dose)")
+            logger.debug("[med_dose]   -> Skipping (already has dose)")
             continue
 
         med_name_lower = med.name.lower()
@@ -761,17 +765,17 @@ def extract_medication_dosages_from_transcript(
         for i, pattern in enumerate(MEDICATION_DOSE_PATTERNS):
             matches = list(re.finditer(pattern, transcript_lower, re.IGNORECASE))
             if matches:
-                print(f"[MedDose DEBUG]   Pattern {i} found {len(matches)} matches")
+                logger.debug("[med_dose]   Pattern %d found %d matches", i, len(matches))
             for match in matches:
                 # Check if this match is for our medication
                 matched_drug = match.group(1)
-                print(f"[MedDose DEBUG]   Matched drug: '{matched_drug}' vs med: '{med_name_lower}'")
+                logger.debug("[med_dose]   Matched drug: '%s' vs med: '%s'", matched_drug, med_name_lower)
                 if matched_drug.lower() in med_name_lower or med_name_lower in matched_drug.lower():
                     # Extract dose
                     dose_value = match.group(2)
                     dose_unit = match.group(3)
                     med.dose = f"{dose_value} {dose_unit}"
-                    print(f"[MedDose DEBUG]   -> MATCHED! Setting dose to: {med.dose}")
+                    logger.debug("[med_dose]   -> MATCHED! Setting dose to: %s", med.dose)
 
                     # Extract frequency if captured
                     if len(match.groups()) >= 4 and match.group(4):
@@ -788,7 +792,7 @@ def extract_medication_dosages_from_transcript(
                         }
                         med.frequency = freq_map.get(freq.lower(), freq)
 
-                    print(f"[Post-process] Extracted dosage for {med.name}: {med.dose} {med.frequency or ''}")
+                    logger.info("[post_process] Extracted dosage for %s: %s %s", med.name, med.dose, med.frequency or '')
                     break
 
             if med.dose:
@@ -816,13 +820,13 @@ def extract_plan_medication_orders(
     """
     # Extract PLAN section
     plan_text = extract_section(transcript, "PLAN")
-    print(f"[PLAN Extract DEBUG] Looking for [PLAN] in transcript...")
-    print(f"[PLAN Extract DEBUG] Found PLAN text: '{plan_text[:100] if plan_text else 'NONE'}...'")
+    logger.debug("[plan_extract] Looking for [PLAN] in transcript...")
+    logger.debug("[plan_extract] Found PLAN text: '%s'...", (plan_text[:100] if plan_text else 'NONE'))
     if not plan_text:
-        print(f"[PLAN Extract DEBUG] No PLAN section found, returning existing orders")
+        logger.debug("[plan_extract] No PLAN section found, returning existing orders")
         return existing_orders
 
-    print(f"[Post-process] Extracting medication orders from PLAN section...")
+    logger.info("[post_process] Extracting medication orders from PLAN section...")
 
     # Patterns for plan medications
     plan_med_patterns = [
@@ -843,9 +847,9 @@ def extract_plan_medication_orders(
 
     for i, pattern in enumerate(plan_med_patterns):
         matches = list(re.finditer(pattern, plan_text, re.IGNORECASE))
-        print(f"[PLAN Extract DEBUG] Pattern {i}: {len(matches)} matches")
+        logger.debug("[plan_extract] Pattern %d: %d matches", i, len(matches))
         for match in matches:
-            print(f"[PLAN Extract DEBUG]   Match: '{match.group(0)}'")
+            logger.debug("[plan_extract]   Match: '%s'", match.group(0))
             drug_name = match.group(1)
 
             # Skip if already exists
@@ -883,7 +887,7 @@ def extract_plan_medication_orders(
 
             new_orders.append(order)
             existing_names.add(drug_name.lower().strip())
-            print(f"[Post-process] Added medication order from PLAN: {order.name} {order.dose or ''}")
+            logger.info("[post_process] Added medication order from PLAN: %s %s", order.name, order.dose or '')
 
     return new_orders
 
@@ -1052,9 +1056,9 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
     Returns:
         Enhanced and filtered ClinicalEntities
     """
-    print(f"[Post-process DEBUG] Starting post_process...")
-    print(f"[Post-process DEBUG] Transcript has [CHIEF COMPLAINT]: {'[CHIEF COMPLAINT]' in transcript}")
-    print(f"[Post-process DEBUG] Transcript has [FAMILY HISTORY]: {'[FAMILY HISTORY]' in transcript}")
+    logger.debug("[post_process] Starting post_process...")
+    logger.debug("[post_process] Transcript has [CHIEF COMPLAINT]: %s", '[CHIEF COMPLAINT]' in transcript)
+    logger.debug("[post_process] Transcript has [FAMILY HISTORY]: %s", '[FAMILY HISTORY]' in transcript)
 
     # Store original transcript for marker extraction
     entities.raw_transcript = transcript
@@ -1068,7 +1072,7 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
 
     # 1. Extract chief complaint from markers if missing
     chief_complaint = extract_chief_complaint(transcript, entities)
-    print(f"[Post-process DEBUG] Extracted chief complaint: '{chief_complaint}'")
+    logger.debug("[post_process] Extracted chief complaint: '%s'", chief_complaint)
     if chief_complaint:
         # Store the chief complaint text separately (reason for visit / presenting symptoms)
         entities.chief_complaint_text = chief_complaint
@@ -1080,29 +1084,29 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
             if condition.name.lower() == chief_complaint.lower():
                 condition.is_chief_complaint = True
                 found = True
-                print(f"[Post-process DEBUG] Matched chief complaint to condition: '{condition.name}'")
+                logger.debug("[post_process] Matched chief complaint to condition: '%s'", condition.name)
                 break
         if not found and entities.conditions:
             # No exact match - mark the first/primary condition as chief complaint
             # This preserves the chief_complaint property without adding symptoms as conditions
             entities.conditions[0].is_chief_complaint = True
-            print(f"[Post-process DEBUG] No match - marked first condition as CC: '{entities.conditions[0].name}'")
+            logger.debug("[post_process] No match - marked first condition as CC: '%s'", entities.conditions[0].name)
 
     # 2. Extract family history from markers
     entities.family_history = extract_family_history(transcript, entities)
-    print(f"[Post-process DEBUG] Family history extracted: {len(entities.family_history)} items")
+    logger.debug("[post_process] Family history extracted: %d items", len(entities.family_history))
 
     # 3. Extract social history from markers
     extracted_sh = extract_social_history(transcript, entities)
     if extracted_sh:
         entities.social_history = extracted_sh
-        print(f"[Post-process DEBUG] Social history: tobacco={extracted_sh.tobacco}, occupation={extracted_sh.occupation}")
+        logger.debug("[post_process] Social history: tobacco=%s, occupation=%s", extracted_sh.tobacco, extracted_sh.occupation)
 
     # 4. Normalize and enhance vitals (extract BP from transcript if missing)
     entities.vitals = normalize_vitals(entities.vitals, transcript)
-    print(f"[Post-process DEBUG] Vitals after normalization: {len(entities.vitals)} items")
+    logger.debug("[post_process] Vitals after normalization: %d items", len(entities.vitals))
     for v in entities.vitals:
-        print(f"[Post-process DEBUG]   - {v.type}: {v.value} {v.unit}")
+        logger.debug("[post_process]   - %s: %s %s", v.type, v.value, v.unit)
 
     # 5. Filter out placeholder values and invalid data
     entities.conditions = filter_conditions(entities.conditions)
@@ -1118,11 +1122,14 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
 
     # 5.5. Extract medication dosages from transcript for meds with null dose
     entities.medications = extract_medication_dosages_from_transcript(entities.medications, transcript)
-    print(f"[Post-process DEBUG] Medication dosages extracted for {sum(1 for m in entities.medications if m.dose)}/{len(entities.medications)} medications")
+    logger.debug(
+        "[post_process] Medication dosages extracted for %d/%d medications",
+        sum(1 for m in entities.medications if m.dose), len(entities.medications)
+    )
 
     # 5.6. Extract medication orders from [PLAN] section (for SOAP notes)
     entities.medication_orders = extract_plan_medication_orders(transcript, entities.medication_orders)
-    print(f"[Post-process DEBUG] Medication orders after PLAN extraction: {len(entities.medication_orders)}")
+    logger.debug("[post_process] Medication orders after PLAN extraction: %d", len(entities.medication_orders))
 
     # 6. Clean social history (convert "null" strings to None)
     entities.social_history = clean_social_history(entities.social_history)
@@ -1130,18 +1137,21 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
     # 7. Enrich conditions with verified ICD-10 codes from lookup database
     entities.conditions = enrich_conditions_with_icd10(entities.conditions)
     icd_coded = sum(1 for c in entities.conditions if c.icd10)
-    print(f"[Post-process DEBUG] ICD-10 codes added: {icd_coded}/{len(entities.conditions)} conditions")
+    logger.debug("[post_process] ICD-10 codes added: %d/%d conditions", icd_coded, len(entities.conditions))
 
     # 8. Enrich medications with verified RxNorm codes from lookup database
     entities.medications = enrich_medications_with_rxnorm(entities.medications)
     entities.medication_orders = enrich_medications_with_rxnorm(entities.medication_orders)
     rxnorm_meds = sum(1 for m in entities.medications if getattr(m, 'rxnorm_matched', False))
     rxnorm_orders = sum(1 for m in entities.medication_orders if getattr(m, 'rxnorm_matched', False))
-    print(f"[Post-process DEBUG] RxNorm verified: {rxnorm_meds}/{len(entities.medications)} medications, {rxnorm_orders}/{len(entities.medication_orders)} orders")
+    logger.debug(
+        "[post_process] RxNorm verified: %d/%d medications, %d/%d orders",
+        rxnorm_meds, len(entities.medications), rxnorm_orders, len(entities.medication_orders)
+    )
 
     # 9. Link medication orders to diagnoses (based on drug class rules and patient conditions)
     entities = enrich_orders_with_diagnoses(entities)
     linked_orders = sum(1 for m in entities.medication_orders if getattr(m, 'linked_diagnosis', None))
-    print(f"[Post-process DEBUG] Diagnosis linked: {linked_orders}/{len(entities.medication_orders)} medication orders")
+    logger.debug("[post_process] Diagnosis linked: %d/%d medication orders", linked_orders, len(entities.medication_orders))
 
     return entities

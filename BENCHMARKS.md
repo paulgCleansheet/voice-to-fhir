@@ -413,8 +413,8 @@ Unmatched entities are flagged as `*_matched: false` for downstream clinical rev
 
 ```bash
 # Clone repository
-git clone https://github.com/paulgCleansheet/voice-to-health-record.git
-cd voice-to-health-record
+git clone https://github.com/paulgCleansheet/voice-to-fhir.git
+cd voice-to-fhir
 
 # Install dependencies
 pip install -e .

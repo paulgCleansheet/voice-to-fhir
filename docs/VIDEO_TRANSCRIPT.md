@@ -1,6 +1,6 @@
 # Video Demonstration Transcript
 
-**Title:** Voice-to-Health-Record: Clinical Documentation Extraction with MedGemma
+**Title:** Voice to FHIR: Clinical Documentation Extraction with MedGemma
 **Duration:** 2:30 (target)
 **Format:** Screen recording with voiceover
 
@@ -28,7 +28,7 @@
 **[VISUAL: Title card → Statistics overlay]**
 
 **VOICEOVER:**
-> "Physicians spend four and a half hours every day on documentation—sixteen minutes per patient. The problem: clinicians speak naturally, but EHRs need structured data with ICD-10 codes, RxNorm identifiers, and LOINC values. Voice-to-Health-Record bridges this gap using Google's MedGemma."
+> "Physicians spend four and a half hours every day on documentation—sixteen minutes per patient. The problem: clinicians speak naturally, but EHRs need structured data with ICD-10 codes, RxNorm identifiers, and LOINC values. Voice to FHIR bridges this gap using Google's MedGemma."
 
 **[ON-SCREEN TEXT OVERLAY:]**
 ```
@@ -53,7 +53,7 @@ docker-compose up -d
 
 **[SHOW OUTPUT:]**
 ```
-✔ Container v2hr-api  Started
+✔ Container voice-to-fhir-api  Started
 ```
 
 **VOICEOVER:**
@@ -199,7 +199,7 @@ curl -X POST http://localhost:8001/api/v1/transform \
 
 **[BOTTOM HALF - Clinician quote overlay:]**
 ```
-"v2hr addresses one of the most pressing challenges in clinical
+"Voice to FHIR addresses one of the most pressing challenges in clinical
 practice today: documentation burden. The ability to automatically
 extract structured data from transcripts could save physicians
 hours each day while improving data quality."
@@ -218,9 +218,9 @@ hours each day while improving data quality."
 **[VISUAL: End card with GitHub URL]**
 
 ```
-Voice-to-Health-Record
+Voice to FHIR
 
-github.com/paulgCleansheet/voice-to-health-record
+github.com/paulgCleansheet/voice-to-fhir
 
 Open Source | CC BY 4.0
 
@@ -229,7 +229,7 @@ Medical Advisor: Leah Galjan Post, MD, FAAP
 ```
 
 **VOICEOVER:**
-> "Voice-to-Health-Record. Open source. Because physicians should spend their time with patients, not paperwork."
+> "Voice to FHIR. Open source. Because physicians should spend their time with patients, not paperwork."
 
 ---
 

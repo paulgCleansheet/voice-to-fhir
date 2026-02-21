@@ -109,8 +109,8 @@ See [docs/IMPACT_ANALYSIS.md](docs/IMPACT_ANALYSIS.md) for projected clinical im
 
 ```bash
 # Clone repository
-git clone https://github.com/paulgCleansheet/voice-to-health-record.git
-cd voice-to-health-record
+git clone https://github.com/paulgCleansheet/voice-to-fhir.git
+cd voice-to-fhir
 
 # Create virtual environment
 python -m venv .venv
@@ -163,8 +163,8 @@ cp .env.example .env
 docker-compose up -d
 
 # Or build manually
-docker build -t voice-to-health-record .
-docker run -p 8001:8001 --env-file .env voice-to-health-record
+docker build -t voice-to-fhir .
+docker run -p 8001:8001 --env-file .env voice-to-fhir
 ```
 
 ## API Usage

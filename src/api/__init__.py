@@ -1,5 +1,5 @@
 """
-V2HR API
+Voice to FHIR API
 
 FastAPI server for clinical transcript extraction.
 

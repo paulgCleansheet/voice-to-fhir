@@ -121,7 +121,7 @@ class HL7v2Exporter:
         fields = [
             "MSH",
             f"{self.COMPONENT_SEP}{self.REPEAT_SEP}{self.ESCAPE_CHAR}{self.SUBCOMPONENT_SEP}",
-            "V2HR",  # Sending Application
+            "voice-to-fhir",  # Sending Application
             "CLEANSHEET",  # Sending Facility
             "EHR",  # Receiving Application
             "HOSPITAL",  # Receiving Facility

@@ -9,7 +9,7 @@
 
 ## Request Summary
 
-We request clinical review of the following impact claims for the v2hr clinical extraction pipeline. Your feedback will:
+We request clinical review of the following impact claims for the voice-to-fhir clinical extraction pipeline. Your feedback will:
 1. Validate or correct our estimates
 2. Suggest real-world measurement approaches
 3. Provide quotable endorsement (if warranted)
@@ -44,12 +44,12 @@ We request clinical review of the following impact claims for the v2hr clinical 
 
 ---
 
-### Claim 1.2: Time Savings with v2hr
+### Claim 1.2: Time Savings with voice-to-fhir
 
-**Our Claim:** "v2hr reduces documentation time from 16 minutes to 3 minutes per patient (13 minutes saved, 81% reduction)."
+**Our Claim:** "voice-to-fhir reduces documentation time from 16 minutes to 3 minutes per patient (13 minutes saved, 81% reduction)."
 
 **Breakdown:**
-| Task | Manual | v2hr | Savings |
+| Task | Manual | voice-to-fhir | Savings |
 |------|--------|------|---------|
 | Medication entry | 3 min | 15 sec (review only) | 2.75 min |
 | Diagnosis coding | 2 min | 10 sec (review only) | 1.83 min |
@@ -110,7 +110,7 @@ Annual value (250 days):    $810 × 250 = $202,500
 
 **Basis:**
 - Baseline error rate: 8.2% (manual transcription of medications)
-- v2hr error rate: 4.5% (auto-extraction with RxNorm validation)
+- voice-to-fhir error rate: 4.5% (auto-extraction with RxNorm validation)
 - Reduction: (8.2 - 4.5) / 8.2 = 45%
 
 **Error Types Addressed:**
@@ -124,7 +124,7 @@ Annual value (250 days):    $810 × 250 = $202,500
 **Questions for Reviewer:**
 - Is 8.2% a reasonable baseline error rate for manual medication entry?
 - What types of medication errors are most clinically significant?
-- Are there error types v2hr might miss or introduce?
+- Are there error types voice-to-fhir might miss or introduce?
 
 **Real-World Measurement Suggestion:**
 ```
@@ -139,7 +139,7 @@ Annual value (250 days):    $810 × 250 = $202,500
 
 **Basis:**
 - Baseline error rate: 12.1% (manual ICD-10 selection)
-- v2hr error rate: 8.7% (auto-coding with validation)
+- voice-to-fhir error rate: 8.7% (auto-coding with validation)
 - Reduction: (12.1 - 8.7) / 12.1 = 28%
 
 **Your Assessment:** [ ]
@@ -157,7 +157,7 @@ Annual value (250 days):    $810 × 250 = $202,500
 
 **Basis:**
 - Baseline miss rate: 15.3% (allergies mentioned but not documented)
-- v2hr miss rate: 2.1% (auto-extraction from transcript)
+- voice-to-fhir miss rate: 2.1% (auto-extraction from transcript)
 - Reduction: (15.3 - 2.1) / 15.3 = 86%
 
 **Your Assessment:** [ ]
@@ -165,7 +165,7 @@ Annual value (250 days):    $810 × 250 = $202,500
 **Questions for Reviewer:**
 - Is 15.3% a reasonable baseline for missed allergies?
 - How significant is this for patient safety?
-- What allergy documentation patterns does v2hr handle well/poorly?
+- What allergy documentation patterns does voice-to-fhir handle well/poorly?
 
 ---
 
@@ -173,13 +173,13 @@ Annual value (250 days):    $810 × 250 = $202,500
 
 ### Claim 3.1: Workflow Integration
 
-**Our Claim:** "v2hr integrates into existing clinical workflows with minimal disruption."
+**Our Claim:** "voice-to-fhir integrates into existing clinical workflows with minimal disruption."
 
 **Proposed Workflow:**
 ```
 1. Clinician conducts patient encounter (as usual)
 2. Voice recording or transcript captured
-3. v2hr extracts structured data (2-5 seconds)
+3. voice-to-fhir extracts structured data (2-5 seconds)
 4. Clinician reviews extracted data on screen
 5. Clinician approves, edits, or rejects each entity
 6. Approved data flows to EHR
@@ -279,15 +279,15 @@ We propose the following pilot study design. Please validate or suggest improvem
 
 ## Section 6: Quotable Endorsement
 
-If you believe v2hr has clinical value, we would appreciate a quotable endorsement for the challenge submission. Please draft or approve one of the following:
+If you believe voice-to-fhir has clinical value, we would appreciate a quotable endorsement for the challenge submission. Please draft or approve one of the following:
 
 **Option A (Strong):**
-> "v2hr addresses one of the most pressing challenges in clinical practice today: documentation burden. The ability to automatically extract structured clinical data from natural language transcripts could save physicians hours each day while improving data quality. This is exactly the kind of AI application healthcare needs."
+> "voice-to-fhir addresses one of the most pressing challenges in clinical practice today: documentation burden. The ability to automatically extract structured clinical data from natural language transcripts could save physicians hours each day while improving data quality. This is exactly the kind of AI application healthcare needs."
 >
 > — Leah Galjan Post, MD, FAAP
 
 **Option B (Moderate):**
-> "The v2hr pipeline demonstrates promising potential for reducing clinical documentation burden. With appropriate validation and clinician oversight, this approach could meaningfully improve physician workflows."
+> "The voice-to-fhir pipeline demonstrates promising potential for reducing clinical documentation burden. With appropriate validation and clinician oversight, this approach could meaningfully improve physician workflows."
 >
 > — Leah Galjan Post, MD, FAAP
 

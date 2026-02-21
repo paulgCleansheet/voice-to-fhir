@@ -1,6 +1,6 @@
 Physicians spend four and a half hours every day on documentation. More time than they spend with patients.
 
-This is Voice to Health Record, a clinical extraction pipeline powered by Google's MedGemma that transforms voice dictation into structured EHR data automatically.
+This is Voice to FHIR — a proof of concept that uses Google's MedGemma to transform voice dictation into structured EHR data automatically.
 
 The problem: clinicians speak naturally, but EHRs require structured data with medical codes. Manual entry is slow and burns out physicians.
 
@@ -10,8 +10,10 @@ Here's a live demo. A 48-year-old male with chest pain on aspirin. I'll send the
 
 In under three seconds, MedGemma extracts the complete picture: diagnosis of angina with ICD-10 code, medications with RxNorm codes, vital signs, and orders for stress testing and statin therapy.
 
-We benchmarked against rule-based extraction on 199 clinical entities. MedGemma achieves 69 percent F1, a 13 point improvement over baseline. Critically, MedGemma catches allergies and family history that traditional rules completely miss.
+We benchmarked against rule-based extraction on 199 clinical entities. MedGemma achieves 69 percent F1 — a 13 point improvement over baseline. Critically, MedGemma catches allergies and family history that rules completely miss — zero percent baseline on both.
 
-The system exports to FHIR, CDA, or HL7 for any EHR system. Deploys to the cloud or on-premises with complete HIPAA compliance.
+This is a proof of concept, and 69 percent is honest. But we've mapped the path to production: prompt engineering for orders, ASR preprocessing, and scaling to MedGemma 27B. Our analysis projects 78 to 83 percent F1 — where reviewing extractions becomes faster than entering data from scratch.
 
-Voice to Health Record. Open source. Because physicians should spend their time with patients, not paperwork.
+The system exports to FHIR, CDA, or HL7 for any EHR system. Deploys to the cloud at three cents per extraction, or on-premises for two thousand dollars — a fraction of annual scribe costs.
+
+Voice to FHIR. Open source. A working proof of concept with a clear path to production. Because physicians should spend their time with patients, not paperwork.

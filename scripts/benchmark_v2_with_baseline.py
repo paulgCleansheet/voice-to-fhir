@@ -439,7 +439,7 @@ def main():
         expected_dir = Path(args.expected_dir)
     else:
         for p in [
-            script_dir / 'tests' / 'fixtures' / 'recordings',  # Primary: v2hr repo
+            script_dir / 'tests' / 'fixtures' / 'recordings',  # Primary: voice-to-fhir repo
             script_dir / 'tests' / 'recordings',               # Legacy location
         ]:
             if p.exists() and list(p.glob('*.expected.json')):
@@ -460,7 +460,7 @@ def main():
     else:
         # Look for bulk export first, then ground-truth.json
         bulk_paths = [
-            script_dir / 'tests' / 'fixtures' / 'bulk-export.json',  # Primary: v2hr repo
+            script_dir / 'tests' / 'fixtures' / 'bulk-export.json',  # Primary: voice-to-fhir repo
         ]
         ground_truth_paths = [
             script_dir / 'tests' / 'fixtures' / 'ground-truth.json',

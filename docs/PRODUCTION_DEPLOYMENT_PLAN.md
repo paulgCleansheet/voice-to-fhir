@@ -1,6 +1,6 @@
 # Production Deployment Plan
 
-**Voice-to-Health-Record Clinical Extraction Pipeline**
+**Voice to FHIR Clinical Extraction Pipeline**
 **Version:** 1.0
 **Date:** January 30, 2026
 
@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-This document provides operational guidance for deploying the v2hr clinical extraction pipeline in production healthcare environments. Three deployment models are supported: cloud-hosted, edge-deployed, and hybrid configurations.
+This document provides operational guidance for deploying the voice-to-fhir clinical extraction pipeline in production healthcare environments. Three deployment models are supported: cloud-hosted, edge-deployed, and hybrid configurations.
 
 **Key Decision Factors:**
 | Factor | Cloud | Edge | Hybrid |
@@ -28,11 +28,11 @@ This document provides operational guidance for deploying the v2hr clinical extr
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           v2hr Production Stack                              │
+│                           voice-to-fhir Production Stack                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌───────────┐ │
-│  │   Ingress    │───▶│   v2hr API   │───▶│   MedGemma   │───▶│  Output   │ │
+│  │   Ingress    │───▶│   voice-to-fhir API   │───▶│   MedGemma   │───▶│  Output   │ │
 │  │  (HTTPS)     │    │  (FastAPI)   │    │  Inference   │    │  (FHIR)   │ │
 │  └──────────────┘    └──────────────┘    └──────────────┘    └───────────┘ │
 │         │                   │                   │                   │       │
@@ -93,7 +93,7 @@ This document provides operational guidance for deploying the v2hr clinical extr
 │  ┌──────────────┐         ┌──────────────────────────────────┐  │
 │  │  Cloudflare  │────────▶│     Azure Container Apps         │  │
 │  │  (DNS/WAF)   │         │  ┌────────────────────────────┐  │  │
-│  └──────────────┘         │  │     v2hr-api container     │  │  │
+│  └──────────────┘         │  │     voice-to-fhir-api container     │  │  │
 │                           │  │     (2 vCPU, 4GB RAM)      │  │  │
 │                           │  │     Scale: 0-10 replicas   │  │  │
 │                           │  └────────────────────────────┘  │  │
@@ -137,26 +137,26 @@ az login
 az account set --subscription "your-subscription"
 
 # 2. Create resource group
-az group create --name v2hr-prod --location eastus
+az group create --name voice-to-fhir-prod --location eastus
 
 # 3. Create Container Registry
-az acr create --resource-group v2hr-prod --name v2hracr --sku Basic
+az acr create --resource-group voice-to-fhir-prod --name voicetofhiracr --sku Basic
 
 # 4. Build and push container
-az acr build --registry v2hracr --image v2hr:latest .
+az acr build --registry voicetofhiracr --image voice-to-fhir:latest .
 
 # 5. Create Container Apps environment
 az containerapp env create \
-  --name v2hr-env \
-  --resource-group v2hr-prod \
+  --name voice-to-fhir-env \
+  --resource-group voice-to-fhir-prod \
   --location eastus
 
 # 6. Deploy container app
 az containerapp create \
-  --name v2hr-api \
-  --resource-group v2hr-prod \
-  --environment v2hr-env \
-  --image v2hracr.azurecr.io/v2hr:latest \
+  --name voice-to-fhir-api \
+  --resource-group voice-to-fhir-prod \
+  --environment voice-to-fhir-env \
+  --image voicetofhiracr.azurecr.io/voice-to-fhir:latest \
   --target-port 8001 \
   --ingress external \
   --min-replicas 0 \
@@ -167,11 +167,11 @@ az containerapp create \
 
 # 7. Configure secrets (from Key Vault)
 az containerapp secret set \
-  --name v2hr-api \
-  --resource-group v2hr-prod \
+  --name voice-to-fhir-api \
+  --resource-group voice-to-fhir-prod \
   --secrets \
-    medgemma-endpoint=keyvaultref:https://v2hr-kv.vault.azure.net/secrets/medgemma-endpoint \
-    hf-token=keyvaultref:https://v2hr-kv.vault.azure.net/secrets/hf-token
+    medgemma-endpoint=keyvaultref:https://voice-to-fhir-kv.vault.azure.net/secrets/medgemma-endpoint \
+    hf-token=keyvaultref:https://voice-to-fhir-kv.vault.azure.net/secrets/hf-token
 ```
 
 ---
@@ -242,30 +242,30 @@ docker run --gpus all -e HF_TOKEN=$HF_TOKEN \
   --model-id google/medgemma-4b-it \
   --port 8080
 
-# 5. Deploy v2hr API
+# 5. Deploy voice-to-fhir API
 docker run -d \
-  --name v2hr-api \
+  --name voice-to-fhir-api \
   -p 8001:8001 \
   -e MEDGEMMA_BACKEND=local \
   -e MEDGEMMA_LOCAL_URL=http://host.docker.internal:8080 \
-  v2hr:latest
+  voice-to-fhir:latest
 
 # 6. Configure systemd for auto-start
-sudo tee /etc/systemd/system/v2hr.service << EOF
+sudo tee /etc/systemd/system/voice-to-fhir.service << EOF
 [Unit]
-Description=v2hr Clinical Extraction API
+Description=voice-to-fhir Clinical Extraction API
 After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker start -a v2hr-api
-ExecStop=/usr/bin/docker stop v2hr-api
+ExecStart=/usr/bin/docker start -a voice-to-fhir-api
+ExecStop=/usr/bin/docker stop voice-to-fhir-api
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-sudo systemctl enable v2hr
+sudo systemctl enable voice-to-fhir
 ```
 
 ### 4.4 Edge Performance Benchmarks
@@ -297,7 +297,7 @@ sudo systemctl enable v2hr
 │  ┌──────────────────────────────┐    ┌──────────────────────────────┐       │
 │  │       Edge Cluster            │    │       Cloud Burst             │       │
 │  │  ┌────────────────────────┐  │    │  ┌────────────────────────┐  │       │
-│  │  │  v2hr + Local MedGemma │  │    │  │  v2hr + HF Endpoint    │  │       │
+│  │  │  voice-to-fhir + Local MedGemma │  │    │  │  voice-to-fhir + HF Endpoint    │  │       │
 │  │  │  Priority: STAT/Real-time│  │    │  │  Priority: Batch/Overflow│  │       │
 │  │  └────────────────────────┘  │    │  └────────────────────────┘  │       │
 │  └──────────────────────────────┘    └──────────────────────────────┘       │
@@ -316,18 +316,18 @@ sudo systemctl enable v2hr
 # traefik.yml
 http:
   routers:
-    v2hr-edge:
+    voice-to-fhir-edge:
       rule: "PathPrefix(`/api/v1/extract`) && HeadersRegexp(`X-Workflow`, `emergency|stat`)"
-      service: v2hr-edge
+      service: voice-to-fhir-edge
       priority: 100
 
-    v2hr-cloud:
+    voice-to-fhir-cloud:
       rule: "PathPrefix(`/api/v1/extract`)"
-      service: v2hr-cloud
+      service: voice-to-fhir-cloud
       priority: 50
 
   services:
-    v2hr-edge:
+    voice-to-fhir-edge:
       loadBalancer:
         servers:
           - url: "http://edge-server:8001"
@@ -335,10 +335,10 @@ http:
           path: /health
           interval: 10s
 
-    v2hr-cloud:
+    voice-to-fhir-cloud:
       loadBalancer:
         servers:
-          - url: "https://v2hr-api.azurecontainerapps.io"
+          - url: "https://voice-to-fhir-api.azurecontainerapps.io"
 ```
 
 ---
@@ -358,7 +358,7 @@ curl -X POST https://epic-fhir-server/api/FHIR/R4/Bundle \
 
 **CDA Import (Chart Import):**
 - Configure Epic Chart Import to watch designated folder
-- v2hr outputs CDA documents to import folder
+- voice-to-fhir outputs CDA documents to import folder
 - Epic processes on schedule (typically every 5 minutes)
 
 ### 6.2 Cerner/Oracle Health Integration
@@ -539,14 +539,14 @@ readinessProbe:
 
 | Component | Update Frequency | Process |
 |-----------|------------------|---------|
-| v2hr API | Monthly | Rolling deployment |
+| voice-to-fhir API | Monthly | Rolling deployment |
 | MedGemma model | Quarterly | Staged rollout with validation |
 | OS/Dependencies | Monthly | Security patches |
 | Terminology databases | Quarterly | RxNorm/ICD-10 annual releases |
 
 ### 11.2 Support Channels
 
-- **Documentation:** https://github.com/paulgCleansheet/voice-to-health-record
+- **Documentation:** https://github.com/paulgCleansheet/voice-to-fhir
 - **Issues:** GitHub Issues
 - **Security:** security@cleansheet.info
 
@@ -569,10 +569,10 @@ curl -X POST http://localhost:8001/api/v1/transform \
   -d '{"extracted_data": {...}, "format": "fhir-r4"}'
 
 # View logs
-docker logs -f v2hr-api
+docker logs -f voice-to-fhir-api
 
 # Restart service
-sudo systemctl restart v2hr
+sudo systemctl restart voice-to-fhir
 ```
 
 ---

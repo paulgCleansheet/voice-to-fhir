@@ -435,7 +435,7 @@ def main():
     # Try loading from .env file if not found
     if not api_key:
         env_paths = [
-            script_dir / '.env',  # Primary: v2hr repo
+            script_dir / '.env',  # Primary: voice-to-fhir repo
             Path.cwd() / '.env',  # Current directory
         ]
         for env_path in env_paths:
@@ -459,7 +459,7 @@ def main():
         expected_dir = Path(args.expected_dir)
     else:
         for p in [
-            script_dir / 'tests' / 'fixtures' / 'recordings',  # Primary: v2hr repo
+            script_dir / 'tests' / 'fixtures' / 'recordings',  # Primary: voice-to-fhir repo
         ]:
             if p.exists() and list(p.glob('*.expected.json')):
                 expected_dir = p

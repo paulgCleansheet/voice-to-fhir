@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice-to-Health-Record | MedGemma Impact Challenge 2026</title>
+    <title>Voice to FHIR | MedGemma Impact Challenge 2026</title>
 
     <!-- Reveal.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
@@ -274,7 +274,7 @@
 
             <!-- Slide 1: Title -->
             <section>
-                <h1>Voice-to-Health-Record</h1>
+                <h1>Voice to FHIR</h1>
                 <h2 style="color: #888; font-weight: 400;">Clinical Documentation Extraction with MedGemma</h2>
                 <div class="medgemma-logo">
                     Powered by Google MedGemma | MedGemma Impact Challenge 2026
@@ -391,33 +391,36 @@
                 <p style="margin-top: 20px;">Recall: <strong>69%</strong> MedGemma vs <strong>45%</strong> baseline (+24 pts)</p>
             </section>
 
-            <!-- Slide 9: Impact -->
+            <!-- Slide 9: Path to Production -->
             <section>
-                <h2>Projected Clinical Impact</h2>
+                <h2>Proof of Concept → Production</h2>
                 <div class="impact-grid">
-                    <div class="impact-item">
-                        <div class="icon">⏱️</div>
-                        <div class="value">13 min</div>
-                        <div class="desc">Saved per patient</div>
-                    </div>
-                    <div class="impact-item">
-                        <div class="icon">💰</div>
-                        <div class="value">$202,500</div>
-                        <div class="desc">Annual value per physician</div>
-                    </div>
                     <div class="impact-item">
                         <div class="icon">📋</div>
                         <div class="value">69%</div>
-                        <div class="desc">F1 extraction accuracy</div>
+                        <div class="desc">Current F1 (measured)</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="icon">🎯</div>
+                        <div class="value">78-83%</div>
+                        <div class="desc">Projected F1 (production)</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="icon">💰</div>
+                        <div class="value">$0.03</div>
+                        <div class="desc">Per extraction (cloud)</div>
                     </div>
                 </div>
+                <p style="color: #888; margin-top: 20px; font-size: 0.8em;">
+                    Prompt engineering + ASR preprocessing + MedGemma 27B = clear improvement path
+                </p>
             </section>
 
             <!-- Slide 10: Clinician Quote -->
             <section>
-                <h2>Clinical Validation</h2>
+                <h2>Clinical Perspective</h2>
                 <div class="quote-box">
-                    "V2HR addresses one of the most pressing challenges in clinical practice: documentation burden. This could save physicians hours each day while improving data quality."
+                    "Voice to FHIR addresses one of the most pressing challenges in clinical practice: documentation burden. This could save physicians hours each day while improving data quality."
                     <div class="attribution">— Leah Galjan Post, MD, FAAP<br>Medical Advisor</div>
                 </div>
                 <p style="margin-top: 30px; color: #888;">
@@ -429,10 +432,11 @@
             <!-- Slide 11: Closing -->
             <section>
                 <div class="end-card" style="padding-bottom: 80px;">
-                    <h1 style="font-size: 2em;">Voice-to-Health-Record</h1>
-                    <div class="url" style="margin: 15px 0;">github.com/paulgCleansheet/voice-to-health-record</div>
+                    <h1 style="font-size: 2em;">Voice to FHIR</h1>
+                    <div class="url" style="margin: 15px 0;">github.com/paulgCleansheet/voice-to-fhir</div>
                     <p style="color: #888; margin: 5px 0;">Open Source | CC BY 4.0</p>
-                    <p class="tagline" style="font-size: 1.1em; margin: 15px 0;">"Because physicians should spend their time with patients, not paperwork."</p>
+                    <p class="tagline" style="font-size: 1.1em; margin: 15px 0;">A working proof of concept with a clear path to production.</p>
+                    <p style="color: #888; font-size: 0.85em; margin: 10px 0;">Because physicians should spend their time with patients, not paperwork.</p>
                     <div style="margin-top: 20px; font-size: 0.65em; color: #888; line-height: 1.4;">
                         <p><strong>Contributors:</strong> Clinical Validation: Leah Galjan Post, MD, FAAP | Security: <a href="https://dugganusa.com" style="color: var(--primary-blue);">DugganUSA</a></p>
                         <p><strong>Powered by:</strong> Google MedGemma | HL7 FHIR R4 | NLM RxNorm | Regenstrief LOINC</p>
@@ -592,7 +596,7 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
                 // Docker output animation
                 setTimeout(() => {
                     document.getElementById('dockerOutput').innerHTML =
-                        '<div class="success">✔ Container v2hr-api Started</div>';
+                        '<div class="success">✔ Container voice-to-fhir-api Started</div>';
                 }, 500);
             }
         }

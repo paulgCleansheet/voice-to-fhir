@@ -14,6 +14,7 @@ License: CC BY 4.0
 
 from dataclasses import dataclass
 import json
+import logging
 import os
 from pathlib import Path
 
@@ -36,6 +37,8 @@ from extraction.extraction_types import (
     PatientDemographics,
 )
 from extraction.post_processor import post_process
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -224,18 +227,12 @@ TRANSCRIPT:
         else:
             return f"{prompt_template}\n{transcript}\n\nJSON:"
 
-    def extract(self, transcript: str, workflow: str = "general") -> ClinicalEntities:
-        """Extract structured clinical entities from transcript."""
-        # Build prompt
-        full_prompt = self._build_prompt(transcript, workflow)
-
+    def _build_payload(self, full_prompt: str) -> dict:
+        """Build the request payload for the configured backend."""
         backend = self.config.backend
-        print(f"[MedGemma] Extracting with backend: {backend}")
-
-        # Build payload based on backend
         if backend == "dedicated":
             # OpenAI-compatible chat completions format
-            payload = {
+            return {
                 "model": self.config.model_id,
                 "messages": [
                     {"role": "user", "content": full_prompt}
@@ -245,14 +242,14 @@ TRANSCRIPT:
             }
         elif backend == "local":
             # Simple prompt format for local server
-            payload = {
+            return {
                 "prompt": full_prompt,
                 "max_tokens": self.config.max_tokens,
                 "temperature": self.config.temperature,
             }
         else:
             # Serverless HF Inference format
-            payload = {
+            return {
                 "inputs": full_prompt,
                 "parameters": {
                     "max_new_tokens": self.config.max_tokens,
@@ -261,6 +258,46 @@ TRANSCRIPT:
                 },
             }
 
+    def _parse_generated_text(self, result: dict | list) -> str:
+        """Extract generated text string from a backend API response."""
+        backend = self.config.backend
+        if backend == "dedicated":
+            # OpenAI format: {"choices": [{"message": {"content": "..."}}]}
+            choices = result.get("choices", [])
+            if choices:
+                return choices[0].get("message", {}).get("content", "")
+            return ""
+        elif backend == "local":
+            # Local server format: {"text": "..."}
+            return result.get("text", "")
+        else:
+            # Serverless format: [{"generated_text": "..."}] or {"generated_text": "..."}
+            if isinstance(result, list) and result:
+                return result[0].get("generated_text", "")
+            elif isinstance(result, dict):
+                return result.get("generated_text", "")
+            return str(result)
+
+    def extract(self, transcript: str, workflow: str = "general") -> ClinicalEntities:
+        """
+        Extract structured clinical entities from a transcript.
+
+        Sends the transcript to MedGemma via the configured backend, parses the
+        JSON response into typed entity objects, then applies deterministic
+        post-processing (BP normalization, ICD-10/RxNorm enrichment, order linking).
+
+        Args:
+            transcript: Raw clinical dictation or note text.
+            workflow: Prompt template to use (e.g. "general", "soap", "cardiology").
+
+        Returns:
+            ClinicalEntities with conditions, medications, vitals, orders, etc.
+        """
+        full_prompt = self._build_prompt(transcript, workflow)
+
+        logger.info("[MedGemma] Extracting with backend: %s", self.config.backend)
+
+        payload = self._build_payload(full_prompt)
         response = requests.post(
             self._endpoint,
             headers=self._headers,
@@ -274,33 +311,13 @@ TRANSCRIPT:
             )
 
         result = response.json()
+        generated_text = self._parse_generated_text(result)
 
-        # Parse response based on backend format
-        if backend == "dedicated":
-            # OpenAI format: {"choices": [{"message": {"content": "..."}}]}
-            choices = result.get("choices", [])
-            if choices:
-                generated_text = choices[0].get("message", {}).get("content", "")
-            else:
-                generated_text = ""
-        elif backend == "local":
-            # Local server format: {"text": "..."}
-            generated_text = result.get("text", "")
-        else:
-            # Serverless format: [{"generated_text": "..."}] or {"generated_text": "..."}
-            if isinstance(result, list) and result:
-                generated_text = result[0].get("generated_text", "")
-            elif isinstance(result, dict):
-                generated_text = result.get("generated_text", "")
-            else:
-                generated_text = str(result)
-
-        # Debug: Log raw MedGemma response
-        print(f"[MedGemma] Raw response length: {len(generated_text)}")
+        logger.debug("[MedGemma] Raw response length: %d", len(generated_text))
         if len(generated_text) < 2000:
-            print(f"[MedGemma] Raw response: {generated_text}")
+            logger.debug("[MedGemma] Raw response: %s", generated_text)
         else:
-            print(f"[MedGemma] Raw response preview: {generated_text[:500]}...")
+            logger.debug("[MedGemma] Raw response preview: %s...", generated_text[:500])
 
         # Parse JSON from response
         entities = self._parse_response(generated_text, transcript, workflow)
@@ -334,41 +351,11 @@ TRANSCRIPT:
         """
         import copy
 
-        # Build prompt
         full_prompt = self._build_prompt(transcript, workflow)
 
-        backend = self.config.backend
-        print(f"[MedGemma] Extracting with backend: {backend}")
+        logger.info("[MedGemma] Extracting with backend: %s", self.config.backend)
 
-        # Build payload based on backend
-        if backend == "dedicated":
-            # OpenAI-compatible chat completions format
-            payload = {
-                "model": self.config.model_id,
-                "messages": [
-                    {"role": "user", "content": full_prompt}
-                ],
-                "max_tokens": self.config.max_tokens,
-                "temperature": self.config.temperature,
-            }
-        elif backend == "local":
-            # Simple prompt format for local server
-            payload = {
-                "prompt": full_prompt,
-                "max_tokens": self.config.max_tokens,
-                "temperature": self.config.temperature,
-            }
-        else:
-            # Serverless HF Inference format
-            payload = {
-                "inputs": full_prompt,
-                "parameters": {
-                    "max_new_tokens": self.config.max_tokens,
-                    "temperature": self.config.temperature,
-                    "return_full_text": False,
-                },
-            }
-
+        payload = self._build_payload(full_prompt)
         response = requests.post(
             self._endpoint,
             headers=self._headers,
@@ -382,29 +369,9 @@ TRANSCRIPT:
             )
 
         result = response.json()
+        generated_text = self._parse_generated_text(result)
 
-        # Parse response based on backend format
-        if backend == "dedicated":
-            # OpenAI format: {"choices": [{"message": {"content": "..."}}]}
-            choices = result.get("choices", [])
-            if choices:
-                generated_text = choices[0].get("message", {}).get("content", "")
-            else:
-                generated_text = ""
-        elif backend == "local":
-            # Local server format: {"text": "..."}
-            generated_text = result.get("text", "")
-        else:
-            # Serverless format: [{"generated_text": "..."}] or {"generated_text": "..."}
-            if isinstance(result, list) and result:
-                generated_text = result[0].get("generated_text", "")
-            elif isinstance(result, dict):
-                generated_text = result.get("generated_text", "")
-            else:
-                generated_text = str(result)
-
-        # Debug: Log raw MedGemma response
-        print(f"[MedGemma] Raw response length: {len(generated_text)}")
+        logger.debug("[MedGemma] Raw response length: %d", len(generated_text))
 
         # Parse JSON from response (Stage 1: AI-only extraction)
         entities = self._parse_response(generated_text, transcript, workflow)
@@ -415,8 +382,8 @@ TRANSCRIPT:
         # Apply post-processing (Stages 2-4: Rules, Enrichment, Linking)
         final_entities = post_process(entities, transcript)
 
-        print(f"[MedGemma] Stage 1 (AI-only) entities extracted")
-        print(f"[MedGemma] Stage 4 (Full pipeline) entities extracted")
+        logger.info("[MedGemma] Stage 1 (AI-only) entities extracted")
+        logger.info("[MedGemma] Stage 4 (Full pipeline) entities extracted")
 
         return (stage1_entities, final_entities)
 
@@ -433,17 +400,16 @@ TRANSCRIPT:
             if json_start >= 0 and json_end > json_start:
                 json_str = response_text[json_start:json_end]
                 data = json.loads(json_str)
-                # Debug: Log parsed data keys and medication count
-                print(f"[MedGemma Parse] Keys in response: {list(data.keys())}")
-                print(f"[MedGemma Parse] Medications found: {len(data.get('medications', []))}")
-                print(f"[MedGemma Parse] Allergies found: {len(data.get('allergies', []))}")
+                logger.debug("[MedGemma Parse] Keys in response: %s", list(data.keys()))
+                logger.debug("[MedGemma Parse] Medications found: %d", len(data.get('medications', [])))
+                logger.debug("[MedGemma Parse] Allergies found: %d", len(data.get('allergies', [])))
                 if data.get('medications'):
-                    print(f"[MedGemma Parse] Medication names: {[m.get('name') for m in data.get('medications', [])]}")
+                    logger.debug("[MedGemma Parse] Medication names: %s", [m.get('name') for m in data.get('medications', [])])
             else:
-                print("[MedGemma Parse] No JSON found in response")
+                logger.warning("[MedGemma Parse] No JSON found in response")
                 data = {}
         except json.JSONDecodeError as e:
-            print(f"[MedGemma Parse] JSON decode error: {e}")
+            logger.warning("[MedGemma Parse] JSON decode error: %s", e)
             data = {}
 
         # Build ClinicalEntities from parsed data

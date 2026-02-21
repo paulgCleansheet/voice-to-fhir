@@ -1,13 +1,13 @@
 # Clinical Impact Analysis
 
-**Voice-to-Health-Record Extraction Pipeline**
+**Voice to FHIR Extraction Pipeline**
 **Date:** February 21, 2026
 
 ---
 
 ## Executive Summary
 
-The v2hr clinical extraction pipeline addresses physician documentation burden — a well-documented healthcare crisis — by automating the extraction of structured clinical data from natural language transcripts using Google's MedGemma.
+The voice-to-fhir clinical extraction pipeline addresses physician documentation burden — a well-documented healthcare crisis — by automating the extraction of structured clinical data from natural language transcripts using Google's MedGemma.
 
 **What we measured:**
 - **69% F1 extraction accuracy** across 6 entity types (199 entities, 16 clinical notes)
@@ -46,7 +46,7 @@ Dictation/Notes → Manual Review → Manual Data Entry → Manual Coding → EH
                                                               Total: ~16 min
 ```
 
-**v2hr workflow (automated extraction + clinician review):**
+**voice-to-fhir workflow (automated extraction + clinician review):**
 ```
 Dictation/Notes → MedGemma Extraction → Auto-Coding → Clinician Review → EHR
     (0 min)           (3 seconds)        (instant)       (3-5 min)
@@ -61,7 +61,7 @@ Dictation/Notes → MedGemma Extraction → Auto-Coding → Clinician Review →
 | Dragon Medical | Speech-to-text only | No structured extraction; still requires manual coding |
 | Nuance DAX | Ambient AI scribe | Proprietary; $15-25K/physician/year; vendor lock-in |
 | Suki AI | AI documentation | Closed source; limited EHR integration |
-| **v2hr** | **MedGemma + post-processing** | **Open-source; $0.03/extraction cloud or $2K on-prem** |
+| **voice-to-fhir** | **MedGemma + post-processing** | **Open-source; $0.03/extraction cloud or $2K on-prem** |
 
 ---
 
@@ -78,7 +78,7 @@ We have **not validated these time savings in clinical deployment**. Actual savi
 
 ### Per-Encounter Estimates
 
-| Encounter Type | Manual Documentation | v2hr + Review | Estimated Savings |
+| Encounter Type | Manual Documentation | voice-to-fhir + Review | Estimated Savings |
 |----------------|---------------------|---------------|-------------------|
 | Routine follow-up | 10 min | 2-3 min | **7-8 min** |
 | General visit | 16 min | 3-5 min | **11-13 min** |
@@ -123,7 +123,7 @@ Annual value per physician:  1,354 × $150 = $203,000
 
 ### What We Measured (Development Benchmarks)
 
-| Entity Type | v2hr F1 | Baseline F1 | Improvement |
+| Entity Type | voice-to-fhir F1 | Baseline F1 | Improvement |
 |-------------|---------|-------------|-------------|
 | Medications | 84% | 71% | +13 pp |
 | Allergies | 84% | 0% | +84 pp |
@@ -167,9 +167,9 @@ Documentation automation is currently available only to well-resourced health sy
 - Commercial AI scribes: $15-25K/year per physician — requires enterprise contracts
 - Most solutions require cloud connectivity — problematic for privacy-sensitive or low-bandwidth settings
 
-### How v2hr Addresses This
+### How voice-to-fhir Addresses This
 
-| Setting | Challenge | v2hr Approach | Cost |
+| Setting | Challenge | voice-to-fhir Approach | Cost |
 |---------|-----------|---------------|------|
 | Rural clinics | Cannot afford scribes | Self-hosted edge deployment | $2,000 one-time |
 | Small practices | No IT department | Docker single-command setup | $0.03/extraction cloud |
@@ -193,7 +193,7 @@ This is a **cost model**, not a deployment plan. Actual adoption depends on EHR 
 
 ### Why Open Source Matters for Equity
 
-Proprietary solutions create vendor lock-in and pricing barriers that disproportionately affect under-resourced settings. v2hr's open-source model (CC BY 4.0) means:
+Proprietary solutions create vendor lock-in and pricing barriers that disproportionately affect under-resourced settings. voice-to-fhir's open-source model (CC BY 4.0) means:
 
 - **No per-physician licensing fees** — the software is free
 - **Community-driven improvements** — specialized rules for cardiology, pediatrics, etc. benefit everyone
@@ -238,7 +238,7 @@ Maintenance:  Standard IT server maintenance
 
 ### Clinician-in-the-Loop
 
-v2hr is designed as a **documentation aid, not an autonomous system**. Every extraction requires clinician review before EHR entry.
+voice-to-fhir is designed as a **documentation aid, not an autonomous system**. Every extraction requires clinician review before EHR entry.
 
 ```
 Transcript → MedGemma Extraction → Structured Output → Clinician Review → EHR
@@ -391,10 +391,10 @@ At 80% extraction accuracy:
 
 ### This Is a Proof of Concept
 
-v2hr demonstrates that MedGemma can power a practical clinical extraction pipeline. The 69% F1 baseline is honest — it represents a working system, not a polished product. But the architecture is sound, the improvement path is clear, and the hardest problem (getting semantic extraction to work at all for complex entities like allergies and family history) is solved.
+voice-to-fhir demonstrates that MedGemma can power a practical clinical extraction pipeline. The 69% F1 baseline is honest — it represents a working system, not a polished product. But the architecture is sound, the improvement path is clear, and the hardest problem (getting semantic extraction to work at all for complex entities like allergies and family history) is solved.
 
 ### What We Know (Measured)
-- v2hr achieves **69% F1 extraction accuracy** in development benchmarks
+- voice-to-fhir achieves **69% F1 extraction accuracy** in development benchmarks
 - MedGemma provides **+13 percentage point improvement** over rule-based baseline
 - MedGemma captures **allergies (84%) and family history (82%)** that rules completely miss (0%)
 - The system **works end-to-end**: transcript → extraction → structured FHIR/CDA/HL7 output
