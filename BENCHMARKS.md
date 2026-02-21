@@ -2,7 +2,8 @@
 
 **Evaluation Date:** January 31, 2026
 **Test Corpus:** 199 entities from 16 clinical transcripts
-**Ground Truth:** Independent human annotation (`.expected.json` files)
+**Ground Truth:** AI-assisted annotation from human-authored clinical scripts (`.expected.json` files)
+**Ground Truth Status:** Development benchmarks; SME validation planned but not yet completed
 
 ---
 
@@ -19,7 +20,7 @@ Our **hybrid extraction pipeline**—combining MedGemma AI with a deterministic 
 
 **Key Finding:** Post-processing adds metadata (ICD-10, RxNorm, LOINC codes) and structured extraction (family history +11%, vitals +6%), but **AI drives accuracy** (67% of the 70% total F1).
 
-**ASR Error Analysis:** With pristine transcripts (no ASR errors), the pipeline achieves **77% F1** - a 9 percentage point improvement over real-world ASR input. This represents the extraction ceiling performance.
+**ASR Error Analysis:** With pristine transcripts (no ASR errors), the pipeline achieves **77% F1** — a 9 percentage point improvement over real-world ASR input. This represents **this model's performance with clean input**, not a hard ceiling — a more capable extraction model could potentially recover from ASR errors through clinical context.
 
 The hybrid pipeline excels at complex extraction tasks where rule-only systems completely fail:
 - **Allergies:** 84% F1 vs 0% baseline (+84%)
@@ -95,7 +96,7 @@ Performance: 70% F1 (P: 72%, R: 69%)
 
 | Stage | Description | Cumulative F1 | Delta from Previous |
 |-------|-------------|--------------|---------------------|
-| **Pristine Input** | Original dictation (no ASR) | **77%** | **— (ceiling)** |
+| **Pristine Input** | Original dictation (no ASR) | **77%** | **— (clean input baseline)** |
 | **Stage 0** | + MedASR transcription | 68% | **-9%** (ASR errors) |
 | **Stage 1** | + AI extraction (MedGemma) | 67% | -1% |
 | **Stages 2-4** | + Rules, codes, linking | **70%** | **+3%** |
@@ -103,9 +104,9 @@ Performance: 70% F1 (P: 72%, R: 69%)
 **Performance Attribution:**
 - **AI contribution:** 67% F1 (represents 96% of final 70% F1)
 - **Post-processing contribution:** +3% F1 (represents 4% of final 70% F1)
-- **ASR error penalty:** -9% F1 (difference between 77% ceiling and 68% with ASR)
+- **ASR error penalty:** -9% F1 (difference between 77% with clean input and 68% with ASR)
 
-**Key Insight:** The 77% F1 with pristine input represents the **extraction ceiling** - the best possible performance with perfect transcription. Real-world performance (70% F1) includes a -9% penalty from ASR errors plus the pipeline's own limitations (30% gap from perfect).
+**Key Insight:** The 77% F1 with pristine input shows what **this model** achieves with clean input. It is not a hard ceiling — a more robust extraction model could potentially recover from ASR errors using clinical context (e.g., inferring "lisinopril" from a phonetic misspelling). The 9% gap measures this model's sensitivity to transcription noise, not an inherent limit.
 
 ### Why Hybrid?
 
@@ -143,14 +144,15 @@ Performance: 70% F1 (P: 72%, R: 69%)
 
 ### Ground Truth Creation
 
-**Critical:** Ground truth was created **independently** of the hybrid pipeline output to ensure valid benchmarking.
+1. **Script Creation:** Clinical scenarios written as human-authored natural language scripts
+2. **AI-Assisted Annotation:** Expected extractions in `.expected.json` files were derived from the scripts using a separate AI model (Claude), not the extraction pipeline under test (MedGemma). This avoids direct circular reasoning but means the ground truth has not been validated by clinical subject matter experts (SMEs).
+3. **Recording:** Scripts dictated and processed through the full hybrid pipeline (transcription → AI extraction → deterministic rules → code enrichment → linking)
+4. **Comparison:** Hybrid pipeline output compared against the annotation files
 
-1. **Script Creation:** Clinical scenarios written as natural language scripts
-2. **Human Annotation:** Expected extractions defined in `.expected.json` files **before** running any AI
-3. **Recording:** Scripts dictated and processed through full hybrid pipeline (transcription → AI extraction → deterministic rules → code enrichment → linking)
-4. **Comparison:** Hybrid pipeline output compared against pre-defined expected files
-
-This methodology avoids circular reasoning where comparing a system to its own output yields meaningless 100% accuracy.
+**Limitations of this approach:**
+- Ground truth was AI-assisted, not SME-annotated. While the clinical scripts are straightforward enough that AI annotation is likely reasonable for development testing, formal SME validation is planned as future work.
+- Using one AI to annotate and another to extract avoids self-referential evaluation but does not guarantee annotation correctness.
+- This is sufficient for **development benchmarking and relative comparisons** (e.g., MedGemma vs. baseline), but should not be cited as clinical validation.
 
 ### Test Corpus
 
@@ -160,7 +162,7 @@ This methodology avoids circular reasoning where comparing a system to its own o
   - Intake, Follow-up, Discharge, Radiology
   - Complex multi-comorbidity case (complex1.1)
 - **199 ground truth entities** across all entity types
-- **Independent annotation:** Expected files created before MedGemma extraction
+- **AI-assisted annotation:** Expected files derived from scripts using a separate AI model, independent of the extraction pipeline under test
 
 ### Baseline Comparison
 
@@ -327,7 +329,7 @@ To isolate transcription errors from extraction errors, we compared the hybrid p
 
 ### Key Findings
 
-1. **ASR errors cost 9% F1**: The hybrid pipeline's ceiling with perfect input is 77%, not 69%
+1. **ASR errors cost this model 9% F1**: With clean input MedGemma achieves 77%, vs 69% with ASR transcripts
 2. **Conditions most affected**: +15% improvement with pristine transcripts
 3. **Orders also benefit**: +14% improvement (35% → 49%) with pristine input
 4. **Medications robust**: No change (84%) - ASR handles medication names well
@@ -407,7 +409,7 @@ Unmatched entities are flagged as `*_matched: false` for downstream clinical rev
 
 ### Running the Benchmark
 
-**What gets tested:** The benchmark runs the full hybrid pipeline (AI + rules + enrichment + linking) and compares against human ground truth.
+**What gets tested:** The benchmark runs the full hybrid pipeline (AI + rules + enrichment + linking) and compares against ground truth annotations.
 
 ```bash
 # Clone repository
@@ -446,7 +448,7 @@ python scripts/benchmark_stage_comparison.py --output stage_attribution.json
 
 | File | Description |
 |------|-------------|
-| `tests/fixtures/recordings/*.expected.json` | Human-defined ground truth (16 files, enhanced with RxNorm/LOINC/ICD-10) |
+| `tests/fixtures/recordings/*.expected.json` | AI-assisted ground truth from human-authored scripts (16 files, enhanced with RxNorm/LOINC/ICD-10) |
 | `tests/fixtures/recordings/script.md` | Pristine dictation scripts for ASR comparison |
 | `tests/fixtures/ground-truth.json` | Hybrid pipeline extraction results (contains transcripts in reviewPool) |
 | `scripts/baseline_extractor.py` | Rule-based baseline implementation (regex only, no AI) |
@@ -462,13 +464,14 @@ python scripts/benchmark_stage_comparison.py --output stage_attribution.json
 
 ## Limitations
 
-1. **Test corpus size:** 199 entities across 16 transcripts; larger corpus would narrow confidence intervals
-2. **Single annotator:** Expected files created by one individual; inter-annotator agreement not measured
-3. **Baseline simplicity:** Rule-based baseline uses common patterns only; more sophisticated NLP baselines (spaCy, clinical NER models, other medical LLMs) not tested
-4. **Pipeline version:** Results specific to `google/medgemma-4b-it` model with current deterministic rules; performance may vary with different AI models or improved rules
-5. **Orders weakness:** Both systems underperform on order detection (34-36% F1) — represents biggest improvement opportunity
-6. **ASR dependency:** Real-world performance includes MedASR transcription errors; pristine input shows higher ceiling (77% F1)
-7. **Component attribution:** Now quantified via Stage Attribution Analysis - AI contributes 67% F1 (96% of total), post-processing adds +3% (4% of total)
+1. **Ground truth not SME-validated:** Expected files were AI-assisted annotations (Claude) of human-authored scripts, not clinician-reviewed. Suitable for development benchmarking and relative comparisons; SME validation planned as future work.
+2. **Test corpus size:** 199 entities across 16 transcripts; larger corpus would narrow confidence intervals
+3. **No inter-annotator agreement:** Single AI annotator; no inter-rater reliability measured
+4. **Baseline simplicity:** Rule-based baseline uses common patterns only; more sophisticated NLP baselines (spaCy, clinical NER models, other medical LLMs) not tested
+5. **Pipeline version:** Results specific to `google/medgemma-4b-it` model with current deterministic rules; performance may vary with different AI models or improved rules
+6. **Orders weakness:** Both systems underperform on order detection (34-36% F1) — represents biggest improvement opportunity
+7. **ASR impact is model-specific:** The 9% F1 gap between pristine and ASR input reflects this model's sensitivity to transcription noise. A more robust model could potentially recover from ASR errors using clinical context, so this gap is not a hard ceiling.
+8. **Component attribution:** Quantified via Stage Attribution Analysis — AI contributes 67% F1 (96% of total), post-processing adds +3% (4% of total)
 
 ---
 
@@ -479,7 +482,7 @@ The **hybrid extraction pipeline** (AI + deterministic rules + code enrichment +
 **Key findings:**
 - **+13% F1 improvement** over baseline (69% vs 56%)
 - **+24 point recall improvement** (69% vs 45%) — catches more real clinical data
-- **77% extraction ceiling** with pristine input (9% lost to ASR errors)
+- **77% with clean input** (9% gap from ASR errors for this model)
 - **Complete failure of baseline** on allergies (0%) and family history (0%)
 - **Baseline advantage** only on structured vital signs (88% vs 82%)
 
@@ -490,7 +493,7 @@ The **hybrid extraction pipeline** (AI + deterministic rules + code enrichment +
 - **Family history rules** most effective (+11% improvement)
 - **Code enrichment** has zero accuracy impact (0% delta) - adds metadata only
 
-**Honest assessment:** 70% F1 with real-world ASR input represents room for improvement. The 77% ceiling with pristine transcripts shows that extraction pipeline limitations account for most errors (72%), not transcription quality (28%).
+**Honest assessment:** 70% F1 with real-world ASR input represents room for improvement. The 77% score with pristine transcripts shows that for this model, extraction limitations account for most of the gap, though a more capable model might also recover from ASR errors. Ground truth is AI-assisted (not SME-validated), so absolute numbers should be interpreted as development benchmarks; relative comparisons (MedGemma vs. baseline) are the stronger claim.
 
 **Critical insight:** Attribution analysis reveals that **MedGemma AI baseline (67% F1) is significantly stronger than hypothesized**. Original expectation was ~52% AI baseline with +17.5% from rules; actual is 67% AI with only +3% from rules. This shifts optimization strategy from rule engineering to AI prompt engineering.
 
@@ -539,9 +542,9 @@ The **hybrid extraction pipeline** (AI + deterministic rules + code enrichment +
 
 **Baseline extractor:** `scripts/baseline_extractor.py` (regex-only, no AI)
 
-**Ground truth:** `tests/fixtures/recordings/*.expected.json` (16 files, human-annotated, enhanced with medical codes)
+**Ground truth:** `tests/fixtures/recordings/*.expected.json` (16 files, AI-assisted annotation from human-authored scripts, enhanced with medical codes)
 
-**Pristine scripts:** `tests/fixtures/recordings/script.md` (error-free input for ASR ceiling analysis)
+**Pristine scripts:** `tests/fixtures/recordings/script.md` (error-free input for ASR impact analysis)
 
 **Documentation:**
 - `STAGE1_IMPLEMENTATION_SUMMARY.md` - Stage attribution implementation details

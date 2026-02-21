@@ -12,9 +12,9 @@ Notice the ICD-10 code for angina, the RxNorm code for aspirin verified against 
 
 Now I'll transform this to a FHIR R4 Bundle. Ready for Epic, Cerner, or any FHIR server. We also support CDA and HL7 version 2.
 
-We benchmarked against regex-based extraction using 181 human-annotated entities. MedGemma achieves 66% F1, an 11 point improvement over baseline. Critically, MedGemma catches allergies and family history that rule-based systems completely miss.
+We benchmarked against regex-based extraction using 181 annotated entities. MedGemma achieves 66% F1, an 11 point improvement over baseline. Critically, MedGemma catches allergies and family history that rule-based systems completely miss.
 
-The projected impact: thirteen minutes saved per patient, over two hundred thousand dollars annual value per physician.
+The potential impact: reduced documentation burden per patient, enabling clinicians to spend more time with patients.
 
 Deploys to the cloud at three cents per extraction, or on-premises for complete HIPAA compliance.
 

@@ -68,7 +68,7 @@ Clinical Transcript → MedGemma Extraction → Terminology Validation → Multi
 
 ### Benchmark Results
 
-We evaluated v2hr against a rule-based baseline (regex pattern matching) on 199 independently annotated entities from 16 clinical transcripts:
+We evaluated v2hr against a rule-based baseline (regex pattern matching) on 199 entities from 16 clinical transcripts, annotated from human-authored clinical scripts:
 
 | Entity Type | MedGemma F1 | Baseline F1 | Delta |
 |-------------|-------------|-------------|-------|
@@ -106,24 +106,16 @@ To isolate transcription errors from extraction errors, we compared MedGemma on 
 | Baseline (regex) | 56% |
 
 **Key findings:**
-- **ASR errors cost 9% F1** - MedASR transcription errors account for ~28% of total errors
-- **Extraction ceiling is 77%** - MedGemma's best performance with perfect input
-- **Conditions most affected** (+15% with pristine) - clinical terminology transcription is challenging
-- **Orders benefit significantly** (+14% with pristine) - order detection improves with clean input
+- **ASR errors cost this model 9% F1** — MedASR transcription errors reduce MedGemma's performance from 77% to 69%
+- **77% with clean input** — MedGemma's performance with pristine scripts (not a hard ceiling; a more robust model could potentially recover from ASR errors using clinical context)
+- **Conditions most affected** (+15% with pristine) — clinical terminology transcription is challenging
+- **Orders benefit significantly** (+14% with pristine) — order detection improves with clean input
 
-This analysis demonstrates that improving ASR accuracy offers meaningful gains, but the majority of improvement opportunity lies in the extraction model itself.
+This analysis demonstrates that improving ASR accuracy offers meaningful gains, but for this model, the majority of improvement opportunity lies in the extraction model itself.
 
 ---
 
-## 4. Projected Clinical Impact
-
-### Time Savings
-
-| Metric | Value |
-|--------|-------|
-| Time saved per patient | 13 minutes |
-| Daily time saved (25 patients) | 5.4 hours |
-| Annual value per physician | $202,500 |
+## 4. Potential Clinical Impact
 
 ### Extraction Accuracy
 
@@ -134,15 +126,11 @@ This analysis demonstrates that improving ASR accuracy offers meaningful gains, 
 | Conditions | 71% F1 | +14% over baseline |
 | Overall | 69% F1 | +13% over baseline |
 
-*Note: All extractions require clinician review before EHR entry.*
+*Note: All extractions require clinician review before EHR entry. Ground truth is AI-assisted annotation from human-authored scripts; SME validation planned as future work.*
 
-### Health Equity
+### Health Equity Potential
 
-v2hr enables affordable documentation automation for settings that cannot afford scribes or expensive enterprise solutions:
-
-- **4,500 rural/underserved facilities** could deploy edge infrastructure for $2,000 each
-- **96 million patients** in underserved areas could benefit
-- **$2.25B annual value** created in safety-net settings
+v2hr's open-source, edge-deployable architecture could enable affordable documentation automation for settings that cannot afford scribes or expensive enterprise solutions, including rural and underserved facilities.
 
 ---
 
@@ -179,6 +167,8 @@ v2hr enables affordable documentation automation for settings that cannot afford
 - Not a medical device; requires clinician review
 - Accuracy dependent on transcript quality
 - Model may miss rare conditions or medications not in training data
+- Benchmark ground truth is AI-assisted (not SME-validated); suitable for development testing and relative comparisons but not clinical validation
+- Benchmark results represent development-stage evaluation with a small corpus (199 entities, 16 transcripts)
 
 ---
 
@@ -197,7 +187,7 @@ cp .env.example .env
 # Run API server
 uvicorn api.main:app --port 8001
 
-# Run benchmark (compares MedGemma vs baseline against human-annotated ground truth)
+# Run benchmark (compares MedGemma vs baseline against ground truth)
 python scripts/benchmark_v2_with_baseline.py
 ```
 
@@ -210,10 +200,10 @@ python scripts/benchmark_v2_with_baseline.py
 
 v2hr demonstrates that MedGemma can transform clinical documentation by:
 
-1. **Achieving 69% F1 extraction accuracy** with +13% improvement over rule-based baseline
+1. **Achieving 69% F1 extraction accuracy** with +13% improvement over rule-based baseline in development benchmarks
 2. **Capturing complex entities** (allergies, family history) that regex patterns completely miss
-3. **Saving an estimated 13 minutes per patient** in documentation time
-4. **Enabling affordable automation** for underserved settings
+3. **Reducing documentation burden** through automated structured extraction
+4. **Enabling affordable automation** for underserved settings via open-source, edge-deployable architecture
 5. **Maintaining safety** through clinician-in-the-loop design
 
 The hardest clinical NLP problems—allergy recognition, family history parsing, context understanding—are exactly where medical language models like MedGemma provide the greatest value. While 69% F1 indicates room for improvement, MedGemma's ability to extract entities that rule-based systems cannot even attempt (0% baseline on allergies/family history) demonstrates the fundamental advantage of medical language models.

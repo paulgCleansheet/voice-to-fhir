@@ -21,12 +21,14 @@ An **information extraction system** that converts unstructured verbal reports i
 ### Ground Truth Creation (Independence Check)
 
 **Process:**
-1. Human annotator writes 16 test scenarios (like test cases)
-2. Annotator defines **expected outputs** in structured format BEFORE running AI
-3. AI system processes test inputs (blind to expected outputs)
-4. Compare AI output vs pre-defined expected output
+1. Human author writes 16 clinical test scenarios as natural language scripts
+2. Expected outputs (`.expected.json`) derived from those scripts using AI-assisted annotation (Claude — a separate model from the extraction pipeline under test)
+3. Extraction pipeline (MedGemma) processes test inputs blind to expected outputs
+4. Compare extraction output vs pre-defined expected output
 
-**Critical question:** Does this avoid circular reasoning? Or could the annotator have biased expected outputs based on knowing what the AI would extract?
+**Key caveat:** The ground truth is AI-assisted, not SME-validated. This avoids direct circular reasoning (different AI models for annotation vs. extraction) but does not guarantee clinical correctness. Suitable for development benchmarking and relative comparisons; SME validation planned as future work.
+
+**Critical question:** Are the clinical scripts straightforward enough that AI annotation is reliable? What errors might a non-SME annotator introduce?
 
 ### Test Corpus
 
@@ -118,7 +120,7 @@ Tested with **pristine input** (no transcription errors) vs **real-world transcr
 
 ## Known Limitations (Self-Assessment)
 
-1. **Single annotator** - No inter-rater reliability measured
+1. **AI-assisted annotation, not SME-validated** - Ground truth created by AI from human-authored scripts; no clinician review yet
 2. **Small corpus** - 199 entities → wide confidence intervals
 3. **Simplistic baseline** - Regex-only, not modern NLP (spaCy, BERT)
 4. **Fuzzy threshold** - 80% similarity seems arbitrary

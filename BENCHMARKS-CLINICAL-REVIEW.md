@@ -222,7 +222,7 @@ Most voice-to-text systems use **only AI** or **only rules**. This system combin
 - Radiology consultation
 - Complex multi-comorbidity case (11 conditions, 15 medications)
 
-**Independent review:** Expected outputs were defined by human clinical reviewers **before** the AI ran, ensuring we're not just comparing the system to itself.
+**Ground truth method:** Expected outputs were derived from the human-authored clinical scripts using AI-assisted annotation (a separate AI model, not the extraction pipeline under test). This avoids self-referential evaluation but has not yet been validated by clinical SMEs. These are development benchmarks; the relative comparisons (MedGemma vs. baseline) are the stronger claim.
 
 **199 clinical data points tested:** Conditions, medications, vitals, allergies, family history, orders
 
@@ -328,23 +328,25 @@ Most voice-to-text systems use **only AI** or **only rules**. This system combin
 
 ---
 
-## Accuracy Ceiling and Improvement Path
+## Accuracy with Clean Input and Improvement Path
 
 ### Current Performance
 
 | Input Quality | System Accuracy | Clinical Meaning |
 |---------------|-----------------|------------------|
-| **Perfect transcription** | 77% | If speech recognition were perfect, system would still miss 23% |
+| **Perfect transcription** | 77% | With perfect input, this model still misses 23% |
 | **Real-world (with ASR errors)** | 70% | Current performance with typical transcription errors |
 | **Rules-only baseline** | 56% | What you'd get without AI (traditional NLP) |
 
-### Where the 30% Gap Comes From
+*Note: The 77% figure is not a hard ceiling. A more capable extraction model could potentially recover from ASR errors using clinical context, so the gap between pristine and real-world may narrow with better models.*
+
+### Where the 30% Gap Comes From (for this model)
 
 **Error Attribution:**
-- 9% from speech recognition errors (MedASR not perfect)
+- 9% from speech recognition errors (MedASR not perfect) — model-specific; better models may recover from these
 - 21% from AI extraction limitations (missed entities, context errors)
 
-**Key insight:** Speech recognition is not the main problem. The AI extraction itself has a 77% ceiling even with perfect input.
+**Key insight:** For this model, speech recognition is not the main problem. MedGemma achieves 77% even with perfect input, though a more capable model might also recover from ASR errors using clinical context.
 
 ### Improvement Roadmap
 
@@ -419,7 +421,7 @@ Similarly:
 | Nuance Dragon Medical | ~95% | Transcription only | No structured extraction |
 | Suki AI | "High accuracy" | Not publicly disclosed | No independent validation published |
 | Abridge | Not disclosed | Internal testing | HIPAA-compliant summaries |
-| **This system** | **70%** | **Independent ground truth** | **Transparent methodology** |
+| **This system** | **70%** | **AI-assisted ground truth** | **Transparent methodology** |
 
 **Key difference:** Most commercial systems don't publish accuracy figures or validation methods. This system provides transparent, reproducible benchmarks.
 

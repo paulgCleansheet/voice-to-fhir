@@ -20,7 +20,7 @@ If you're reading this with a software QA mindset, **stop and recalibrate**. ML 
 | **Output determinism** | Same input → same output (always) | Same input → potentially different output (stochastic) |
 | **Correctness** | Binary (correct/incorrect) | Continuous (69% F1 score) |
 | **Success metric** | 100% pass rate expected | 60-90% F1 typical, 100% impossible |
-| **Ground truth source** | Requirements specification (objective) | Human annotation (subjective) |
+| **Ground truth source** | Requirements specification (objective) | Annotation — human or AI-assisted (subjective) |
 | **Test oracle** | Automated assertion (`assert x == y`) | Fuzzy comparison + human judgment |
 | **Failure** | Bug to be fixed | Inherent task difficulty (some errors unavoidable) |
 | **Test independence** | Doesn't matter if devs saw tests | **Critical:** Model must not train on test data |
@@ -103,7 +103,7 @@ Is this correct? (strings don't match exactly)
 - Ambiguous (is "high blood pressure" same as "hypertension"?)
 - Wrong (annotator makes mistakes)
 
-**Our limitation:** Single annotator, no inter-rater reliability measured.
+**Our limitation:** AI-assisted annotation (Claude) from human-authored scripts, not SME-validated. No inter-rater reliability measured. Suitable for development benchmarking; relative comparisons (MedGemma vs. baseline) are the stronger claim.
 
 **Question for you:** How would you validate ground truth quality without clinical expertise?
 
@@ -119,7 +119,7 @@ Is this correct? (strings don't match exactly)
 ### ML Benchmarking
 ❌ **Data leakage:** Model trained on test data → inflated scores → meaningless results
 ❌ **Circular reasoning:** Ground truth created after seeing model output → not independent
-✅ **Our approach:** Ground truth written BEFORE running AI (timestamps prove independence)
+✅ **Our approach:** Ground truth derived from human-authored scripts using a separate AI model (Claude), independent of the extraction pipeline under test (MedGemma). Not self-referential, but also not SME-validated.
 
 **Red flag scenario:**
 1. Run AI on test data

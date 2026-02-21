@@ -37,7 +37,7 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 ## Benchmark Results
 
-Evaluated against 199 independently annotated entities from 16 clinical transcripts, comparing MedGemma extraction vs. rule-based baseline:
+Development benchmarks evaluated against 199 entities from 16 clinical transcripts (AI-assisted annotation from human-authored scripts; SME validation planned), comparing MedGemma extraction vs. rule-based baseline:
 
 | Entity Type | MedGemma F1 | Baseline F1 | Delta |
 |-------------|-------------|-------------|-------|
@@ -60,7 +60,7 @@ Evaluated against 199 independently annotated entities from 16 clinical transcri
 
 **Why this matters:** A physician dictating "patient is allergic to penicillin, father had heart attack at 55" will have both items captured by MedGemma. Rule-based regex patterns miss them entirely.
 
-**ASR Error Analysis:** With pristine transcripts (no transcription errors), MedGemma achieves **77% F1** — a 9 percentage point improvement. This represents the extraction model's ceiling performance.
+**ASR Error Analysis:** With pristine transcripts (no transcription errors), MedGemma achieves **77% F1** — a 9 percentage point improvement. This represents this model's performance with clean input, not a hard ceiling.
 
 See [BENCHMARKS.md](BENCHMARKS.md) for detailed methodology and results.
 
@@ -83,11 +83,7 @@ python scripts/benchmark_pristine.py --verbose
 - `tests/fixtures/scripts/script.md` — Pristine dictation scripts
 - `tests/fixtures/bulk-export.json` — MedGemma+ASR extraction results
 
-**Projected Clinical Impact:**
-- 13 minutes saved per patient encounter
-- $202,500 annual value per physician
-
-See [docs/IMPACT_ANALYSIS.md](docs/IMPACT_ANALYSIS.md) for full impact analysis.
+See [docs/IMPACT_ANALYSIS.md](docs/IMPACT_ANALYSIS.md) for projected clinical impact analysis.
 
 ## Extracted Entities
 

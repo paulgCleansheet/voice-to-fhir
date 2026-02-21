@@ -4,7 +4,7 @@ Benchmark with Pristine Transcripts: Three-way comparison.
 
 Compares:
 - MedGemma + MedASR transcripts (real-world)
-- MedGemma + Pristine scripts (ceiling performance)
+- MedGemma + Pristine scripts (clean input performance)
 - Baseline regex (no LLM)
 
 This isolates whether extraction errors come from ASR or MedGemma.
@@ -408,7 +408,7 @@ def print_three_way_table(asr_totals: Dict[str, Metrics],
     else:
         print(f"  ASR Error Impact: ~{asr_gap:.0f}% F1 (MedASR errors have minimal impact)")
 
-    print(f"  Extraction Ceiling: {pr_f1:.0%} F1 (best MedGemma can do with perfect input)")
+    print(f"  Clean Input Performance: {pr_f1:.0%} F1 (MedGemma with perfect input)")
     print(f"  Room for Improvement: {extraction_gap:.0f}% (extraction model limitations)")
 
 

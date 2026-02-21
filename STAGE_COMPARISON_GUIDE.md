@@ -78,7 +78,7 @@ For each entity type (conditions, medications, vitals, allergies, family history
    ```
 
 2. **Ground Truth Files**
-   - `tests/fixtures/recordings/*.expected.json` (16 files) - Human-annotated ground truth
+   - `tests/fixtures/recordings/*.expected.json` (16 files) - AI-assisted ground truth from human-authored scripts
    - `tests/fixtures/ground-truth.json` - Contains transcripts in reviewPool
 
 3. **Python Environment**
@@ -368,7 +368,7 @@ python scripts/benchmark_stage_comparison.py --output attribution.json
    - Each recording has `transcript` and `workflow` fields
 
 4. **tests/fixtures/recordings/*.expected.json** (existing)
-   - 16 human-annotated ground truth files
+   - 16 AI-assisted ground truth files from human-authored scripts
    - Enhanced with RxNorm, LOINC, ICD-10 codes
 
 ---
