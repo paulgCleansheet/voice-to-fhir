@@ -1,251 +1,323 @@
 # Clinical Impact Analysis
 
 **Voice-to-Health-Record Extraction Pipeline**
+**Date:** February 21, 2026
 
 ---
 
 ## Executive Summary
 
-The v2hr clinical extraction pipeline addresses a critical bottleneck in healthcare delivery: physician documentation burden. By automating the extraction of structured clinical data from natural language transcripts, v2hr enables:
+The v2hr clinical extraction pipeline addresses physician documentation burden — a well-documented healthcare crisis — by automating the extraction of structured clinical data from natural language transcripts using Google's MedGemma.
 
-- **13 minutes saved** per patient encounter
-- **45% reduction** in medication documentation errors
-- **$202,500 annual value** per physician (at $150/hr cost-to-employer)
+**What we measured:**
+- **69% F1 extraction accuracy** across 6 entity types (199 entities, 16 clinical notes)
+- **+13 percentage point improvement** over rule-based baseline
+- **84% F1 on medications and allergies** — entities critical for patient safety
+- **0% baseline on allergies and family history** — MedGemma captures what rules cannot
+
+**What we project (with assumptions stated):**
+- **8-13 minutes saved** per patient encounter (review vs. manual entry)
+- Potential to reduce documentation time by **30-40%** for routine visits
+
+All projections below are estimates based on published literature and our measured extraction performance. They are not validated in clinical deployment.
 
 ---
 
-## The Problem
+## The Problem: Documentation Burden
 
-### Physician Documentation Burden
+### Published Evidence
 
 | Metric | Value | Source |
 |--------|-------|--------|
-| Time spent on documentation | 4.5 hours/day | AMA 2024 |
-| Documentation time per patient | 16 minutes | JAMA Internal Medicine |
-| EHR interaction time | 37% of workday | Annals of Internal Medicine |
-| Physician burnout rate | 63% | Medscape 2024 |
+| Daily documentation time | 4.5 hours | AMA Physician Practice Benchmark Survey, 2024 |
+| Documentation time per encounter | 16 minutes avg | Sinsky et al., Annals of Internal Medicine, 2016 |
+| EHR interaction as % of workday | 37% | Arndt et al., Annals of Internal Medicine, 2017 |
+| Physician burnout rate | 63% | Medscape Physician Burnout Report, 2024 |
+| After-hours EHR time ("pajama time") | 1.4 hours/day | Adler-Milstein & Zhao, JAMA, 2022 |
 
-**Root cause:** Manual transcription of clinical findings into structured EHR fields.
+### The Translation Gap
 
-### Current Workflow (Manual)
+Clinicians think and speak in natural clinical language. EHRs require structured, coded data. This translation is currently performed manually:
 
+**Current workflow (manual):**
 ```
-Voice/Text Note → Manual Review → Manual Data Entry → Manual Coding → EHR Storage
-     (5 min)         (3 min)          (5 min)           (3 min)
-                                                                    Total: 16 min
-```
-
-### v2hr Workflow (Automated)
-
-```
-Voice/Text Note → MedGemma Extraction → Auto-Coding → Review → EHR Storage
-     (0 min)          (3 sec)            (instant)   (2 min)
-                                                                    Total: 3 min
+Dictation/Notes → Manual Review → Manual Data Entry → Manual Coding → EHR
+    (5 min)          (3 min)          (5 min)           (3 min)
+                                                              Total: ~16 min
 ```
 
-**Time savings: 13 minutes per patient**
+**v2hr workflow (automated extraction + clinician review):**
+```
+Dictation/Notes → MedGemma Extraction → Auto-Coding → Clinician Review → EHR
+    (0 min)           (3 seconds)        (instant)       (3-5 min)
+                                                              Total: ~3-5 min
+```
+
+### Why Existing Solutions Fall Short
+
+| Solution | Approach | Limitation |
+|----------|----------|------------|
+| Medical scribes | Human documentation | $30-50K/year per physician; labor shortage |
+| Dragon Medical | Speech-to-text only | No structured extraction; still requires manual coding |
+| Nuance DAX | Ambient AI scribe | Proprietary; $15-25K/physician/year; vendor lock-in |
+| Suki AI | AI documentation | Closed source; limited EHR integration |
+| **v2hr** | **MedGemma + post-processing** | **Open-source; $0.03/extraction cloud or $2K on-prem** |
 
 ---
 
-## Quantified Impact
+## Projected Time Savings
 
-### Time Savings Analysis
+### Assumptions (Stated Explicitly)
 
-| Encounter Type | Manual Time | v2hr Time | Savings |
-|----------------|-------------|-----------|---------|
-| General visit | 16 min | 3 min | 13 min |
-| H&P (comprehensive) | 25 min | 5 min | 20 min |
-| Emergency | 12 min | 2 min | 10 min |
-| Follow-up | 10 min | 2 min | 8 min |
-| Discharge summary | 20 min | 4 min | 16 min |
+These projections are based on:
+1. **Published literature** on documentation time per encounter (Sinsky et al., 2016)
+2. **Our measured extraction accuracy** (69% F1 overall; 84% on medications/allergies)
+3. **Estimated review time** based on BENCHMARKS-CLINICAL-REVIEW.md workflow analysis (3-5 min for clinician to review and correct structured output vs. 16 min for full manual entry)
 
-### Economic Model
+We have **not validated these time savings in clinical deployment**. Actual savings will depend on note complexity, clinician comfort with the system, and EHR integration quality.
 
-**Per Physician:**
+### Per-Encounter Estimates
+
+| Encounter Type | Manual Documentation | v2hr + Review | Estimated Savings |
+|----------------|---------------------|---------------|-------------------|
+| Routine follow-up | 10 min | 2-3 min | **7-8 min** |
+| General visit | 16 min | 3-5 min | **11-13 min** |
+| H&P (comprehensive) | 25 min | 5-8 min | **17-20 min** |
+| Emergency note | 12 min | 3-4 min | **8-9 min** |
+| Discharge summary | 20 min | 5-7 min | **13-15 min** |
+
+**Basis for review times:** At 69% extraction accuracy, roughly 7 of 10 entities are correct. The clinician reviews the structured output, corrects ~3 entities, and approves. This is faster than entering all 10 entities from scratch.
+
+**Conservative estimate: 8 minutes saved per encounter (routine visits)**
+**Moderate estimate: 13 minutes saved per encounter (general visits)**
+
+### Per-Physician Annual Projections
+
+**Conservative scenario (routine outpatient only):**
 ```
-Time saved per patient:     13 minutes
-Patients per day:           25
-Daily time saved:           325 minutes = 5.4 hours
+Time saved per patient:      8 minutes (conservative)
+Patients per day:            20 (outpatient primary care)
+Daily time saved:            160 minutes = 2.7 hours
+Annual time saved:           2.7 hours × 250 working days = 667 hours
 
-Physician cost to employer: $150/hour (loaded cost)
-Daily savings:              5.4 hours × $150 = $810
-Annual savings:             $810 × 250 working days = $202,500
+At $150/hr physician loaded cost:
+Annual value per physician:  667 × $150 = $100,000
 ```
 
-**Per Healthcare System:**
+**Moderate scenario (mixed encounter types):**
 ```
-Typical hospital physicians: 200
-Annual savings:              200 × $202,500 = $40,500,000
+Time saved per patient:      13 minutes (general visits)
+Patients per day:            25 (mixed practice)
+Daily time saved:            325 minutes = 5.4 hours
+Annual time saved:           5.4 hours × 250 working days = 1,354 hours
 
-ROI calculation:
-  - Cloud deployment cost:   ~$50,000/year
-  - Net annual benefit:      $40,450,000
-  - ROI:                     809x
+At $150/hr physician loaded cost:
+Annual value per physician:  1,354 × $150 = $203,000
 ```
 
-### Error Reduction
-
-| Error Type | Baseline Rate | v2hr Rate | Reduction |
-|------------|---------------|-----------|-----------|
-| Medication transcription | 8.2% | 4.5% | **45%** |
-| Diagnosis miscoding | 12.1% | 8.7% | **28%** |
-| Missing allergy documentation | 15.3% | 2.1% | **86%** |
-| Incomplete orders | 23.5% | 5.2% | **78%** |
-
-**Source:** Internal validation against SME-reviewed ground truth (n=16 transcripts)
-
-### Quality Metrics
-
-| Metric | Manual Entry | v2hr | Improvement |
-|--------|--------------|------|-------------|
-| Medication F1 accuracy | 73.9% | 100% | +35% |
-| Condition coding F1 | 36.9% | 100% | +171% |
-| Order capture F1 | 20.3% | 100% | +393% |
-| Overall extraction F1 | 30.8% | 100% | +225% |
+**These are projections, not measured outcomes.** The $150/hr figure represents total cost-to-employer (salary + benefits + overhead), not physician salary alone.
 
 ---
 
-## Market Opportunity
+## Quality Impact
 
-### Target Market Size
+### What We Measured (Development Benchmarks)
 
-| Segment | Size | Annual Documentation Cost |
-|---------|------|---------------------------|
-| US Physicians | 1,100,000 | $166B (4.5 hrs/day × $150/hr × 250 days) |
-| US Hospitals | 6,093 | $40.5M each average |
-| US Clinics | 250,000+ | $500K each average |
+| Entity Type | v2hr F1 | Baseline F1 | Improvement |
+|-------------|---------|-------------|-------------|
+| Medications | 84% | 71% | +13 pp |
+| Allergies | 84% | 0% | +84 pp |
+| Conditions | 71% | 57% | +14 pp |
+| Family History | 82% | 0% | +82 pp |
+| Vitals | 82% | 88% | -6 pp |
+| Orders | 35% | 23% | +12 pp |
+| **Overall** | **69%** | **56%** | **+13 pp** |
 
-### Addressable Market
+*Ground truth: AI-assisted annotation from human-authored clinical scripts. SME validation planned. See BENCHMARKS.md for full methodology.*
 
-**Conservative estimate (10% adoption):**
-- 110,000 physicians × $202,500 savings = **$22.3B annual value**
+### Where MedGemma Provides Unique Value
 
-**Moderate estimate (25% adoption):**
-- 275,000 physicians × $202,500 savings = **$55.7B annual value**
+The strongest impact case is not overall accuracy — it's the entities that **rule-based systems completely cannot extract**:
 
-### Competitive Landscape
+- **Allergies (84% vs. 0%):** "Patient is allergic to penicillin, causes rash" — requires semantic understanding. Regex patterns cannot express this. Missing allergy documentation is a patient safety issue.
 
-| Solution | Approach | Limitations |
-|----------|----------|-------------|
-| Dragon Medical | ASR only | No structured extraction |
-| Nuance DAX | Ambient AI | Proprietary, expensive |
-| Generic LLMs | GPT-4, etc. | Not medical-specific, HIPAA concerns |
-| **v2hr** | MedGemma + post-processing | Open-source, medical-domain, multi-format |
+- **Family History (82% vs. 0%):** "Father had MI at 55, mother has diabetes" — requires relationship parsing. Critical for risk assessment. Currently under-documented in most EHRs.
 
-**v2hr differentiators:**
-- Open-source (CC BY 4.0)
-- Medical-specific model (MedGemma)
-- Deterministic terminology validation
-- Multi-format output (FHIR, CDA, HL7v2)
-- On-premises deployment option
+These two entity types represent the highest clinical safety impact: allergies affect medication safety checks, and family history drives screening and prevention decisions.
+
+### What We Have Not Measured
+
+To be transparent, we have **not** measured:
+- Error reduction rates in clinical deployment (no before/after study)
+- Impact on medication safety events
+- Impact on clinical decision-making quality
+- Time savings in actual clinical workflows
+- Clinician satisfaction or adoption rates
+
+These would require a prospective clinical study, which is planned as future work.
 
 ---
 
-## Health Equity Impact
+## Health Equity Potential
 
-### Accessibility Benefits
+### The Access Gap
 
-| Population | Current Challenge | v2hr Solution |
+Documentation automation is currently available only to well-resourced health systems:
+- Medical scribes: $30-50K/year per physician — prohibitive for small practices
+- Commercial AI scribes: $15-25K/year per physician — requires enterprise contracts
+- Most solutions require cloud connectivity — problematic for privacy-sensitive or low-bandwidth settings
+
+### How v2hr Addresses This
+
+| Setting | Challenge | v2hr Approach | Cost |
+|---------|-----------|---------------|------|
+| Rural clinics | Cannot afford scribes | Self-hosted edge deployment | $2,000 one-time |
+| Small practices | No IT department | Docker single-command setup | $0.03/extraction cloud |
+| Safety-net hospitals | Documentation backlog | Batch processing | $2,000 one-time |
+| FQHCs | High volume, low resources | API integration with existing EHR | $0.03/extraction cloud |
+
+### Potential Reach
+
+| Setting | US Facilities | Patients Served |
+|---------|---------------|-----------------|
+| Rural hospitals | ~1,800 | 46M rural Americans |
+| FQHCs | ~1,400 | 30M underserved patients |
+| Critical access hospitals | ~1,300 | 20M rural patients |
+| **Total potential** | **~4,500 facilities** | **~96M patients** |
+
+*Source: HRSA data warehouse, AHA hospital statistics*
+
+**Infrastructure cost to serve all 4,500 facilities:** $9M (edge deployment at $2,000 each)
+
+This is a **cost model**, not a deployment plan. Actual adoption depends on EHR integration, regulatory requirements, and clinician acceptance.
+
+### Why Open Source Matters for Equity
+
+Proprietary solutions create vendor lock-in and pricing barriers that disproportionately affect under-resourced settings. v2hr's open-source model (CC BY 4.0) means:
+
+- **No per-physician licensing fees** — the software is free
+- **Community-driven improvements** — specialized rules for cardiology, pediatrics, etc. benefit everyone
+- **Local deployment** — no cloud dependency, no data leaving the facility
+- **Transparency** — clinicians and administrators can audit the extraction logic
+
+---
+
+## Deployment Feasibility
+
+### Cloud Deployment (Recommended for Most)
+
+```
+Cost:         $0.03-0.05 per extraction (HuggingFace Inference Endpoint)
+Setup:        2-4 hours (Docker + environment configuration)
+Scaling:      Automatic (HuggingFace manages infrastructure)
+Maintenance:  Minimal (endpoint auto-scales)
+```
+
+### Edge/On-Premises Deployment (Privacy-Sensitive)
+
+```
+Hardware:     NVIDIA L4 GPU or Jetson Orin ($2,000 one-time)
+Cost:         $0 per extraction after hardware
+Setup:        1-2 days (hardware setup + Docker deployment)
+Latency:      <1 second per extraction
+Maintenance:  Standard IT server maintenance
+```
+
+### EHR Integration Points
+
+| EHR System | Integration Method | Output Format |
 |------------|-------------------|---------------|
-| Rural clinics | Cannot afford scribes | Automated extraction at $0.03/note |
-| Small practices | Limited IT staff | Simple Docker deployment |
-| Safety-net hospitals | Documentation backlog | Batch processing overnight |
-| Underserved communities | Long wait times | Faster throughput |
-
-### Estimated Reach
-
-| Setting | Count | Potential Patients |
-|---------|-------|-------------------|
-| Rural hospitals | 1,800 | 46M rural Americans |
-| FQHCs | 1,400 | 30M underserved |
-| Critical access hospitals | 1,300 | 20M rural patients |
-| **Total** | **4,500 facilities** | **96M patients** |
-
-**Cost to serve:** Edge deployment at $2,000 per facility = $9M total infrastructure
-**Annual value created:** 4,500 × $500K average = $2.25B
+| Epic | FHIR R4 REST API | FHIR R4 Bundle |
+| Cerner | FHIR API / HL7 v2.x interface | FHIR R4 / HL7 v2 |
+| Legacy systems | CDA R2 import | CDA R2 Document |
+| Any FHIR server | Standard REST API | FHIR R4 Bundle |
 
 ---
 
-## Clinical Safety
+## Clinical Safety Design
 
-### Risk Mitigation
+### Clinician-in-the-Loop
 
-| Risk | Mitigation | Implementation |
-|------|------------|----------------|
-| Extraction errors | Uncertainty flagging | `*_matched: false` for unverified items |
-| Hallucination | Post-processing validation | Deterministic RxNorm/ICD-10 lookup |
-| Over-reliance | Clinician review workflow | All extractions require approval |
-| Data integrity | Audit logging | Full request/response logging |
-
-### Recommended Workflow
+v2hr is designed as a **documentation aid, not an autonomous system**. Every extraction requires clinician review before EHR entry.
 
 ```
-Transcript → MedGemma → Post-Processing → Clinician Review → EHR
-                                               │
-                                               ├── Approve
-                                               ├── Edit
-                                               └── Reject
+Transcript → MedGemma Extraction → Structured Output → Clinician Review → EHR
+                                                            │
+                                                            ├── Approve (entity correct)
+                                                            ├── Edit (entity needs correction)
+                                                            └── Reject (entity is wrong)
 ```
 
-**Clinician remains in control.** System suggests; human decides.
+### Safety Features
+
+| Risk | Mitigation |
+|------|------------|
+| Extraction errors (31% of entities) | All extractions flagged for clinician review |
+| Hallucinated entities | Post-processing validation against RxNorm/ICD-10 databases |
+| Unverified codes | Items marked `*_matched: false` for explicit review |
+| Over-reliance on automation | System designed to require approval workflow |
+| Audit trail | Full request/response logging for compliance |
+
+### What This System Is Not
+
+- **Not a medical device** — does not make clinical decisions
+- **Not autonomous** — requires clinician approval for all extractions
+- **Not a replacement for clinical judgment** — a time-saving tool only
+- **Not validated for billing/coding** — ICD-10 codes require clinician verification
 
 ---
 
-## Implementation Timeline
+## Future Validation Roadmap
 
-### Phase 1: Pilot (Months 1-3)
-- Single department deployment
-- 5-10 physicians
-- Measure: time savings, accuracy, user satisfaction
+### Phase 1: SME Ground Truth Validation (Next)
+- Clinical SMEs review the 16 existing test cases
+- Establish inter-annotator agreement
+- Refine ground truth where AI annotation was incorrect
+- **Outcome:** Clinically validated benchmarks
 
-### Phase 2: Expansion (Months 4-6)
-- Multi-department rollout
-- 50-100 physicians
-- Measure: organization-wide efficiency gains
+### Phase 2: Prospective Time Study (3-6 months)
+- Deploy in 1-2 willing practice sites
+- Measure actual documentation time: before vs. after
+- Record clinician review time per note
+- **Outcome:** Validated time savings figures
 
-### Phase 3: Enterprise (Months 7-12)
-- Full hospital deployment
-- EHR integration
-- Measure: ROI, quality metrics, burnout reduction
+### Phase 3: Quality Impact Study (6-12 months)
+- Compare documentation completeness (before vs. after)
+- Track allergy documentation rates
+- Measure family history capture rates
+- **Outcome:** Validated quality improvement metrics
 
----
-
-## Key Performance Indicators
-
-| KPI | Target | Measurement |
-|-----|--------|-------------|
-| Time per note | <3 minutes | Timestamp analysis |
-| Extraction accuracy | >95% F1 | SME validation sampling |
-| Clinician satisfaction | >4.0/5.0 | Survey |
-| Adoption rate | >80% | Usage tracking |
-| Error reduction | >40% | Before/after comparison |
+### Phase 4: Multi-Site Expansion (12+ months)
+- Deploy across multiple practice types
+- Measure specialty-specific performance
+- Track clinician adoption and satisfaction
+- **Outcome:** Generalizability evidence
 
 ---
 
-## Conclusion
+## Summary
 
-The v2hr clinical extraction pipeline offers:
+### What We Know (Measured)
+- v2hr achieves **69% F1 extraction accuracy** in development benchmarks
+- MedGemma provides **+13 percentage point improvement** over rule-based baseline
+- MedGemma captures **allergies and family history** that rules completely miss
+- The system **works end-to-end**: voice → extraction → structured FHIR/CDA/HL7 output
 
-1. **Immediate value:** 13 minutes saved per patient, $202K annual value per physician
-2. **Quality improvement:** 45% reduction in documentation errors
-3. **Equity impact:** Enables affordable documentation automation for underserved settings
-4. **Safety:** Clinician-in-the-loop design with uncertainty flagging
+### What We Project (Estimated)
+- **8-13 minutes saved** per patient encounter (review vs. manual entry)
+- **$100-200K annual value** per physician (based on published time costs)
+- **96M patients** in underserved settings could benefit from affordable edge deployment
 
-**Investment required:** $2,000-50,000 depending on deployment model
-**Expected ROI:** 50-800x annually
+### What We Don't Know Yet (Future Work)
+- Actual time savings in clinical deployment
+- Impact on documentation error rates
+- Clinician satisfaction and adoption rates
+- Long-term quality improvement metrics
 
----
-
-## References
-
-1. AMA Physician Practice Benchmark Survey, 2024
-2. JAMA Internal Medicine, "Physician Time Spent on Documentation," 2023
-3. Annals of Internal Medicine, "EHR Time Allocation Study," 2022
-4. Medscape Physician Burnout Report, 2024
-5. Internal benchmark validation (n=16 transcripts, SME-validated)
+**The case for impact rests on a straightforward argument:** if a system can correctly extract 7 out of 10 clinical entities from a physician's dictation, reviewing and correcting those extractions is faster than entering all 10 from scratch. The magnitude of time savings depends on deployment context, but the direction is clear.
 
 ---
 
 **Prepared by:** Cleansheet LLC
-**Date:** January 30, 2026
-**Contact:** https://github.com/paulgCleansheet/voice-to-health-record
+**Medical Advisor:** Leah Galjan Post, MD, FAAP
+**Date:** February 21, 2026
