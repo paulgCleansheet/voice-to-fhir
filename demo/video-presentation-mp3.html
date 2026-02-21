@@ -336,13 +336,7 @@
                 <pre><code class="language-json" id="extractionResult"></code></pre>
             </section>
 
-            <!-- Slide 7: FHIR Transform -->
-            <section>
-                <h2>FHIR R4 Output</h2>
-                <pre><code class="language-json" id="fhirResult"></code></pre>
-            </section>
-
-            <!-- Slide 8: Benchmark Results -->
+            <!-- Slide 7: Benchmark Results -->
             <section>
                 <h2>Benchmark Results</h2>
                 <p style="color: #888; margin-bottom: 15px;">199 ground truth entities | Development benchmarks</p>
@@ -391,7 +385,7 @@
                 <p style="margin-top: 20px;">Recall: <strong>69%</strong> MedGemma vs <strong>45%</strong> baseline (+24 pts)</p>
             </section>
 
-            <!-- Slide 9: Path to Production -->
+            <!-- Slide 8: Path to Production -->
             <section>
                 <h2>Proof of Concept → Production</h2>
                 <div class="impact-grid">
@@ -416,7 +410,7 @@
                 </p>
             </section>
 
-            <!-- Slide 10: Clinician Quote -->
+            <!-- Slide 9: Clinician Quote + Deployment -->
             <section>
                 <h2>Clinical Perspective</h2>
                 <div class="quote-box">
@@ -429,7 +423,7 @@
                 </p>
             </section>
 
-            <!-- Slide 11: Closing -->
+            <!-- Slide 10: Closing -->
             <section>
                 <div class="end-card" style="padding-bottom: 80px;">
                     <h1 style="font-size: 2em;">Voice to FHIR</h1>
@@ -491,11 +485,10 @@
             43,     // Slide 4:  Transcript  - 0:43 "Here's a live demo..."
             50,     // Slide 5:  API Call    - 0:50 "I'll send the clinical note..."
             55,     // Slide 6:  Extraction  - 0:55 "In under three seconds..."
-            70,     // Slide 7:  FHIR        - 1:10 (brief visual)
-            75,     // Slide 8:  Benchmarks  - 1:15 "We benchmarked against..."
-            91,     // Slide 9:  Impact      - 1:31 "This is a proof of concept..."
-            115,    // Slide 10: Quote       - 1:55 "The system exports to FHIR..."
-            132,    // Slide 11: Closing     - 2:12 "Voice to FHIR. Open source..."
+            75,     // Slide 7:  Benchmarks  - 1:15 "We benchmarked against..."
+            91,     // Slide 8:  Impact      - 1:31 "This is a proof of concept..."
+            115,    // Slide 9:  Quote       - 1:55 "The system exports to FHIR..."
+            132,    // Slide 10: Closing     - 2:12 "Voice to FHIR. Open source..."
         ];
 
         // =========================================================
@@ -664,7 +657,7 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
         // CALIBRATION
         // =========================================================
 
-        const SLIDE_NAMES = ['Title', 'Problem', 'Docker', 'Transcript', 'API Call', 'Extraction', 'FHIR', 'Benchmarks', 'Impact', 'Quote', 'Closing'];
+        const SLIDE_NAMES = ['Title', 'Problem', 'Docker', 'Transcript', 'API Call', 'Extraction', 'Benchmarks', 'Impact', 'Quote', 'Closing'];
         let calibrating = false;
         let calibrateIdx = 0;
         let calibratedTimestamps = [];
@@ -739,8 +732,6 @@ Plan: Stress test, echocardiogram, start statin therapy.`;
             document.getElementById('transcriptText').textContent = TRANSCRIPT;
             document.getElementById('extractionResult').textContent =
                 JSON.stringify(EXTRACTION_RESULT, null, 2);
-            document.getElementById('fhirResult').textContent =
-                JSON.stringify(FHIR_RESULT, null, 2);
 
             // Init Reveal
             await Reveal.initialize({
