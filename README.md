@@ -28,7 +28,7 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 ## Demo
 
-**Judges:** The demonstration video is included in this repository at [`demo/voice-to-fhir-demo.mp4`](demo/voice-to-fhir-demo.mp4). This video walks through the end-to-end pipeline — from clinical transcript input through MedGemma extraction to structured FHIR output — and illustrates the key differentiators described in the submission writeup.
+**Judges:** The demonstration video is available at **[https://youtu.be/4tIWJ4M27Xs](https://youtu.be/4tIWJ4M27Xs)**. This video walks through the end-to-end pipeline — from clinical transcript input through MedGemma extraction to structured FHIR output — and illustrates the key differentiators described in the submission writeup.
 
 ## Features
 

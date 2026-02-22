@@ -198,7 +198,7 @@ Voice to FHIR's open-source, edge-deployable architecture could enable affordabl
 
 ## 7. Demonstration Video
 
-**Judges:** A walkthrough demonstration is included in the repository at [`demo/voice-to-fhir-demo.mp4`](demo/voice-to-fhir-demo.mp4). The video covers the end-to-end pipeline: transcript input, MedGemma extraction, terminology validation, and structured FHIR output.
+**Judges:** A walkthrough demonstration is available at **[https://youtu.be/4tIWJ4M27Xs](https://youtu.be/4tIWJ4M27Xs)**. The video covers the end-to-end pipeline: transcript input, MedGemma extraction, terminology validation, and structured FHIR output.
 
 ## 8. Reproducibility
 
