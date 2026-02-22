@@ -73,8 +73,12 @@ See [BENCHMARKS.md](BENCHMARKS.md) for detailed methodology and results.
 All data required to reproduce these results is included in the repository:
 
 ```bash
-# Run MedGemma vs Baseline comparison
+# Run MedGemma vs Baseline comparison (uses stored results, no API required)
 python scripts/benchmark_v2_with_baseline.py
+
+# Re-extract all 16 transcripts through the live API and regenerate bulk-export.json
+# (API must be running: docker-compose up -d)
+python scripts/regenerate_bulk_export.py
 
 # Run ASR error analysis (requires HuggingFace API token)
 cp .env.example .env
