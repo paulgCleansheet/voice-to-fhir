@@ -25,6 +25,7 @@ from extraction.extraction_types import (
 )
 from extraction.icd10_lookup import enrich_conditions_with_icd10
 from extraction.rxnorm_lookup import enrich_medications_with_rxnorm
+from extraction.loinc_lookup import enrich_labs_with_loinc
 from extraction.order_diagnosis_linker import enrich_orders_with_diagnoses
 
 logger = logging.getLogger(__name__)
@@ -1148,6 +1149,11 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
         "[post_process] RxNorm verified: %d/%d medications, %d/%d orders",
         rxnorm_meds, len(entities.medications), rxnorm_orders, len(entities.medication_orders)
     )
+
+    # 8b. Enrich lab orders with verified LOINC codes from lookup database
+    entities.lab_orders = enrich_labs_with_loinc(entities.lab_orders)
+    loinc_coded = sum(1 for lo in entities.lab_orders if getattr(lo, 'loinc', None))
+    logger.debug("[post_process] LOINC codes added: %d/%d lab orders", loinc_coded, len(entities.lab_orders))
 
     # 9. Link medication orders to diagnoses (based on drug class rules and patient conditions)
     entities = enrich_orders_with_diagnoses(entities)

@@ -26,6 +26,10 @@ This project was developed for the [Kaggle MedGemma Impact Challenge](https://ww
 
 **Challenge Focus:** Build demonstration applications using MedGemma that showcase real-world healthcare impact with responsible AI practices.
 
+## Demo
+
+**Judges:** The demonstration video is included in this repository at [`demo/voice-to-fhir-demo.mp4`](demo/voice-to-fhir-demo.mp4). This video walks through the end-to-end pipeline — from clinical transcript input through MedGemma extraction to structured FHIR output — and illustrates the key differentiators described in the submission writeup.
+
 ## Features
 
 - **MedGemma Integration** — Structured entity extraction using Google's medical language model

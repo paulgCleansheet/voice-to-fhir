@@ -357,7 +357,7 @@ voice-to-fhir is **open-source** (CC BY 4.0), **production-ready**, and designed
 
 - **Repository:** https://github.com/paulgCleansheet/voice-to-fhir
 - **License:** CC BY 4.0
-- **Video:** [YouTube link - to be added]
+- **Demo Video:** [`demo/voice-to-fhir-demo.mp4`](demo/voice-to-fhir-demo.mp4) (included in repository)
 
 ---
 

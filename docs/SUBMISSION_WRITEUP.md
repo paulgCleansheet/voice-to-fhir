@@ -196,7 +196,11 @@ Voice to FHIR's open-source, edge-deployable architecture could enable affordabl
 
 ---
 
-## 7. Reproducibility
+## 7. Demonstration Video
+
+**Judges:** A walkthrough demonstration is included in the repository at [`demo/voice-to-fhir-demo.mp4`](demo/voice-to-fhir-demo.mp4). The video covers the end-to-end pipeline: transcript input, MedGemma extraction, terminology validation, and structured FHIR output.
+
+## 8. Reproducibility
 
 ```bash
 # Clone and install
@@ -220,7 +224,7 @@ python scripts/benchmark_v2_with_baseline.py
 
 ---
 
-## 8. Conclusion
+## 9. Conclusion
 
 voice-to-fhir is a **proof of concept** that demonstrates MedGemma can power practical clinical documentation extraction:
 

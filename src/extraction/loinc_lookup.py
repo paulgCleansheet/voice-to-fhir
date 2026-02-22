@@ -344,31 +344,41 @@ def get_lab_category(lab_name: str) -> str | None:
 
 def enrich_labs_with_loinc(lab_orders: list) -> list:
     """
-    Enrich a list of lab order objects with LOINC codes.
+    Enrich a list of LabOrder objects with LOINC codes.
 
     This function adds verified LOINC codes to lab orders, preferring
     lookup codes over any LLM-generated codes.
 
     Args:
-        lab_orders: List of lab order objects
+        lab_orders: List of LabOrder objects
 
     Returns:
         The same list with LOINC codes and match status added
     """
     for lab in lab_orders:
-        if not lab.get('name'):
+        name = lab.name if hasattr(lab, 'name') else lab.get('name')
+        if not name:
             continue
 
-        loinc, display, confidence, matched = lookup_loinc(lab['name'])
+        loinc, display, confidence, matched = lookup_loinc(name)
 
         # Add loinc_matched field to track verification status
-        lab['loinc_matched'] = matched
+        if hasattr(lab, 'loinc_matched'):
+            lab.loinc_matched = matched
+        else:
+            try:
+                lab['loinc_matched'] = matched
+            except TypeError:
+                pass
 
         if loinc and confidence >= 0.85:
             # Use lookup code (verified) over any existing code
-            lab['loinc'] = loinc
-            # Store confidence in metadata if available
-            if 'confidence' not in lab:
-                lab['loinc_confidence'] = confidence
+            if hasattr(lab, 'loinc'):
+                lab.loinc = loinc
+            else:
+                try:
+                    lab['loinc'] = loinc
+                except TypeError:
+                    pass
 
     return lab_orders

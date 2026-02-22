@@ -17,6 +17,7 @@ import json
 import logging
 import os
 from pathlib import Path
+import time
 
 import requests
 
@@ -205,11 +206,23 @@ TRANSCRIPT:
         from extraction.prompts import AVAILABLE_WORKFLOWS
         return AVAILABLE_WORKFLOWS.copy()
 
+    @property
+    def _health_endpoint(self) -> str:
+        """Health check URL for the configured backend."""
+        if self.config.backend == "dedicated":
+            # Use base endpoint URL (strip the /v1/chat/completions path)
+            return self.config.endpoint_url.rstrip("/")
+        elif self.config.backend == "local":
+            return f"{self.config.local_url}/health"
+        else:
+            # Serverless: model info endpoint
+            return f"{self.config.api_url}/{self.config.model_id}"
+
     def health_check(self) -> bool:
-        """Check if the API is reachable."""
+        """Check if the configured backend is reachable."""
         try:
             response = requests.get(
-                f"{self.config.api_url}/{self.config.model_id}",
+                self._health_endpoint,
                 headers=self._headers,
                 timeout=10.0,
             )
@@ -298,17 +311,41 @@ TRANSCRIPT:
         logger.info("[MedGemma] Extracting with backend: %s", self.config.backend)
 
         payload = self._build_payload(full_prompt)
-        response = requests.post(
-            self._endpoint,
-            headers=self._headers,
-            json=payload,
-            timeout=self.config.timeout_seconds,
-        )
-
-        if response.status_code != 200:
+        max_attempts = 3
+        last_error: Exception | None = None
+        response = None
+        for attempt in range(max_attempts):
+            try:
+                response = requests.post(
+                    self._endpoint,
+                    headers=self._headers,
+                    json=payload,
+                    timeout=self.config.timeout_seconds,
+                )
+                if response.status_code == 200:
+                    break
+                # Don't retry on client errors (4xx)
+                if response.status_code < 500:
+                    raise RuntimeError(
+                        f"MedGemma API error: {response.status_code} - {response.text[:500]}"
+                    )
+                last_error = RuntimeError(
+                    f"MedGemma API error: {response.status_code} - {response.text[:500]}"
+                )
+            except requests.exceptions.RequestException as exc:
+                last_error = exc
+                response = None
+            if attempt < max_attempts - 1:
+                delay = 2 ** attempt  # 1s, 2s
+                logger.warning(
+                    "[MedGemma] Request failed (attempt %d/%d), retrying in %ds: %s",
+                    attempt + 1, max_attempts, delay, last_error,
+                )
+                time.sleep(delay)
+        else:
             raise RuntimeError(
-                f"MedGemma API error: {response.status_code} - {response.text[:500]}"
-            )
+                f"MedGemma API unavailable after {max_attempts} attempts"
+            ) from last_error
 
         result = response.json()
         generated_text = self._parse_generated_text(result)

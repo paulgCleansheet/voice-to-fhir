@@ -91,6 +91,7 @@
 ## ✅ Submission Package Verification
 
 ### Required Files Present
+- [x] demo/voice-to-fhir-demo.mp4 - Demonstration video for judges
 - [x] README.md - Overview and features
 - [x] BENCHMARKS.md - Detailed methodology
 - [x] docs/SUBMISSION_WRITEUP.md - Contest submission document
