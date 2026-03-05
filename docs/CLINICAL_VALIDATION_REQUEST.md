@@ -291,12 +291,22 @@ If you believe voice-to-fhir has clinical value, we would appreciate a quotable 
 >
 > — Leah Galjan Post, MD, FAAP
 
-**Option C (Custom):**
+**Option C (Light/Observational):**
+> "As a clinician, I'm struck by the allergy and family history detection — these are exactly the items that fall through the cracks in busy practices. voice-to-fhir won't replace clinical judgment, but catching what documentation misses is genuinely valuable."
+>
+> — Leah Galjan Post, MD, FAAP
+
+**Option D (Investigational):**
+> "The initial results here are worth paying attention to — particularly the model's ability to surface allergies and family history that rule-based systems miss entirely. These are preliminary findings, but they point to a research question worth pursuing rigorously."
+>
+> — Leah Galjan Post, MD, FAAP
+
+**Option E (Custom):**
 ```
 [Reviewer: Please draft your own endorsement if you prefer]
 ```
 
-**Your Selection:** [ ]
+**Your Selection:** [ ] A  [ ] B  [ ] C  [ ] D  [ ] E
 
 ---
 

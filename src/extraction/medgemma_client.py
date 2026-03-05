@@ -210,8 +210,8 @@ TRANSCRIPT:
     def _health_endpoint(self) -> str:
         """Health check URL for the configured backend."""
         if self.config.backend == "dedicated":
-            # Use base endpoint URL (strip the /v1/chat/completions path)
-            return self.config.endpoint_url.rstrip("/")
+            # vLLM exposes /health on the endpoint base URL
+            return f"{self.config.endpoint_url.rstrip('/')}/health"
         elif self.config.backend == "local":
             return f"{self.config.local_url}/health"
         else:

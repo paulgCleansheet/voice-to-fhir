@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"name": "voice-to-fhir",
+			"path": "../.."
+		},
+		{
+			"path": "../../../../Library/CloudStorage/OneDrive-Cleansheet"
+		},
+		{
+			"name": "safe-shift",
+			"path": "../../../safe-shift"
+		}
+	],
+	"settings": {}
+}
