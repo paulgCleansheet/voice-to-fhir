@@ -1,18 +1,23 @@
 {
 	"folders": [
 		{
-			"path": "../../.."
+			"name": "medical",
+			"path": "../../../medical"
 		},
 		{
 			"name": "voice-to-fhir",
 			"path": "../.."
 		},
 		{
+			"name": "OneDrive-Cleansheet",
 			"path": "../../../../Library/CloudStorage/OneDrive-Cleansheet"
 		},
 		{
 			"name": "safe-shift",
 			"path": "../../../safe-shift"
+		},
+		{
+			"path": "../../../Clinical"
 		}
 	],
 	"settings": {}
