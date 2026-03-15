@@ -18,6 +18,9 @@
 		},
 		{
 			"path": "../../../Clinical"
+		},
+		{
+			"path": "../../../clinician-contributors"
 		}
 	],
 	"settings": {}
