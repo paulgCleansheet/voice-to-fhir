@@ -24,6 +24,13 @@
 		},
 		{
 			"path": "../../../wwwCleansheet"
+		},
+		{
+			"name": "cleansheet-rtls",
+			"path": "../../../cleansheet-rtls"
+		},
+		{
+			"path": "../../../corporate"
 		}
 	],
 	"settings": {}
