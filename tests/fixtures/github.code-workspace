@@ -31,6 +31,9 @@
 		},
 		{
 			"path": "../../../corporate"
+		},
+		{
+			"path": "../../../community-health"
 		}
 	],
 	"settings": {}
