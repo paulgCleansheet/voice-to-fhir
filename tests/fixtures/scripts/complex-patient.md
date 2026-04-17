@@ -2,19 +2,6 @@
 
 **Purpose:** Stress-test extraction with multiple comorbidities, polypharmacy, and comprehensive clinical data.
 
-**Recommended workflow:** `hp` (History & Physical) or `intake`
-
-**Recording tips:**
-- Speak at natural dictation pace
-- Brief pauses between sections are fine
-- ~3-4 minutes total
-
----
-
-## Script
-
-**IMPORTANT: Do NOT say the bracketed markers aloud. MedASR will garble them. Use natural speech transitions.**
-
 ---
 
 This is a 78-year-old male presenting for hospital admission with acute exacerbation of congestive heart failure.
