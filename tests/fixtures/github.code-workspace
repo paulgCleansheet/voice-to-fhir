@@ -34,6 +34,12 @@
 		},
 		{
 			"path": "../../../community-health"
+		},
+		{
+			"path": "../../../cleansheet-dispatch"
+		},
+		{
+			"path": "../../../cleansheet-survey"
 		}
 	],
 	"settings": {}

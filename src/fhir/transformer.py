@@ -27,6 +27,7 @@ from extraction.extraction_types import (
     Allergy,
     FamilyHistory,
     SocialHistory,
+    BillingCandidate,
 )
 
 
@@ -157,6 +158,13 @@ class FHIRTransformer:
                 entities.social_history, patient_ref, encounter_ref
             ):
                 bundle["entry"].append(self._wrap_entry(resource, "POST"))
+
+        # Create ChargeItems for billing candidates
+        for candidate in entities.billing_candidates:
+            resource = self._create_charge_item(
+                candidate, patient_ref, encounter_ref
+            )
+            bundle["entry"].append(self._wrap_entry(resource, "POST"))
 
         return bundle
 
@@ -343,6 +351,93 @@ class FHIRTransformer:
                         }
                     ],
                     "text": "Chief Complaint",
+                }
+            ]
+
+        # Add HCC extension if HCC category is populated
+        if condition.hcc_category:
+            hcc_ext = {
+                "url": "http://cleansheet.life/fhir/StructureDefinition/hcc-risk-adjustment",
+                "extension": [
+                    {
+                        "url": "category",
+                        "valueString": condition.hcc_category,
+                    },
+                    {
+                        "url": "weight",
+                        "valueDecimal": condition.hcc_weight,
+                    },
+                    {
+                        "url": "description",
+                        "valueString": condition.hcc_description,
+                    },
+                ],
+            }
+            if condition.hcc_model_version:
+                hcc_ext["extension"].append({
+                    "url": "modelVersion",
+                    "valueString": condition.hcc_model_version,
+                })
+            resource.setdefault("extension", []).append(hcc_ext)
+
+        return resource
+
+    def _create_charge_item(
+        self,
+        candidate: BillingCandidate,
+        patient_ref: str | None,
+        encounter_ref: str | None,
+    ) -> dict[str, Any]:
+        """Create ChargeItem resource from billing candidate."""
+        resource = {
+            "resourceType": "ChargeItem",
+            "id": str(uuid.uuid4()),
+            "status": "planned",
+            "code": {
+                "text": candidate.name or "unspecified procedure",
+            },
+        }
+
+        if patient_ref:
+            resource["subject"] = {"reference": patient_ref}
+
+        if encounter_ref:
+            resource["context"] = {"reference": encounter_ref}
+
+        # Add OPS coding
+        if candidate.code and candidate.code_system:
+            system_url = {
+                "OPS": "http://fhir.de/CodeSystem/bfarm/ops",
+                "CPT": "http://www.ama-assn.org/go/cpt",
+            }.get(candidate.code_system, f"http://example.org/{candidate.code_system}")
+
+            resource["code"]["coding"] = [
+                {
+                    "system": system_url,
+                    "code": candidate.code,
+                    "display": candidate.name,
+                }
+            ]
+
+        # Add linked diagnosis as reason
+        if candidate.linked_diagnosis:
+            resource["reason"] = [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/sid/icd-10",
+                            "code": candidate.linked_diagnosis,
+                        }
+                    ]
+                }
+            ]
+
+        # Add validation note
+        if candidate.validation_status:
+            resource["note"] = [
+                {
+                    "text": f"Validation: {candidate.validation_status}"
+                    + (f" - {'; '.join(candidate.validation_messages)}" if candidate.validation_messages else ""),
                 }
             ]
 

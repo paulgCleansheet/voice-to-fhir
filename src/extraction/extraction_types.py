@@ -53,10 +53,14 @@ class Condition:
     severity: str | None = None
     is_chief_complaint: bool = False
     confidence: float = 1.0
+    hcc_category: str | None = None
+    hcc_weight: float | None = None
+    hcc_description: str | None = None
+    hcc_model_version: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
-        return {
+        result = {
             "name": self.name,
             "status": self.status,
             "icd10": self.icd10,
@@ -66,6 +70,12 @@ class Condition:
             "is_chief_complaint": self.is_chief_complaint,
             "confidence": self.confidence,
         }
+        if self.hcc_category is not None:
+            result["hcc_category"] = self.hcc_category
+            result["hcc_weight"] = self.hcc_weight
+            result["hcc_description"] = self.hcc_description
+            result["hcc_model_version"] = self.hcc_model_version
+        return result
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Condition":
@@ -79,6 +89,10 @@ class Condition:
             severity=data.get("severity"),
             is_chief_complaint=data.get("is_chief_complaint", False),
             confidence=data.get("confidence", 1.0),
+            hcc_category=data.get("hcc_category"),
+            hcc_weight=data.get("hcc_weight"),
+            hcc_description=data.get("hcc_description"),
+            hcc_model_version=data.get("hcc_model_version"),
         )
 
 
@@ -372,6 +386,56 @@ class Observation:
 
 
 @dataclass
+class BillingCandidate:
+    """A billing candidate for revenue cycle (OPS or CPT)."""
+
+    name: str
+    code: str | None = None
+    code_system: str | None = None  # "OPS", "CPT", etc.
+    confidence: float = 1.0
+    alternatives: list[dict[str, Any]] = field(default_factory=list)
+    linked_diagnosis: str | None = None  # ICD-10 code
+    reasoning: str | None = None
+    ops_chapter: str | None = None  # OPS chapter (1-9)
+    ops_setting: str | None = None  # "inpatient", "outpatient", "both"
+    validation_status: str = "pending"  # "valid", "warning", "error", "pending"
+    validation_messages: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary."""
+        return {
+            "name": self.name,
+            "code": self.code,
+            "code_system": self.code_system,
+            "confidence": self.confidence,
+            "alternatives": self.alternatives,
+            "linked_diagnosis": self.linked_diagnosis,
+            "reasoning": self.reasoning,
+            "ops_chapter": self.ops_chapter,
+            "ops_setting": self.ops_setting,
+            "validation_status": self.validation_status,
+            "validation_messages": self.validation_messages,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "BillingCandidate":
+        """Create from dictionary."""
+        return cls(
+            name=data["name"],
+            code=data.get("code"),
+            code_system=data.get("code_system"),
+            confidence=data.get("confidence", 1.0),
+            alternatives=data.get("alternatives", []),
+            linked_diagnosis=data.get("linked_diagnosis"),
+            reasoning=data.get("reasoning"),
+            ops_chapter=data.get("ops_chapter"),
+            ops_setting=data.get("ops_setting"),
+            validation_status=data.get("validation_status", "pending"),
+            validation_messages=data.get("validation_messages", []),
+        )
+
+
+@dataclass
 class Procedure:
     """An extracted procedure."""
 
@@ -577,6 +641,9 @@ class ClinicalEntities:
     # Procedures
     procedures: list[Procedure] = field(default_factory=list)
 
+    # Billing candidates (OPS / CPT)
+    billing_candidates: list[BillingCandidate] = field(default_factory=list)
+
     # Family history
     family_history: list[FamilyHistory] = field(default_factory=list)
 
@@ -625,6 +692,10 @@ class ClinicalEntities:
         """Add a lab result to the list."""
         self.lab_results.append(lab_result)
 
+    def add_billing_candidate(self, candidate: BillingCandidate) -> None:
+        """Add a billing candidate to the list."""
+        self.billing_candidates.append(candidate)
+
     def add_family_history(self, fh: FamilyHistory) -> None:
         """Add a family history item to the list."""
         self.family_history.append(fh)
@@ -644,6 +715,7 @@ class ClinicalEntities:
             procedure_orders=self.procedure_orders + other.procedure_orders,
             imaging_orders=self.imaging_orders + other.imaging_orders,
             procedures=self.procedures + other.procedures,
+            billing_candidates=self.billing_candidates + other.billing_candidates,
             family_history=self.family_history + other.family_history,
             social_history=self.social_history or other.social_history,
             workflow=self.workflow,
@@ -676,6 +748,8 @@ class ClinicalEntities:
             parts.append(f"{len(self.imaging_orders)} imaging orders")
         if self.procedures:
             parts.append(f"{len(self.procedures)} procedures")
+        if self.billing_candidates:
+            parts.append(f"{len(self.billing_candidates)} billing candidates")
         if self.family_history:
             parts.append(f"{len(self.family_history)} family history")
         if self.social_history:
@@ -700,6 +774,7 @@ class ClinicalEntities:
             "allergies": [a.to_dict() for a in self.allergies],
             "medications": [m.to_dict() for m in self.medications],
             "procedures": [p.to_dict() for p in self.procedures],
+            "billing_candidates": [bc.to_dict() for bc in self.billing_candidates],
             "family_history": [fh.to_dict() for fh in self.family_history],
             "social_history": self.social_history.to_dict() if self.social_history else None,
             "workflow": self.workflow,
@@ -734,6 +809,7 @@ class ClinicalEntities:
             allergies=[Allergy.from_dict(a) for a in data.get("allergies", [])],
             medications=[Medication.from_dict(m) for m in data.get("medications", [])],
             procedures=[Procedure.from_dict(p) for p in data.get("procedures", [])],
+            billing_candidates=[BillingCandidate.from_dict(bc) for bc in data.get("billing_candidates", [])],
             family_history=[FamilyHistory.from_dict(fh) for fh in data.get("family_history", [])],
             social_history=social_history,
             workflow=data.get("workflow", "general"),

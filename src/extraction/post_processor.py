@@ -1160,4 +1160,15 @@ def post_process(entities: ClinicalEntities, transcript: str) -> ClinicalEntitie
     linked_orders = sum(1 for m in entities.medication_orders if getattr(m, 'linked_diagnosis', None))
     logger.debug("[post_process] Diagnosis linked: %d/%d medication orders", linked_orders, len(entities.medication_orders))
 
+    # 10. HCC enrichment (depends on ICD-10 from step 7)
+    from extraction.hcc_lookup import enrich_conditions_with_hcc
+    entities = enrich_conditions_with_hcc(entities)
+    hcc_coded = sum(1 for c in entities.conditions if c.hcc_category)
+    logger.debug("[post_process] HCC categories added: %d/%d conditions", hcc_coded, len(entities.conditions))
+
+    # 11. OPS billing candidates (depends on procedures from step 5)
+    from extraction.ops_lookup import enrich_billing_candidates_with_ops
+    entities = enrich_billing_candidates_with_ops(entities)
+    logger.debug("[post_process] OPS billing candidates: %d", len(entities.billing_candidates))
+
     return entities
