@@ -17,12 +17,15 @@
 			"path": "../../../safe-shift"
 		},
 		{
+			"name": "Clinical",
 			"path": "../../../Clinical"
 		},
 		{
+			"name": "clinician-contributors",
 			"path": "../../../clinician-contributors"
 		},
 		{
+			"name": "wwwCleansheet",
 			"path": "../../../wwwCleansheet"
 		},
 		{
@@ -30,16 +33,30 @@
 			"path": "../../../cleansheet-rtls"
 		},
 		{
+			"name": "cleansheet-partners",
+			"path": "../../../cleansheet-partners"
+		},
+		{
+			"name": "corporate",
 			"path": "../../../corporate"
 		},
 		{
+			"name": "community-health",
 			"path": "../../../community-health"
 		},
 		{
+			"name": "cleansheet-dispatch",
 			"path": "../../../cleansheet-dispatch"
 		},
 		{
+			"name": "cleansheet-survey",
 			"path": "../../../cleansheet-survey"
+		},
+		{
+			"path": "../../../clinical-extraction-benchmark"
+		},
+		{
+			"path": "../../../cleansheet-lausitz"
 		}
 	],
 	"settings": {}
