@@ -300,11 +300,11 @@ class FHIRTransformer:
         if encounter_ref:
             resource["encounter"] = {"reference": encounter_ref}
 
-        # Add ICD-10 code if available
+        # Add ICD-10-CM code if available
         if condition.icd10:
             resource["code"]["coding"] = [
                 {
-                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "system": "http://hl7.org/fhir/sid/icd-10-cm",
                     "code": condition.icd10,
                     "display": condition_name,
                 }
@@ -425,7 +425,7 @@ class FHIRTransformer:
                 {
                     "coding": [
                         {
-                            "system": "http://hl7.org/fhir/sid/icd-10",
+                            "system": "http://hl7.org/fhir/sid/icd-10-cm",
                             "code": candidate.linked_diagnosis,
                         }
                     ]
